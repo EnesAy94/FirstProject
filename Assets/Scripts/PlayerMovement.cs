@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public Route currentRoute;
-    public QuestionManager soruYoneticisi;
+    // public QuestionManager soruYoneticisi; // GEREK YOK: GameManager hallediyor
 
     int routePosition = 0;
     public int steps = 0;
@@ -15,13 +15,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if (gameFinished) return;
-
-        /* Space tuşuna basınca test hareketi (Zar gelince burası değişecek)
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && !isMoving)
-        {
-            steps = 1; // Şimdilik 1 adım (İleride zardan gelecek)
-            StartCoroutine(Move());
-        }*/
     }
 
     IEnumerator Move()
@@ -33,18 +26,15 @@ public class PlayerMovement : MonoBehaviour
         {
             routePosition++;
 
-            // Oyun Bitiş Kontrolü
+            // Oyun Bitiş / Tur Başa Dönüş Kontrolü
             if (routePosition >= currentRoute.childNodes.Count)
             {
                 routePosition = 0;
-                Debug.Log("🎉 OYUN BİTTİ! KAZANDINIZ! 🎉");
-                gameFinished = true;
-                if (currentRoute.childNodes.Count > 0)
-                {
-                    Vector3 finishPos = currentRoute.childNodes[0].position;
-                    while (MoveToNextNode(finishPos)) { yield return null; }
-                }
-                yield break;
+                Debug.Log("🎉 TUR TAMAMLANDI! Başa dönülüyor...");
+                // Buraya ileride Level Bitiş kontrolü eklenebilir
+                
+                // Piyonu fiziksel olarak başa ışınla veya yürüt
+                transform.position = currentRoute.childNodes[0].position;
             }
 
             Vector3 nextPos = currentRoute.childNodes[routePosition].position;
@@ -54,9 +44,13 @@ public class PlayerMovement : MonoBehaviour
             steps--;
         }
 
-        // --- HAREKET BİTTİ, ŞİMDİ KONTROL ZAMANI ---
+        // --- HAREKET BİTTİ ---
         isMoving = false;
-        CheckCurrentTile();
+        
+        // YENİ SİSTEM:
+        // Artık burada switch-case ile uğraşmıyoruz.
+        // Topu GameManager'a atıyoruz, o ne yapacağını biliyor.
+        CheckCurrentTile(); 
     }
 
     bool MoveToNextNode(Vector3 goal)
@@ -64,65 +58,37 @@ public class PlayerMovement : MonoBehaviour
         return goal != (transform.position = Vector3.MoveTowards(transform.position, goal, 5f * Time.deltaTime));
     }
 
-    // YENİ EKLENEN FONKSİYON: Kareyi Analiz Et
     void CheckCurrentTile()
     {
-        // Şu anki karenin (Node) içindeki 'Tile' scriptini bul
-        Tile currentTile = currentRoute.childNodes[routePosition].GetComponent<Tile>();
-
-        if (currentTile != null)
+        // 1. Durduğumuz kareyi bul
+        if (routePosition < currentRoute.childNodes.Count)
         {
-            // Hangi tür olduğuna göre işlem yap (Switch-Case)
-            switch (currentTile.type)
+            Tile currentTile = currentRoute.childNodes[routePosition].GetComponent<Tile>();
+
+            if (currentTile != null)
             {
-                case TileType.Empty:
-                    Debug.Log("⚪ BOŞ KARE: Bir şey yapma, sıra diğer oyuncuda.");
-                    GameManager.instance.SwitchTurn(); // HEMEN SIRA DEĞİŞTİR
-                    break;
-                case TileType.Blue:
-                    Debug.Log("🔵 MAVİ SORU: Matematik sorusu geliyor!");
-                    soruYoneticisi.MaviSorusunuHazirla();
-                    break;
-                case TileType.Red:
-                    Debug.Log("🔴 KIRMIZI SORU: Zor soru geliyor!");
-                    soruYoneticisi.AntikaSorusunuHazirla();
-                    break;
-                case TileType.Green:
-                    Debug.Log("🟢 YEŞİL SORU: Kolay soru geliyor!");
-                    soruYoneticisi.YesilSorusunuHazirla();
-                    break;
-                case TileType.Yellow:
-                    Debug.Log("🟡 SARI SORU: Mantık sorusu geliyor!");
-                    soruYoneticisi.SariSorusunuHazirla();
-                    break;
-                case TileType.Purple:
-                    Debug.Log("🟣 MOR SORU: Tarih sorusu geliyor!");
-                    soruYoneticisi.MorSorusunuHazirla();
-                    break;  
+                // 2. GameManager'a "Ben buraya indim, gereğini yap" de.
+                GameManager.instance.OnPlayerLanded(currentTile);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ HATA: Bu karede Tile scripti yok!");
             }
         }
-        else
-        {
-            Debug.LogWarning("⚠️ HATA: Bu karede Tile scripti yok!");
-        }
     }
-    // Ödül veya Ceza hareketi için
-    public void BonusMove(int amount)
-    {
-        // Şimdilik sadece log atalım, Zar sistemini kurunca burası
-        // piyonu fiziksel olarak hareket ettirecek.
-        if (amount > 0)
-            Debug.Log("Piyon " + amount + " kare ileri gidiyor...");
-        else
-            Debug.Log("Piyon " + Mathf.Abs(amount) + " kare geri gidiyor...");
 
-        // Buraya ileride 'Move()' fonksiyonunu tekrar çağıracağız.
-    }
     public void StartMoving()
     {
         if(!isMoving)
         {
             StartCoroutine(Move());
         }
+    }
+
+    // İleride görevlerden veya kartlardan gelen bonus hareketler için
+    public void BonusMove(int amount)
+    {
+        // Şimdilik sadece log, ileride burayı dolduracağız
+        Debug.Log("Piyon " + amount + " kare ileri/geri gidiyor.");
     }
 }

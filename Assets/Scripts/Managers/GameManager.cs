@@ -1,17 +1,14 @@
 using UnityEngine;
-using System.Collections.Generic; // Listeler için
-using TMPro; // Ekrana "Sıra Mavi'de" yazdırmak istersen
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance; // Her yerden ulaşmak için
+    public static GameManager instance;
 
-    [Header("Oyuncular")]
-    public PlayerMovement[] players; // Oyuncu listesi (P1, P2...)
-    public int currentPlayerIndex = 0; // Şu an sıra kimde? (0=Kırmızı, 1=Mavi)
-
-    [Header("UI")]
-    public TextMeshProUGUI turnText; // Ekranda "Sıra: OYUNCU 1" yazsın
+    [Header("Oyuncu Ayarları")]
+    public PlayerMovement player; // Artık dizi [] yok, tek oyuncu var
+    
+    // Sıra (Turn) değişkenleri silindi çünkü tek kişiyiz.
 
     void Awake()
     {
@@ -20,45 +17,38 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        if (CameraManager.instance != null && players.Length > 0)
+        // Kamera direkt oyuncuya kilitlensin
+        if (CameraManager.instance != null && player != null)
         {
-            CameraManager.instance.target = players[currentPlayerIndex].transform;
-        }
-        UpdateTurnUI();
-    }
-
-    // Sıradaki oyuncuyu veren fonksiyon (Zar sistemi bunu kullanacak)
-    public PlayerMovement GetActivePlayer()
-    {
-        return players[currentPlayerIndex];
-    }
-
-    // Sırayı diğerine geçiren fonksiyon
-    public void SwitchTurn()
-    {
-        // Sırayı bir artır
-        currentPlayerIndex++;
-
-        // Eğer son oyuncuyu geçtiyse başa dön (Modülo işlemi)
-        if (currentPlayerIndex >= players.Length)
-        {
-            currentPlayerIndex = 0;
-        }
-
-        Debug.Log("🔄 Sıra Değişti! Yeni Sıra: " + players[currentPlayerIndex].name);
-        
-        UpdateTurnUI();
-        if (CameraManager.instance != null)
-        {
-            CameraManager.instance.ChangeTarget(players[currentPlayerIndex].transform);
+            CameraManager.instance.ChangeTarget(player.transform);
         }
     }
 
-    void UpdateTurnUI()
+    // Diğer scriptler oyuncuya ulaşmak isterse bunu kullanacak
+    public PlayerMovement GetPlayer()
     {
-        if (turnText != null)
+        return player;
+    }
+
+    // --- KRİTİK NOKTA: OYUNCU HAREKETİ BİTİNCE BU ÇAĞRILACAK ---
+    // PlayerMovement scripti, hareket bitince burayı tetikleyecek.
+    public void OnPlayerLanded(Tile currentTile)
+    {
+        if (currentTile == null) return;
+
+        Debug.Log("📍 Oyuncu şu karede durdu: " + currentTile.type);
+
+        // 1. Eğer kare BOŞ ise (Ayak izi/Büyüteç)
+        if (currentTile.type == TileType.Empty)
         {
-            turnText.text = "SIRA: " + players[currentPlayerIndex].name;
+            Debug.Log("💨 Boş alan, bir şey olmuyor.");
+            // Burada belki "Boş" sesi çalabilirsin.
+            // Zarı tekrar aktif etmek gerekebilir (Bunu ileride DiceManager'da yaparız)
+            return;
         }
+
+        // 2. Eğer kare DOLU ise (Kırmızı, Mavi vb.)
+        // Eski "Panel Aç" kodları yerine direkt QuestionManager'ı çağırıyoruz.
+        QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
     }
 }

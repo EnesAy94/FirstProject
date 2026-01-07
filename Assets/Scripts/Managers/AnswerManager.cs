@@ -3,77 +3,85 @@ using TMPro;
 
 public class AnswerManager : MonoBehaviour
 {
-    public static AnswerManager instance; // Her yerden ulaşabilmek için
+    public static AnswerManager instance;
 
     [Header("UI Elemanları")]
-    public GameObject answerPanel;      // Panelin kendisi
-    public TextMeshProUGUI infoText;    // Üstteki bilgi yazısı
-    public TMP_InputField answerInput;  // Cevap kutusu
-    public Whiteboard whiteboard;       // Çizim tahtası (Temizlemek için)
+    public GameObject answerPanel;
+    public TextMeshProUGUI infoText;
+    public TMP_InputField answerInput;
+    public Whiteboard whiteboard;
 
+    // Soru panelini kapatmak için referans (QuestionManager'ın içindeki panel)
+    // Eğer QuestionManager'da panel public ise direkt oradan kapatabiliriz ama şimdilik kalsın.
     public GameObject questionPanel;
-    public PlayerMovement player;
-    private int currentCorrectAnswer;   // Doğru cevap hafızada burada tutulacak
+
+    private int currentCorrectAnswer;
+    private TileType currentQuestionType; // Hangi renk soruyu çözüyoruz? (Görev için lazım)
 
     void Awake()
     {
         instance = this;
-        answerPanel.SetActive(false); // Başlangıçta gizle
+        answerPanel.SetActive(false);
     }
 
     // QuestionManager burayı çağıracak
-    // Parametreleri güncelledik
-    public void PaneliAc(string esyaAdi, string miktarStr, int adet, int dogruCevap)
+    // DİKKAT: Buraya 'TileType' parametresi ekledik!
+    // Parametreye 'string soruKurali' ekledik
+    public void PaneliAc(string baslik, string esyaDetayi, string soruKurali, int adet, int dogruCevap, TileType type)
     {
         answerPanel.SetActive(true);
+
         currentCorrectAnswer = dogruCevap;
+        currentQuestionType = type;
 
         answerInput.text = "";
-        whiteboard.ClearBoard();
+        if (whiteboard != null) whiteboard.ClearBoard();
 
-        string detayMetni = "";
-
-        // Eğer adet 1'den büyükse (Demek ki Sarı soru)
-        if (adet > 1)
-        {
-            detayMetni = $"SEÇİLEN: {esyaAdi}  FİYAT: {miktarStr} TL  ADET: {adet}";
-        }
-        else // Kırmızı ve Mavi
-        {
-            detayMetni = $"SEÇİLEN: {esyaAdi}  SAYI: {miktarStr}";
-        }
-
-        infoText.text = detayMetni + "\nİşlemi yap ve cevabı yaz.";
+        // ARTIK KURALI DA YAZDIRIYORUZ:
+        // Örn: SEÇİLEN: Gramofon
+        //      SORU: Miktar Çift olduğu için (Ünlü - Ünsüz) işlemini yap.
+        infoText.text = $"{baslik}\n\n{esyaDetayi}\n\n {soruKurali}";
     }
 
-    // "Kontrol Et" butonuna basınca bu çalışacak
     public void CevabiKontrolEt()
     {
         if (string.IsNullOrEmpty(answerInput.text)) return;
 
-        int oyuncuCevabi = int.Parse(answerInput.text);
+        int oyuncuCevabi;
+        bool isNumeric = int.TryParse(answerInput.text, out oyuncuCevabi);
+
+        if (!isNumeric) return; // Sayı girilmemişse işlem yapma
 
         if (oyuncuCevabi == currentCorrectAnswer)
         {
-            Debug.Log("✅ DOĞRU BİLDİNİZ! +2 ADIM İLERLE");
+            Debug.Log("✅ DOĞRU CEVAP!");
 
-            // ÖDÜL: Piyonu 2 adım ileri at (Birazdan Player koduna bunu ekleyeceğiz)
-            player.BonusMove(2);
+            // 1. Oyuncuyu Ödüllendir (Bonus Hareket)
+            if (GameManager.instance != null && GameManager.instance.player != null)
+            {
+                GameManager.instance.player.BonusMove(2);
+            }
+
+            // 2. GÖREV SİSTEMİNE HABER VER (4. Adımda burayı LevelManager'a bağlayacağız)
+            // Örn: LevelManager.instance.GorevIlerlet(currentQuestionType);
+            Debug.Log($"📜 Görev Tetiklendi: {currentQuestionType} sorusu çözüldü.");
         }
         else
         {
             Debug.Log("❌ YANLIŞ CEVAP!");
 
-            // CEZA: Piyonu 1 adım geri al
-            player.BonusMove(-1);
+            // Ceza: Geri git
+            if (GameManager.instance != null && GameManager.instance.player != null)
+            {
+                GameManager.instance.player.BonusMove(-1);
+            }
         }
 
-        // --- TEMİZLİK ZAMANI ---
-        // 1. Cevap panelini kapat
+        // --- KAPANIŞ ---
         answerPanel.SetActive(false);
-        // 2. Arkadaki soru panelini kapat (QuestionManager'ın paneli)
-        questionPanel.SetActive(false);
+        if (questionPanel != null) questionPanel.SetActive(false);
 
-        GameManager.instance.SwitchTurn();
+        // 'SwitchTurn' kalktı. Oyun akışına devam ediyor.
+        // Eğer zar sistemi varsa burada "Zar Butonunu Aç" diyebiliriz ileride.
     }
 }
