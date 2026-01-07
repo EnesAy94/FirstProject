@@ -62,7 +62,7 @@ public class AnswerManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("❌ YANLIŞ CEVAP! -1 ADIM GERİ");
+            Debug.Log("❌ YANLIŞ CEVAP!");
 
             // CEZA: Piyonu 1 adım geri al
             player.BonusMove(-1);
