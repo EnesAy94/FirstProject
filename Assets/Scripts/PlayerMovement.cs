@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public Route currentRoute;
-    // public QuestionManager soruYoneticisi; // GEREK YOK: GameManager hallediyor
 
     int routePosition = 0;
     public int steps = 0;
@@ -24,32 +23,40 @@ public class PlayerMovement : MonoBehaviour
 
         while (steps > 0)
         {
+            // Bir sonraki kareye geçmek için indeksi artır
             routePosition++;
 
-            // Oyun Bitiş / Tur Başa Dönüş Kontrolü
-            if (routePosition >= currentRoute.childNodes.Count)
-            {
-                routePosition = 0;
-                Debug.Log("🎉 TUR TAMAMLANDI! Başa dönülüyor...");
-                // Buraya ileride Level Bitiş kontrolü eklenebilir
-                
-                // Piyonu fiziksel olarak başa ışınla veya yürüt
-                transform.position = currentRoute.childNodes[0].position;
-            }
+            // --- YENİ DÖNGÜ MANTIĞI (Işınlanmayı Çözen Kısım) ---
+            
+            // Eğer liste sonuna geldiysek (Örn: 40. kareye geldik ama liste 0-39 arası)
+            // Hedefimiz 0. kare (Başlangıç) olmalı.
+            // Ama routePosition'ı hemen 0 yapmıyoruz, önce oraya yürüsün istiyoruz.
+            
+            // Modulo (%) işlemi ile hedef indeksi buluyoruz.
+            // Örn: routePosition 40 ise ve Count 40 ise -> 40 % 40 = 0 olur.
+            int nextNodeIndex = routePosition % currentRoute.childNodes.Count;
 
-            Vector3 nextPos = currentRoute.childNodes[routePosition].position;
+            Vector3 nextPos = currentRoute.childNodes[nextNodeIndex].position;
+            
+            // Oraya kadar YÜRÜ (Işınlanma yok, while döngüsü ile kayarak gidiyor)
             while (MoveToNextNode(nextPos)) { yield return null; }
 
-            yield return new WaitForSeconds(0.1f);
+            // Yürüme bitti, şimdi eğer turu tamamladıysak ana değişkeni sıfırlayalım
+            if (routePosition >= currentRoute.childNodes.Count)
+            {
+                routePosition = 0; 
+                Debug.Log("🔄 Tur tamamlandı, başa dönüldü!");
+            }
+
+            // -----------------------------------------------------
+
+            yield return new WaitForSeconds(0.1f); // Her karede minik bekleme
             steps--;
         }
 
         // --- HAREKET BİTTİ ---
         isMoving = false;
         
-        // YENİ SİSTEM:
-        // Artık burada switch-case ile uğraşmıyoruz.
-        // Topu GameManager'a atıyoruz, o ne yapacağını biliyor.
         CheckCurrentTile(); 
     }
 
@@ -60,20 +67,18 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckCurrentTile()
     {
-        // 1. Durduğumuz kareyi bul
-        if (routePosition < currentRoute.childNodes.Count)
-        {
-            Tile currentTile = currentRoute.childNodes[routePosition].GetComponent<Tile>();
+        // Güvenlik kontrolü: Liste dışına taşma olmasın
+        int safeIndex = routePosition % currentRoute.childNodes.Count;
+        
+        Tile currentTile = currentRoute.childNodes[safeIndex].GetComponent<Tile>();
 
-            if (currentTile != null)
-            {
-                // 2. GameManager'a "Ben buraya indim, gereğini yap" de.
-                GameManager.instance.OnPlayerLanded(currentTile);
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ HATA: Bu karede Tile scripti yok!");
-            }
+        if (currentTile != null)
+        {
+            GameManager.instance.OnPlayerLanded(currentTile);
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ HATA: Bu karede Tile scripti yok!");
         }
     }
 
@@ -85,10 +90,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // İleride görevlerden veya kartlardan gelen bonus hareketler için
     public void BonusMove(int amount)
     {
-        // Şimdilik sadece log, ileride burayı dolduracağız
-        Debug.Log("Piyon " + amount + " kare ileri/geri gidiyor.");
+        // İleride burayı dolduracağız (Geri gitme vs.)
+        Debug.Log("Bonus Hareket: " + amount);
     }
 }

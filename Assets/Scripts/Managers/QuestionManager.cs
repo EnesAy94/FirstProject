@@ -75,15 +75,14 @@ public class QuestionManager : MonoBehaviour
         if (miktar % 2 == 0)
         {
             cevap = unlu - unsuz;
-            kural = "Miktar ÇİFT sayı.\nSORU: (Ünlü Harf Sayısı) - (Ünsüz Harf Sayısı) kaçtır?";
         }
         else
         {
             cevap = unsuz - unlu;
-            kural = "Miktar TEK sayı.\nSORU: (Ünsüz Harf Sayısı) - (Ünlü Harf Sayısı) kaçtır?";
         }
 
-        metin = $"{isim}\n(Miktar: {miktar})";
+        metin = $"{isim} (Miktar: {miktar})";
+        kural = "Sayı Tek ise : (Ünsüz Harf Sayısı) - (Ünlü Harf Sayısı) kaçtır?\nSayı Çift ise : (Ünlü Harf Sayısı) - (Ünsüz Harf Sayısı) kaçtır?";
     }
 
     // --- 2. TEKNOLOJİ (MAVİ) ---
@@ -115,8 +114,8 @@ public class QuestionManager : MonoBehaviour
 
         cevap = rakamToplami - 4;
         
-        metin = $"{isim}\n({adet} Adet x {birimFiyat} TL)";
-        kural = $"Toplam Fiyat: {toplamFiyat} TL ediyor.\nSORU: (Toplam Fiyatın Rakamları Toplamı) - 4";
+        metin = $"{isim} ({adet} Adet x {birimFiyat} TL)";
+        kural = $"Toplam Fiyat: (Adet x birim fiyat) TL ediyor.\nSORU: (Toplam Fiyatın Rakamları Toplamı) - 4";
     }
 
     // --- 4. MOR (FİLM & KİTAP) ---
@@ -154,7 +153,7 @@ public class QuestionManager : MonoBehaviour
         {
             cevap = (-1 * s1) + (-1 * s2);
             metin = $"Plaka Şifresi:\nTersi(+{s1}) + Tersi({s2})";
-            kural = "SORU: Sayıların toplama işlemine göre tersini alıp topla.\n(Örn: 5'in tersi -5 tir)";
+            kural = "SORU: Sayıların toplama işlemine göre tersini alıp topla.";
         }
         else 
         {

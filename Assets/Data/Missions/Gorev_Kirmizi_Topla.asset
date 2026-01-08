@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04943bed99a63af4499141c75dec297a, type: 3}
   m_Name: Gorev_Kirmizi_Topla
   m_EditorClassIdentifier: Assembly-CSharp::MissionData
-  description: "K\u0131rm\u0131z\u0131 Alandan 2 Do\u011Fru yap"
+  description: "Bir soruyu do\u011Fru \xE7\xF6z"
   isMainMission: 1
-  type: 0
-  targetAmount: 2
+  type: 5
+  targetAmount: 1
   icon: {fileID: 0}
+  currentProgress: 0

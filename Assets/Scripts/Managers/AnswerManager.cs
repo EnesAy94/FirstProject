@@ -62,9 +62,11 @@ public class AnswerManager : MonoBehaviour
                 GameManager.instance.player.BonusMove(2);
             }
 
-            // 2. GÖREV SİSTEMİNE HABER VER (4. Adımda burayı LevelManager'a bağlayacağız)
-            // Örn: LevelManager.instance.GorevIlerlet(currentQuestionType);
-            Debug.Log($"📜 Görev Tetiklendi: {currentQuestionType} sorusu çözüldü.");
+            // 2. GÖREV SİSTEMİNE HABER VER
+            if (LevelManager.instance != null)
+            {
+                LevelManager.instance.CheckMissionProgress(currentQuestionType);
+            }
         }
         else
         {

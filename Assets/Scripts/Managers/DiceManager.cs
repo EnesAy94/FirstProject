@@ -13,6 +13,7 @@ public class DiceManager : MonoBehaviour
     // Butona basınca bu çalışacak
     public void RollDice()
     {
+        if (LevelManager.instance == null || LevelManager.instance.isLevelFinished) return;
         if (isRolling) return; // Zaten zar dönüyorsa basamasın
 
         // --- DÜZELTME BURADA ---

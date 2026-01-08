@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e2a12d0c8c45bf4498ddb4bf085b996, type: 3}
   m_Name: Story1
   m_EditorClassIdentifier: Assembly-CSharp::StoryData
-  storyTitle: 
+  storyTitle: "H\u0131rs\u0131z\u0131 Bul"
   storyDescription: 
   chapters:
   - {fileID: 11400000, guid: a5211c89fbc05e24f9ec767b79b5663a, type: 2}
+  - {fileID: 11400000, guid: 4bea84389a324fc4d9ed059b8ba55af3, type: 2}

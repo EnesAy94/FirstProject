@@ -24,4 +24,6 @@ public class MissionData : ScriptableObject
     
     [Header("Görsel")]
     public Sprite icon; // Görev listesinde gözükecek küçük ikon
+
+    [HideInInspector] public int currentProgress = 0;
 }

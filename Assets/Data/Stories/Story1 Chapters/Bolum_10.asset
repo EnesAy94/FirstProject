@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4e02189f9e70bf4181d3977935577cc, type: 3}
-  m_Name: Bolum_1
+  m_Name: Bolum_10
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
-  chapterID: 0
-  chapterName: "H\u0131rs\u0131z"
-  introText: "H\u0131rs\u0131z\u0131 bul"
+  chapterID: 10
+  chapterName: "H\u0131rs\u0131z 10"
+  introText: 
   missions:
-  - {fileID: 11400000, guid: 2e501f10a4d1da1449f16aa851c01868, type: 2}
-  - {fileID: 11400000, guid: 69c9f43319a21e44e911a054071917ff, type: 2}
+  - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
