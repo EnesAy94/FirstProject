@@ -17,3 +17,5 @@ MonoBehaviour:
   introText: 
   missions:
   - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
+  startingScore: 100
+  penaltyPerWrongAnswer: 20

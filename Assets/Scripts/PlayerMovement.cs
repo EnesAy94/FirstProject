@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     public bool isMoving = false;
     bool gameFinished = false;
 
+    // YENİ: Kameranın o an hangi kenarda olduğunu bilmesi için hafıza
+    private int currentSideIndex = -1; 
+
     void Update()
     {
         if (gameFinished) return;
@@ -23,40 +26,53 @@ public class PlayerMovement : MonoBehaviour
 
         while (steps > 0)
         {
-            // Bir sonraki kareye geçmek için indeksi artır
             routePosition++;
-
-            // --- YENİ DÖNGÜ MANTIĞI (Işınlanmayı Çözen Kısım) ---
             
-            // Eğer liste sonuna geldiysek (Örn: 40. kareye geldik ama liste 0-39 arası)
-            // Hedefimiz 0. kare (Başlangıç) olmalı.
-            // Ama routePosition'ı hemen 0 yapmıyoruz, önce oraya yürüsün istiyoruz.
-            
-            // Modulo (%) işlemi ile hedef indeksi buluyoruz.
-            // Örn: routePosition 40 ise ve Count 40 ise -> 40 % 40 = 0 olur.
-            int nextNodeIndex = routePosition % currentRoute.childNodes.Count;
-
+            int totalTiles = currentRoute.childNodes.Count;
+            int nextNodeIndex = routePosition % totalTiles;
             Vector3 nextPos = currentRoute.childNodes[nextNodeIndex].position;
+
+            // --- TİTREMEYİ ENGELLEYEN MANTIK ---
             
-            // Oraya kadar YÜRÜ (Işınlanma yok, while döngüsü ile kayarak gidiyor)
+            // 1. Kenar uzunluğunu bul (Toplam / 4)
+            int sideLength = totalTiles / 4; 
+
+            // 2. Gideceğimiz karenin hangi kenarda olduğunu hesapla
+            // (Mathf.Min kullanarak 4. kenar hatasını önlüyoruz, en fazla 3 olsun)
+            int newSideIndex = Mathf.Min(nextNodeIndex / sideLength, 3);
+
+            // 3. SADECE KENAR DEĞİŞTİYSE KAMERAYI DÖNDÜR
+            // (Eğer zaten 0. kenardaysam ve yine 0. kenardaki bir kareye gidiyorsam kameraya dokunma)
+            if (newSideIndex != currentSideIndex)
+            {
+                currentSideIndex = newSideIndex; // Yeni kenarı kaydet
+                
+                float targetAngle = currentSideIndex * 90f; // 0, 90, 180, 270
+                
+                if (CameraManager.instance != null)
+                {
+                    CameraManager.instance.SetRotation(targetAngle);
+                }
+            }
+            // ------------------------------------
+
             while (MoveToNextNode(nextPos)) { yield return null; }
 
-            // Yürüme bitti, şimdi eğer turu tamamladıysak ana değişkeni sıfırlayalım
-            if (routePosition >= currentRoute.childNodes.Count)
+            // Turu tamamlama kontrolü
+            if (routePosition >= totalTiles)
             {
                 routePosition = 0; 
                 Debug.Log("🔄 Tur tamamlandı, başa dönüldü!");
+                
+                // Tur bitince side index'i sıfırla veya güncelle ki karışmasın
+                // (Gerekirse buraya özel bir kamera reset kodu eklenebilir ama şu anki mantık yeterli)
             }
 
-            // -----------------------------------------------------
-
-            yield return new WaitForSeconds(0.1f); // Her karede minik bekleme
+            yield return new WaitForSeconds(0.1f);
             steps--;
         }
 
-        // --- HAREKET BİTTİ ---
         isMoving = false;
-        
         CheckCurrentTile(); 
     }
 
@@ -67,9 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckCurrentTile()
     {
-        // Güvenlik kontrolü: Liste dışına taşma olmasın
         int safeIndex = routePosition % currentRoute.childNodes.Count;
-        
         Tile currentTile = currentRoute.childNodes[safeIndex].GetComponent<Tile>();
 
         if (currentTile != null)
@@ -92,7 +106,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void BonusMove(int amount)
     {
-        // İleride burayı dolduracağız (Geri gitme vs.)
         Debug.Log("Bonus Hareket: " + amount);
     }
 }

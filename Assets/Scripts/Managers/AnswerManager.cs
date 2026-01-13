@@ -68,22 +68,25 @@ public class AnswerManager : MonoBehaviour
                 LevelManager.instance.CheckMissionProgress(currentQuestionType);
             }
         }
-        else
+        else // YANLIŞ CEVAPSA
         {
             Debug.Log("❌ YANLIŞ CEVAP!");
 
-            // Ceza: Geri git
+            // 1. Piyonu Geri Al (Fiziksel Ceza)
             if (GameManager.instance != null && GameManager.instance.player != null)
             {
                 GameManager.instance.player.BonusMove(-1);
+            }
+
+            // 2. PUANI DÜŞÜR (Yeni Eklenen)
+            if (LevelManager.instance != null)
+            {
+                LevelManager.instance.DecreaseScore();
             }
         }
 
         // --- KAPANIŞ ---
         answerPanel.SetActive(false);
         if (questionPanel != null) questionPanel.SetActive(false);
-
-        // 'SwitchTurn' kalktı. Oyun akışına devam ediyor.
-        // Eğer zar sistemi varsa burada "Zar Butonunu Aç" diyebiliriz ileride.
     }
 }
