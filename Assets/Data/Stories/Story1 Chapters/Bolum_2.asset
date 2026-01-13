@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterID: 2
   chapterName: "H\u0131rs\u0131z 2"
+  nextChapter: {fileID: 11400000, guid: 230fe49fadb2171449f7456949be32c1, type: 2}
   introText: 
   missions:
   - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
+  - {fileID: 11400000, guid: 69c9f43319a21e44e911a054071917ff, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 20

@@ -1,96 +1,89 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement; // Sahne değişimi için şart
-using TMPro; // Puan yazısı (Text) için şart
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
     [Header("Mevcut Durum")]
-    public ChapterData currentChapter;          // Şu an oynanan bölüm verisi
-    public List<MissionData> activeMissions;    // Aktif görev listesi
-    public bool isLevelFinished = false;        // Oyun bitti mi? (Hareket engellemek için)
+    public ChapterData currentChapter;
+    public List<MissionData> activeMissions;
+    
+    public bool isLevelFinished = false; 
+
+    private bool hasCelebratedMainMissions = false; 
+    private bool areMainMissionsDoneInitially = false; 
 
     [Header("Puan Sistemi")]
-    public int currentScore;                    // Anlık puan
-    public TextMeshProUGUI scoreText;           // Ekrandaki puan yazısı
+    public int currentScore;
+    public TextMeshProUGUI scoreText;
 
-    [Header("Paneller")]
-    public GameObject levelCompletePanel;       // KAZANDIN Paneli
-    public GameObject levelFailedPanel;         // KAYBETTİN Paneli
-    public string mainMenuSceneName = "MainMenu"; // Ana menü sahnesinin adı
+    [Header("Paneller & Butonlar")]
+    public GameObject levelCompletePanel;       
+    public GameObject levelFailedPanel;         
+    
+    public GameObject nextLevelButton;  
+    public GameObject keepPlayingButton; 
 
-    // Görevler güncellenince UI'ya haber veren sistem
+    public string mainMenuSceneName = "MainMenu";
     public System.Action OnMissionsUpdated;
 
-    void Awake()
-    {
-        instance = this;
-    }
+    void Awake() { instance = this; }
 
     void Start()
     {
-        // Başlangıçta panelleri gizle
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
         if (levelFailedPanel != null) levelFailedPanel.SetActive(false);
 
-        // Menüden seçilen bölümü al
-        if (GameSession.activeChapter != null)
-        {
-            currentChapter = GameSession.activeChapter;
-        }
-        
-        // Bölümü başlat
-        if (currentChapter != null)
-        {
-            StartChapter();
-        }
+        if (GameSession.activeChapter != null) currentChapter = GameSession.activeChapter;
+        if (currentChapter != null) StartChapter();
     }
 
     void StartChapter()
     {
         isLevelFinished = false;
+        hasCelebratedMainMissions = false; 
 
-        // 1. Puanı Başlat (ChapterData'dan gelen değere göre)
         currentScore = currentChapter.startingScore;
         UpdateScoreUI();
 
-        // 2. Görevleri Kopyala (Orijinal dosya bozulmasın diye kopya oluşturuyoruz)
         activeMissions = new List<MissionData>();
-        foreach (MissionData mission in currentChapter.missions)
+
+        string mainDoneKey = $"Chapter_{currentChapter.chapterID}_MainDone";
+        areMainMissionsDoneInitially = PlayerPrefs.GetInt(mainDoneKey, 0) == 1;
+
+        for (int i = 0; i < currentChapter.missions.Count; i++)
         {
-            MissionData missionCopy = Instantiate(mission);
-            missionCopy.currentProgress = 0;
+            MissionData originalMission = currentChapter.missions[i];
+            MissionData missionCopy = Instantiate(originalMission);
+
+            if (missionCopy.isMainMission)
+            {
+                missionCopy.currentProgress = 0; // Ana görevler hep sıfırlanır
+            }
+            else
+            {
+                // Yan görevler hafızadan gelir
+                string missionKey = $"Chapter_{currentChapter.chapterID}_Mission_{i}_Progress";
+                missionCopy.currentProgress = PlayerPrefs.GetInt(missionKey, 0);
+            }
+
             activeMissions.Add(missionCopy);
         }
 
-        // UI'yı güncelle (Görev Listesi)
         if(OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
     }
 
-    // --- PUAN SİSTEMİ ---
-    
-    // Yanlış cevap verildiğinde çağrılır
     public void DecreaseScore()
     {
         if (isLevelFinished) return;
-
-        // Bölüm ayarlarındaki ceza puanını düş
         int penalty = currentChapter.penaltyPerWrongAnswer;
         currentScore -= penalty;
-
-        // Puan eksiye düşmesin
         if (currentScore < 0) currentScore = 0;
-
         UpdateScoreUI();
-        Debug.Log($"⚠️ Yanlış Cevap! Puan düştü. Kalan: {currentScore}");
-
-        // KAYBETME KONTROLÜ (0 puan)
-        if (currentScore <= 0)
-        {
-            LevelFailed();
-        }
+        if (currentScore <= 0) LevelFailed();
     }
 
     void UpdateScoreUI()
@@ -98,20 +91,14 @@ public class LevelManager : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = "PUAN: " + currentScore;
-            
-            // Puan azaldıysa (30 altı) kırmızı yap, yoksa beyaz
-            if (currentScore <= 30) scoreText.color = Color.red;
-            else scoreText.color = Color.black;
+            scoreText.color = (currentScore <= 30) ? Color.red : Color.white;
         }
     }
-
-    // --- GÖREV SİSTEMİ ---
 
     public void CheckMissionProgress(TileType type)
     {
         if (isLevelFinished) return;
 
-        // Hangi tür soru çözüldü?
         MissionType targetType = MissionType.SolveAny;
         switch (type)
         {
@@ -123,104 +110,158 @@ public class LevelManager : MonoBehaviour
         }
 
         bool gorevGuncellendi = false;
+        bool yanGorevBitti = false;
 
-        // Görev listesini tara
         foreach (MissionData mission in activeMissions)
         {
-            // Zaten bitmişse atla
             if (mission.currentProgress >= mission.targetAmount) continue;
 
-            // Tür eşleşiyorsa veya görev "Herhangi Bir Soru" ise
             if (mission.type == targetType || mission.type == MissionType.SolveAny)
             {
                 mission.currentProgress++; 
                 gorevGuncellendi = true;
-                
-                if (mission.currentProgress >= mission.targetAmount)
+
+                if (!mission.isMainMission && mission.currentProgress >= mission.targetAmount)
                 {
-                    Debug.Log($"✅ GÖREV TAMAMLANDI: {mission.description}");
-                    // Burada 'Görev Tamamlandı' sesi çalabilirsin
+                    yanGorevBitti = true;
                 }
             }
         }
 
-        // Eğer ilerleme olduysa UI'yı güncelle
-        if (gorevGuncellendi && OnMissionsUpdated != null)
+        if (gorevGuncellendi)
         {
-            OnMissionsUpdated.Invoke();
+            if(OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
+            SaveAllProgress();
+
+            // Eğer "Ana Görevler" daha önceden (veya önceki turda) bitmişse
+            // VE şimdi "Yan Görev" de bitmişse -> O zaman kontrol et.
+            // (Eğer ana görev şu an bittiyse aşağıdaki CheckMainMissionsCompletion zaten paneli açacak)
+            if (hasCelebratedMainMissions && yanGorevBitti)
+            {
+                // Eğer her şey bittiyse paneli aç
+                if (AreAllMissionsCompleted())
+                {
+                    Debug.Log("🌟 TEBRİKLER! BÖLÜMDEKİ HER ŞEY BİTTİ.");
+                    LevelCompleted(); 
+                }
+            }
         }
 
-        // Bölüm bitti mi diye kontrol et
-        CheckLevelCompletion();
+        // Ana görevler bitti mi kontrolü
+        CheckMainMissionsCompletion();
     }
 
-    void CheckLevelCompletion()
+    void CheckMainMissionsCompletion()
     {
-        if (isLevelFinished) return;
+        if (hasCelebratedMainMissions) return; 
 
-        bool allMainMissionsDone = true;
-
+        bool allMainDone = true;
         foreach (MissionData mission in activeMissions)
         {
-            // Sadece 'Ana Görevler' bitince bölüm biter
             if (mission.isMainMission && mission.currentProgress < mission.targetAmount)
             {
-                allMainMissionsDone = false;
+                allMainDone = false;
                 break;
             }
         }
 
-        if (allMainMissionsDone)
+        if (allMainDone)
         {
-            Debug.Log("🏆 BÖLÜM TAMAMLANDI!");
-            LevelCompleted();
+            Debug.Log("🏆 ANA GÖREVLER BİTTİ!");
+            hasCelebratedMainMissions = true; 
+            LevelCompleted(); // Parametre göndermiyoruz artık!
         }
     }
 
-    // --- OYUN SONU DURUMLARI ---
-
-    // KAZANMA
+    // ARTIK PARAMETRE YOK: Fonksiyon kendisi hesaplıyor
     void LevelCompleted()
     {
-        isLevelFinished = true; // Oyunu durdur
-        
-        // Kayıt İşlemi (Bir sonraki bölümü açmak için)
+        // 1. Önce kayıt işlemlerini yap
+        PlayerPrefs.SetInt($"Chapter_{currentChapter.chapterID}_MainDone", 1);
         int savedLevel = PlayerPrefs.GetInt("CompletedLevelIndex", 0);
-        
-        // Eğer şu anki bölüm ID'si kayıtlı olandan büyük veya eşitse kaydet
-        if (currentChapter != null && currentChapter.chapterID >= savedLevel)
+        if (currentChapter.chapterID >= savedLevel)
         {
             PlayerPrefs.SetInt("CompletedLevelIndex", currentChapter.chapterID); 
-            PlayerPrefs.Save();
         }
 
-        // Kazanma Panelini Aç
-        if (levelCompletePanel != null) levelCompletePanel.SetActive(true);
+        string scoreKey = $"HighScore_{currentChapter.chapterID}";
+        if (currentScore > PlayerPrefs.GetInt(scoreKey, 0))
+        {
+            PlayerPrefs.SetInt(scoreKey, currentScore);
+        }
+
+        SaveAllProgress();
+
+        // 2. Paneli Aç
+        if (levelCompletePanel != null)
+        {
+            levelCompletePanel.SetActive(true);
+
+            // 3. BUTON AYARLARI
+            if (nextLevelButton != null)
+            {
+                nextLevelButton.SetActive(currentChapter.nextChapter != null);
+            }
+
+            // 🔥 KRİTİK DÜZELTME BURASI 🔥
+            // Dışarıdan gelen veriye güvenmek yerine, şu anki durumu kendimiz hesaplıyoruz.
+            // "Şu an gerçekten her şey (ana+yan) bitti mi?"
+            bool herSeyBittiMi = AreAllMissionsCompleted();
+
+            // Eğer her şey bittiyse (TRUE) -> Buton GİZLENİR (Active: FALSE)
+            // Eğer bitmeyen varsa (FALSE) -> Buton GÖZÜKÜR (Active: TRUE)
+            if (keepPlayingButton != null)
+            {
+                keepPlayingButton.SetActive(!herSeyBittiMi);
+            }
+        }
     }
 
-    // KAYBETME
+    // Yardımcı: Her şey (Yan görevler dahil) bitti mi?
+    bool AreAllMissionsCompleted()
+    {
+        foreach (MissionData mission in activeMissions)
+        {
+            // Eğer tek bir görev bile hedefe ulaşmadıysa -> FALSE
+            if (mission.currentProgress < mission.targetAmount)
+            {
+                return false; 
+            }
+        }
+        return true; // Hepsi tamsa -> TRUE
+    }
+
     void LevelFailed()
     {
-        isLevelFinished = true; // Oyunu durdur
-        Debug.Log("💀 OYUN BAŞARISIZ! Puan bitti.");
+        isLevelFinished = true;
+        if (levelFailedPanel != null) levelFailedPanel.SetActive(true);
+    }
 
-        // Kaybetme Panelini Aç
-        if (levelFailedPanel != null)
+    void SaveAllProgress()
+    {
+        for (int i = 0; i < activeMissions.Count; i++)
         {
-            levelFailedPanel.SetActive(true);
+            string missionKey = $"Chapter_{currentChapter.chapterID}_Mission_{i}_Progress";
+            PlayerPrefs.SetInt(missionKey, activeMissions[i].currentProgress);
+        }
+        PlayerPrefs.Save();
+    }
+
+    public void OnClick_NextLevel()
+    {
+        if (currentChapter.nextChapter != null)
+        {
+            GameSession.activeChapter = currentChapter.nextChapter;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
-    // --- BUTON FONKSİYONLARI ---
-
-    public void ReturnToMainMenu()
+    public void OnClick_KeepPlaying()
     {
-        SceneManager.LoadScene(mainMenuSceneName);
+        levelCompletePanel.SetActive(false);
     }
 
-    public void RetryLevel()
-    {
-        // Şu anki sahneyi baştan yükle
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    public void OnClick_ExitGame() { ReturnToMainMenu(); }
+    public void ReturnToMainMenu() { SceneManager.LoadScene(mainMenuSceneName); }
+    public void RetryLevel() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
 }
