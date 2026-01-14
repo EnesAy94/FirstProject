@@ -5,12 +5,15 @@ using System.Collections.Generic;
 
 public enum TileType 
 { 
-    Empty,    // Boş
-    Red,      // Hurdacı
-    Blue,     // Teknoloji
-    Yellow,   // Kuyumcu
-    Purple,   // Film/Kitap
-    Green     // Whatsapp
+    Empty, 
+    Red,      
+    Blue,   
+    Yellow,   
+    Purple,  
+    Green,     
+    Hard,
+    Start,
+    Penalty
 }
 
 public class Tile : MonoBehaviour

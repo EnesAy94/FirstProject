@@ -3,12 +3,13 @@ using UnityEngine;
 // Görev Tipleri: Hangi tür eylem gerekiyor?
 public enum MissionType
 {
-    SolveRed,    // Hurdacı (Kırmızı) sorusu çöz
-    SolveBlue,   // Teknoloji (Mavi) sorusu çöz
-    SolveYellow, // Kuyumcu (Sarı) sorusu çöz
-    SolvePurple, // Kitap/Film (Mor) sorusu çöz
-    SolveGreen,  // Mesaj (Yeşil) sorusu çöz
-    SolveAny     // Herhangi bir renk fark etmez
+    SolveRed,
+    SolveBlue,
+    SolveYellow,
+    SolvePurple,
+    SolveGreen,
+    SolveAny,  
+    SolveHard
 }
 
 [CreateAssetMenu(fileName = "NewMission", menuName = "StorySystem/Mission")]

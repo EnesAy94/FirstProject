@@ -19,5 +19,6 @@ MonoBehaviour:
   missions:
   - {fileID: 11400000, guid: 2e501f10a4d1da1449f16aa851c01868, type: 2}
   - {fileID: 11400000, guid: 69c9f43319a21e44e911a054071917ff, type: 2}
+  - {fileID: 11400000, guid: 262542de773685242b7553a977efbd31, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 25
