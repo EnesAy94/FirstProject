@@ -8,6 +8,9 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    [Header("Başarım Ayarları")]
+    public string penaltyExitAchievementID;
+
     [Header("Mevcut Durum")]
     public ChapterData currentChapter;
     public List<MissionData> activeMissions;
@@ -175,6 +178,15 @@ public class LevelManager : MonoBehaviour
                 if (!mission.isMainMission && mission.currentProgress >= mission.targetAmount)
                 {
                     yanGorevBitti = true;
+
+                    if (!string.IsNullOrEmpty(mission.unlockAchievementKey))
+                    {
+                        // Yazılıysa (Örn: "Mission_Hard_Done"), git bunu kaydet!
+                        PlayerPrefs.SetInt(mission.unlockAchievementKey, 1);
+                        PlayerPrefs.Save();
+
+                        Debug.Log($"🔓 Kilit Açıldı: {mission.unlockAchievementKey}");
+                    }
                 }
             }
         }
@@ -306,6 +318,11 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("🔓 TEBRİKLER! Ceza Köşesinden Çıktın.");
 
+        if (!string.IsNullOrEmpty(penaltyExitAchievementID))
+        {
+            AchievementManager.instance.AddProgress(penaltyExitAchievementID, 1);
+        }
+
         isPenaltyActive = false;
         penaltyCorrectCount = 0;
 
@@ -389,16 +406,19 @@ public class LevelManager : MonoBehaviour
     public void OnClick_KeepPlaying()
     {
         levelCompletePanel.SetActive(false);
-        // isCompletionPending zaten false olduğu için oyun akar
+        SetDiceInteractable(true);
+        isCompletionPending = false;
     }
 
     public void OnClick_ExitGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
     public void ReturnToMainMenu()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
 

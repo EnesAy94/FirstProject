@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject rootPanel;         // En baştaki ana menü (Story, Multi, Settings)
     public GameObject storySelectPanel;  // Hikaye seçme ekranı
     public GameObject chapterSelectPanel;// Bölüm seçme ekranı
+    public GameObject profilePanel;
 
     [Header("Container & Prefabs")]
     public Transform storyListContainer;   // Hikaye butonlarının dizileceği yer
@@ -54,7 +55,24 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_Profile()
     {
-        Debug.Log("Profil sayfası henüz yapım aşamasında...");
+        // 1. Ana menüyü gizle (Temiz görüntü için)
+        if (rootPanel != null) rootPanel.SetActive(false);
+
+        // 2. Profil Panelini Aç
+        if (profilePanel != null)
+        {
+            profilePanel.SetActive(true);
+
+            // NOT: ProfileUI scriptindeki 'OnEnable' fonksiyonu sayesinde,
+            // panel açılır açılmaz başarımlar otomatik listelenecek.
+            // Ekstra kod yazmamıza gerek yok! Harika değil mi? :)
+        }
+    }
+
+    public void OnClick_CloseProfile()
+    {
+        if (profilePanel != null) profilePanel.SetActive(false);
+        if (rootPanel != null) rootPanel.SetActive(true);
     }
 
     public void OnClick_Settings()

@@ -1,10 +1,22 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class AnswerManager : MonoBehaviour
 {
     public static AnswerManager instance;
+
+    [System.Serializable]
+    public struct AchievementLink
+    {
+        public TileType type;      // Hangi Soru Türü? (Örn: Blue)
+        public string achievementID; // Hangi Başarım ID'si? (Örn: "blue_master")
+    }
+
+    [Header("Başarım Ayarları")]
+    // Editörden dolduracağımız liste bu:
+    public List<AchievementLink> achievementLinks;
 
     [Header("UI Elemanları")]
     public GameObject answerPanel;
@@ -71,18 +83,31 @@ public class AnswerManager : MonoBehaviour
     // --- NORMAL OYUN SONUCU ---
     void HandleNormalFeedback(bool isCorrect)
     {
-        // 1. Puan/Hareket İşlemleri
         if (isCorrect)
         {
-            if (GameManager.instance != null) GameManager.instance.player.BonusMove(0); // Sadece tetikleme (Boş)
-            if (LevelManager.instance != null) LevelManager.instance.CheckMissionProgress(currentQuestionType);
+            // 1. ÖNCE GÖREVİ İLERLET VE KİLİDİ AÇTIR! (Yer değiştirdi)
+            if (LevelManager.instance != null)
+            {
+                LevelManager.instance.CheckMissionProgress(currentQuestionType);
+            }
+
+            // 2. SONRA BAŞARIMI KONTROL ET (Artık kilit açık olduğu için işleyecek)
+            foreach (AchievementLink link in achievementLinks)
+            {
+                if (link.type == currentQuestionType)
+                {
+                    AchievementManager.instance.AddProgress(link.achievementID, 1);
+                    break;
+                }
+            }
+
+            if (GameManager.instance != null) GameManager.instance.player.BonusMove(0);
         }
         else
         {
             if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
         }
 
-        // 2. Feedback Panelini Göster
         ShowFeedbackPanel(isCorrect, false);
     }
 

@@ -5691,6 +5691,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2753ff4fb9c0a549944ca5b830446b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnswerManager
+  achievementLinks:
+  - type: 6
+    achievementID: hard_master
+  - type: 2
+    achievementID: blue_master
   answerPanel: {fileID: 463850257}
   infoText: {fileID: 1245274405}
   answerInput: {fileID: 1844875644}
@@ -5745,6 +5750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d8de0a790cbb8642b16dee892368bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  penaltyExitAchievementID: penalty_escape
   currentChapter: {fileID: 0}
   activeMissions: []
   isLevelFinished: 0

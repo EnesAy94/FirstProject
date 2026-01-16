@@ -17,4 +17,5 @@ MonoBehaviour:
   type: 6
   targetAmount: 1
   icon: {fileID: 0}
+  unlockAchievementKey: Mission_Hard_Done
   currentProgress: 0
