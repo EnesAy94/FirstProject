@@ -1,63 +1,59 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager instance;
-    public List<AchievementData> allAchievements; // Tüm ScriptableObject'leri buraya sürükle
+    public List<AchievementData> allAchievements; 
 
     void Awake()
     {
-        // Eğer zaten bir yönetici varsa (Önceki sahneden gelen)
         if (instance != null && instance != this)
         {
-            // Bu yeni geleni hemen yok et! Kopyaya izin yok.
             Destroy(gameObject);
             return;
         }
 
-        // Yoksa, patron benim
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
-    // --- İLERLEME KAYDETME ---
-    // Bu fonksiyonu oyunun içinden çağıracağız.
-    // Örn: AddProgress("hard_master", 1);
+    // --- İLERLEME KAYDETME (GÜNCELLENDİ) ---
     public void AddProgress(string achievementID, int amount)
     {
         AchievementData data = allAchievements.Find(x => x.id == achievementID);
         if (data == null) return;
 
-        // 1. KONTROL: Eğer görev şartı varsa ve görev yapılmadıysa sayma!
+        // 1. KONTROL: Görev yapıldı mı? (SaveManager'a soruyoruz)
         if (data.requiresMission)
         {
-            // Görev bitince PlayerPrefs'e "MissionX_Done" gibi bir şey kaydediyoruz ya, onu kontrol ediyoruz.
-            // Eğer görev bitmediyse (0 ise), işlem yapma.
-            if (PlayerPrefs.GetInt(data.requiredMissionKey, 0) == 0)
+            // ESKİSİ: if (PlayerPrefs.GetInt(data.requiredMissionKey, 0) == 0)
+            // YENİSİ:
+            if (!SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
             {
                 Debug.Log($"[Achievement] {data.title} için önce ilgili görev yapılmalı!");
                 return;
             }
         }
 
-        // 2. İLERLEMEYİ ARTIR
-        string currentKey = $"Ach_{achievementID}_Count";
-        int currentCount = PlayerPrefs.GetInt(currentKey, 0);
-        currentCount += amount;
-        PlayerPrefs.SetInt(currentKey, currentCount);
-        PlayerPrefs.Save();
+        // 2. MEVCUT İLERLEMEYİ AL (SaveManager'dan)
+        // ESKİSİ: int currentCount = PlayerPrefs.GetInt(currentKey, 0);
+        // YENİSİ:
+        int currentCount = SaveManager.instance.GetAchievementProgress(achievementID);
 
-        // 3. SEVİYE KONTROLÜ (Level Up var mı?)
+        // 3. ARTIR VE KAYDET (SaveManager'a)
+        currentCount += amount;
+        
+        // ESKİSİ: PlayerPrefs.SetInt... PlayerPrefs.Save...
+        // YENİSİ:
+        SaveManager.instance.SetAchievementProgress(achievementID, currentCount);
+
+        // 4. SEVİYE KONTROLÜ
         CheckUnlockStatus(data, currentCount);
     }
 
-    // Sadece kontrol eder, UI güncellemesi için.
     public void CheckUnlockStatus(AchievementData data, int currentCount)
     {
-        // Şimdilik sadece log atalım, UI kısmında bunu görselleştireceğiz.
-        // Hangi seviyede olduğunu bulmak için:
         int currentTierIndex = -1;
         for (int i = 0; i < data.tiers.Count; i++)
         {
@@ -69,17 +65,21 @@ public class AchievementManager : MonoBehaviour
 
         if (currentTierIndex >= 0)
         {
-            Debug.Log($"[Achievement] {data.title} şu an {data.tiers[currentTierIndex].tierName} seviyesinde! ({currentCount})");
+            // İstersen burada UI bildirimi yapabilirsin
+            // Debug.Log($"[Achievement] {data.title} seviye atladı!");
         }
     }
 
-    // UI'ın kullanacağı yardımcı fonksiyon: Şu anki ilerleme ve tier bilgisini getir
+    // --- DURUM SORGULAMA (GÜNCELLENDİ) ---
     public (int currentCount, int currentTierIndex) GetAchievementStatus(string id)
     {
         AchievementData data = allAchievements.Find(x => x.id == id);
         if (data == null) return (0, -1);
 
-        int count = PlayerPrefs.GetInt($"Ach_{data.id}_Count", 0);
+        // 1. İLERLEMEYİ ÇEK (SaveManager'dan)
+        // ESKİSİ: int count = PlayerPrefs.GetInt($"Ach_{data.id}_Count", 0);
+        // YENİSİ:
+        int count = SaveManager.instance.GetAchievementProgress(data.id);
 
         int tierIndex = -1;
         for (int i = 0; i < data.tiers.Count; i++)
@@ -87,13 +87,14 @@ public class AchievementManager : MonoBehaviour
             if (count >= data.tiers[i].targetCount) tierIndex = i;
         }
 
-        // Eğer görev şartı varsa ve görev yapılmamışsa, kullanıcı 0 ilerlemede gözüksün
-        if (data.requiresMission && PlayerPrefs.GetInt(data.requiredMissionKey, 0) == 0)
+        // 2. GÖREV KİLİDİ KONTROLÜ (SaveManager'dan)
+        // ESKİSİ: if (data.requiresMission && PlayerPrefs.GetInt(...) == 0)
+        // YENİSİ:
+        if (data.requiresMission && !SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
         {
-            return (0, -1); // -1 demek "Kilitli/Sahip Değil" demek
+            return (0, -1); 
         }
 
-        // Eğer görev gerektirmiyorsa (Ceza gibi) ama henüz ilk hedefi (Örn: 1) tutturamadıysa yine kilitli
         if (!data.requiresMission && tierIndex == -1)
         {
             return (count, -1);

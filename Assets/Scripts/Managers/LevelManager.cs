@@ -182,9 +182,7 @@ public class LevelManager : MonoBehaviour
                     if (!string.IsNullOrEmpty(mission.unlockAchievementKey))
                     {
                         // Yazılıysa (Örn: "Mission_Hard_Done"), git bunu kaydet!
-                        PlayerPrefs.SetInt(mission.unlockAchievementKey, 1);
-                        PlayerPrefs.Save();
-
+                        SaveManager.instance.CompleteMission(mission.unlockAchievementKey);
                         Debug.Log($"🔓 Kilit Açıldı: {mission.unlockAchievementKey}");
                     }
                 }
