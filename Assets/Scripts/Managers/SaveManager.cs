@@ -130,4 +130,43 @@ public class SaveManager : MonoBehaviour
         // Eğer data null değilse amount'u dön, yoksa 0 dön
         return (data.id != null) ? data.amount : 0;
     }
+
+    // Soru çözüldüğünde bu fonksiyonu çağıracağız
+    // GÜNCELLENMİŞ VERSİYON
+    public void RegisterAnswer(bool isCorrect, bool isHardQuestion, bool isPenaltyQuestion)
+    {
+        // 1. STREAK (SERİ) HESABI (Aynı kalıyor)
+        if (isCorrect)
+        {
+            activeSave.currentStreak++;
+            if (activeSave.currentStreak > activeSave.maxStreak)
+                activeSave.maxStreak = activeSave.currentStreak;
+        }
+        else
+        {
+            activeSave.currentStreak = 0;
+        }
+
+        // 2. KATEGORİYE GÖRE KAYIT (Burası Değişti)
+        if (isPenaltyQuestion)
+        {
+            // Eğer Ceza alanındaysak buraya yaz
+            if (isCorrect) activeSave.penaltyCorrectCount++;
+            else activeSave.penaltyWrongCount++;
+        }
+        else if (isHardQuestion)
+        {
+            // Zor soruysa buraya
+            if (isCorrect) activeSave.hardCorrectCount++;
+            else activeSave.hardWrongCount++;
+        }
+        else
+        {
+            // Normal soruysa buraya
+            if (isCorrect) activeSave.normalCorrectCount++;
+            else activeSave.normalWrongCount++;
+        }
+
+        SaveGame();
+    }
 }

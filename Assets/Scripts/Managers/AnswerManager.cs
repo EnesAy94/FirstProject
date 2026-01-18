@@ -108,6 +108,15 @@ public class AnswerManager : MonoBehaviour
             if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
         }
 
+        // İSTATİSTİK KAYDI:
+        bool isHard = (currentQuestionType == TileType.Hard);
+        bool isPenalty = false;
+        if (LevelManager.instance != null)
+        {
+            isPenalty = LevelManager.instance.isPenaltyActive;
+        }
+        SaveManager.instance.RegisterAnswer(isCorrect, isHard, isPenalty);
+
         ShowFeedbackPanel(isCorrect, false);
     }
 
@@ -115,6 +124,7 @@ public class AnswerManager : MonoBehaviour
     void HandlePenaltyFeedback(bool isCorrect)
     {
         LevelManager.instance.CheckPenaltyProgress(isCorrect);
+        SaveManager.instance.RegisterAnswer(isCorrect, false, true);
         ShowFeedbackPanel(isCorrect, true);
     }
 
