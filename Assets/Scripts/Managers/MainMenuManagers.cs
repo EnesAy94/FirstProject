@@ -7,23 +7,22 @@ using System.Collections.Generic;
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Veriler")]
-    public List<StoryData> allStories; // Oyundaki tüm hikayeleri buraya atacağız (Story 1, Story 2...)
+    public List<StoryData> allStories;
     public string gameSceneName = "GameScene";
 
     [Header("Paneller")]
-    public GameObject rootPanel;         // En baştaki ana menü (Story, Multi, Settings)
-    public GameObject storySelectPanel;  // Hikaye seçme ekranı
-    public GameObject chapterSelectPanel;// Bölüm seçme ekranı
+    public GameObject rootPanel;
+    public GameObject storySelectPanel;
+    public GameObject chapterSelectPanel;
     public GameObject profilePanel;
 
     [Header("Container & Prefabs")]
-    public Transform storyListContainer;   // Hikaye butonlarının dizileceği yer
-    public Transform chapterListContainer; // Bölüm butonlarının dizileceği yer
-    public GameObject menuButtonPrefab;    // Standart buton tasarımı
+    public Transform storyListContainer;
+    public Transform chapterListContainer;
+    public GameObject menuButtonPrefab;
 
-    // Geri dönünce hangi paneli açacağını bilmek için
     public GameObject replayConfirmPanel;
-    private ChapterData selectedChapterToReplay; // Hangi bölümü tekrar oynayacağız?
+    private ChapterData selectedChapterToReplay;
 
     void Start()
     {
@@ -42,7 +41,6 @@ public class MainMenuManager : MonoBehaviour
         panelToOpen.SetActive(true);
     }
 
-    // --- 1. ADIM: ANA MENÜ BUTONLARI ---
     public void OnClick_StoryMode()
     {
         OpenStorySelection();
@@ -55,17 +53,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_Profile()
     {
-        // 1. Ana menüyü gizle (Temiz görüntü için)
         if (rootPanel != null) rootPanel.SetActive(false);
 
-        // 2. Profil Panelini Aç
         if (profilePanel != null)
         {
             profilePanel.SetActive(true);
-
-            // NOT: ProfileUI scriptindeki 'OnEnable' fonksiyonu sayesinde,
-            // panel açılır açılmaz başarımlar otomatik listelenecek.
-            // Ekstra kod yazmamıza gerek yok! Harika değil mi? :)
+            // ProfileUI OnEnable ile verileri otomatik çekecek
         }
     }
 
@@ -86,7 +79,7 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("Oyundan Çıkıldı.");
     }
 
-    // --- 2. ADIM: HİKAYE SEÇİMİ ---
+    // --- 2. ADIM: HİKAYE SEÇİMİ (GÜNCELLENDİ) ---
     void OpenStorySelection()
     {
         OpenPanel(storySelectPanel);
@@ -97,33 +90,21 @@ public class MainMenuManager : MonoBehaviour
             GameObject btnObj = Instantiate(menuButtonPrefab, storyListContainer);
             btnObj.transform.localScale = Vector3.one;
 
-            // Scripti al
             LevelButtonItem buttonScript = btnObj.GetComponent<LevelButtonItem>();
 
             if (buttonScript != null)
             {
-                // --- ORTALAMA PUAN HESAPLAMA ---
-                float totalScore = 0;
-                int totalChapters = story.chapters.Count; // Örn: 10 bölüm
-
-                foreach (ChapterData chapter in story.chapters)
-                {
-                    // Her bölümün rekorunu çek, yoksa 0 gelir
-                    int chapterScore = PlayerPrefs.GetInt($"HighScore_{chapter.chapterID}", 0);
-                    totalScore += chapterScore;
-                }
-
-                // Ortalama Hesapla (Bölüm sayısı 0 değilse)
+                // --- DEĞİŞİKLİK BURADA ---
+                // Eskiden burada 10 satır kodla ortalama hesaplıyorduk.
+                // Şimdi tek satırda SaveManager'a soruyoruz:
                 int averageScore = 0;
-                if (totalChapters > 0)
-                {
-                    // (int) diyerek tam sayıya yuvarlıyoruz (Örn: 9.5 -> 9)
-                    // Mathf.RoundToInt kullanırsan 9.5 -> 10 olur. Tercih senin.
-                    averageScore = Mathf.RoundToInt(totalScore / totalChapters);
-                }
-                // ---------------------------------
 
-                // Butonu Kur (Yeni fonksiyonu kullanıyoruz)
+                if (SaveManager.instance != null)
+                {
+                    averageScore = SaveManager.instance.GetStoryAverageScore(story.chapters);
+                }
+
+                // Butonu Kur
                 buttonScript.SetupStory(
                     story.storyTitle,
                     averageScore,
@@ -133,50 +114,66 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    // --- 3. ADIM: BÖLÜM SEÇİMİ ---
+    // --- 3. ADIM: BÖLÜM SEÇİMİ (GÜNCELLENDİ) ---
+    // --- 3. ADIM: BÖLÜM SEÇİMİ (SaveManager ile Tam Uyumlu) ---
     void OpenChapterSelection(StoryData selectedStory)
     {
         OpenPanel(chapterSelectPanel);
         ClearContainer(chapterListContainer);
 
-        int unlockedLevelIndex = PlayerPrefs.GetInt("CompletedLevelIndex", 0);
+        // YENİ KOD: SaveManager'a soruyoruz "En son hangi seviye açık?"
+        int maxUnlockedLevel = 1;
+        if (SaveManager.instance != null)
+        {
+            maxUnlockedLevel = SaveManager.instance.GetLastUnlockedLevel();
+        }
 
         for (int i = 0; i < selectedStory.chapters.Count; i++)
         {
             ChapterData chapter = selectedStory.chapters[i];
 
-            // Prefab'ı oluştur
             GameObject btnObj = Instantiate(menuButtonPrefab, chapterListContainer);
             btnObj.transform.localScale = Vector3.one;
 
-            // 🔥 PROFESYONEL DOKUNUŞ BURADA 🔥
-            // Objeyi aramak yerine direkt scriptine ulaşıyoruz.
             LevelButtonItem buttonScript = btnObj.GetComponent<LevelButtonItem>();
 
             if (buttonScript != null)
             {
-                // Kilit kontrolü
-                if (chapter.chapterID <= unlockedLevelIndex + 1)
+                // KİLİT MANTIĞI:
+                // Bölüm ID'si, açık olan son seviyeden küçük veya eşitse o bölüm açıktır.
+                // Örn: Son açık 2 ise -> 1. Bölüm (Açık), 2. Bölüm (Açık), 3. Bölüm (Kilitli)
+                if (chapter.chapterID <= maxUnlockedLevel)
                 {
-                    // Açık Bölüm
-                    int highScore = PlayerPrefs.GetInt($"HighScore_{chapter.chapterID}", 0);
-                    bool isCompleted = chapter.chapterID <= unlockedLevelIndex;
+                    // PUAN ÇEKME
+                    int highScore = 0;
+                    if (SaveManager.instance != null)
+                    {
+                        highScore = SaveManager.instance.GetLevelBestScore(chapter.chapterID);
+                    }
 
-                    // Tıklanınca ne yapacağını belirliyoruz
+                    // TAMAMLANDI MI?
+                    // Eğer bölümün ana görevleri bitmişse "Tamamlandı" sayılır.
+                    // (Replay sormak için bunu kullanıyoruz)
+                    bool isCompleted = false;
+                    if (SaveManager.instance != null)
+                    {
+                        isCompleted = SaveManager.instance.IsMainMissionDone(chapter.chapterID);
+                    }
+
+                    // TIKLAMA OLAYI
                     System.Action clickAction = () =>
                     {
                         if (isCompleted) AskToReplay(chapter);
                         else StartLevelDirectly(chapter);
                     };
 
-                    // Scriptin içindeki Setup fonksiyonunu çağırıyoruz
                     buttonScript.Setup(chapter, highScore, clickAction);
                 }
                 else
                 {
-                    // Kilitli Bölüm
-                    buttonScript.Setup(chapter, 0, null); // Önce ismini yazsın
-                    buttonScript.LockButton(); // Sonra kilitlesin
+                    // KİLİTLİ BÖLÜM
+                    buttonScript.Setup(chapter, 0, null);
+                    buttonScript.LockButton();
                 }
             }
         }
@@ -189,16 +186,13 @@ public class MainMenuManager : MonoBehaviour
         if (replayConfirmPanel != null)
         {
             replayConfirmPanel.SetActive(true);
-            // Panelin içindeki metni güncelleyebilirsin: "Bölüm 1'i tekrar oynamak istiyor musun?"
         }
         else
         {
-            // Panel yoksa direkt başlat (Hata vermesin)
             StartLevelDirectly(chapter);
         }
     }
 
-    // Paneldeki "EVET" butonu buna bağlanacak
     public void OnConfirmReplay()
     {
         if (selectedChapterToReplay != null)
@@ -207,20 +201,17 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    // Paneldeki "HAYIR" butonu buna bağlanacak
     public void OnCancelReplay()
     {
         if (replayConfirmPanel != null) replayConfirmPanel.SetActive(false);
     }
 
-    // --- OYUNU BAŞLATMA ---
     void StartLevelDirectly(ChapterData chapter)
     {
         GameSession.activeChapter = chapter;
         SceneManager.LoadScene(gameSceneName);
     }
 
-    // --- YARDIMCI: GERİ DÖN BUTONLARI ---
     public void OnClick_BackToRoot()
     {
         OpenPanel(rootPanel);
@@ -235,11 +226,19 @@ public class MainMenuManager : MonoBehaviour
     {
         foreach (Transform child in container) Destroy(child.gameObject);
     }
-
     [ContextMenu("Tüm Kayıtları Sil")]
     public void DeleteAllSaveData()
     {
-        PlayerPrefs.DeleteAll();
-        Debug.Log("💥 TÜM İLERLEME SİLİNDİ! Oyun sıfırlandı.");
+        // Şimdi: SaveManager'a emrediyoruz
+        if (SaveManager.instance != null)
+        {
+            SaveManager.instance.ResetAllData();
+        }
+        else
+        {
+            // Eğer sahnede SaveManager yoksa (nadir durum) manuel sil
+            PlayerPrefs.DeleteAll();
+            Debug.Log("SaveManager bulunamadı, sadece PlayerPrefs silindi.");
+        }
     }
 }

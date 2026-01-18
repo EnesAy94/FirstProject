@@ -33,11 +33,10 @@ public class SaveManager : MonoBehaviour
         // 1. Veriyi JSON formatına (Metne) çevir
         string json = JsonUtility.ToJson(activeSave);
 
-        // 2. Diske yaz (PlayerPrefs içine tek bir string olarak)
         PlayerPrefs.SetString(saveFileName, json);
         PlayerPrefs.Save();
 
-        Debug.Log("💾 Oyun Kaydedildi (Local): " + json);
+        Debug.Log("Oyun Kaydedildi (Local): " + json);
 
         // NOT: İlerde buraya "Firebase.Database.Save(json)" gelecek.
     }
@@ -53,7 +52,7 @@ public class SaveManager : MonoBehaviour
             // JSON'u tekrar Class'a çevir
             activeSave = JsonUtility.FromJson<PlayerData>(json);
 
-            Debug.Log("📂 Oyun Yüklendi!");
+            Debug.Log("Oyun Yüklendi!");
         }
         else
         {
@@ -168,5 +167,197 @@ public class SaveManager : MonoBehaviour
         }
 
         SaveGame();
+    }
+
+    // --- 1. PROFİL BİLGİLERİNİ KAYDETME ---
+    public void SaveProfileInfo(string name, string surname, string nickname)
+    {
+        activeSave.playerName = name;
+        activeSave.playerSurname = surname;
+        activeSave.playerNickname = nickname;
+        SaveGame();
+    }
+
+    // --- 2. AKILLI PUAN SİSTEMİ (En Önemli Kısım) ---
+    public void SubmitLevelScore(int chapterID, int matchScore)
+    {
+        // Önce listeyi kontrol et (Null ise başlat)
+        if (activeSave.levelBestScores == null)
+            activeSave.levelBestScores = new List<LevelScoreData>();
+
+        // Bu bölüm daha önce oynanmış mı?
+        int index = activeSave.levelBestScores.FindIndex(x => x.chapterID == chapterID);
+
+        if (index != -1)
+        {
+            // EVET, daha önce oynanmış.
+            int oldBest = activeSave.levelBestScores[index].bestScore;
+
+            // Eğer yeni skor daha iyiyse güncelle
+            if (matchScore > oldBest)
+            {
+                // Aradaki farkı genel toplama ekle
+                int difference = matchScore - oldBest;
+                activeSave.totalScore += difference;
+
+                // Listeyi güncelle (Struct olduğu için geri atıyoruz)
+                LevelScoreData data = activeSave.levelBestScores[index];
+                data.bestScore = matchScore;
+                activeSave.levelBestScores[index] = data;
+
+                Debug.Log($"Yeni Bölüm Rekoru! Puan arttı: +{difference}");
+            }
+        }
+        else
+        {
+            // HAYIR, bu bölüm ilk defa bitiriliyor.
+            // Direkt toplama ekle
+            activeSave.totalScore += matchScore;
+
+            // Listeye kaydet
+            LevelScoreData newData = new LevelScoreData { chapterID = chapterID, bestScore = matchScore };
+            activeSave.levelBestScores.Add(newData);
+
+            Debug.Log($"İlk Kez Bitti! Toplama Eklendi: {matchScore}");
+        }
+
+        SaveGame();
+    }
+
+    public int GetLevelBestScore(int chapterID)
+    {
+        if (activeSave.levelBestScores == null) return 0;
+
+        // Listede bu ID'ye sahip bir kayıt var mı?
+        var data = activeSave.levelBestScores.Find(x => x.chapterID == chapterID);
+
+        // Varsa puanı döndür, yoksa 0 döndür
+        return (data.chapterID != 0) ? data.bestScore : 0;
+    }
+
+    // UI İÇİN: Tüm bölümlerin toplam puanını hesapla (Garanti olsun diye)
+    public int CalculateTotalScoreRealtime()
+    {
+        if (activeSave.levelBestScores == null) return 0;
+
+        int total = 0;
+        foreach (var levelData in activeSave.levelBestScores)
+        {
+            total += levelData.bestScore;
+        }
+        return total;
+    }
+    public int GetStoryAverageScore(List<ChapterData> storyChapters)
+    {
+        // Bölüm yoksa hata vermesin, 0 dönsün
+        if (storyChapters == null || storyChapters.Count == 0) return 0;
+
+        int totalScore = 0;
+
+        // 1. Hikayenin içindeki tüm bölümleri tek tek gez
+        foreach (var chapter in storyChapters)
+        {
+            // 2. Her bölümün en yüksek puanını SaveManager kasasından çek ve topla
+            // (Oynanmamışsa zaten 0 gelir, oynanmışsa puanı gelir)
+            totalScore += GetLevelBestScore(chapter.chapterID);
+        }
+
+        // 3. MATEMATİK: (Toplam Puan / Toplam Bölüm Sayısı)
+        // Örnek: 300 / 10 = 30
+        int average = totalScore / storyChapters.Count;
+
+        return average;
+    }
+
+    [ContextMenu("Reset All Data")] // Inspector'dan sağ tıklayıp da çalıştırabilirsin
+    public void ResetAllData()
+    {
+        // 1. Önce diski tamamen temizle
+        PlayerPrefs.DeleteAll();
+
+        // 2. Hafızadaki kutuyu (activeSave) sıfırla! (EN ÖNEMLİ KISIM)
+        CreateNewSave();
+
+        Debug.Log("HER ŞEY SIFIRLANDI! Hafıza ve Disk temizlendi.");
+
+        // 3. Sahneyi yenile ki UI'daki puanlar ve isimler anında silinsin
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    // --- GÖREV İLERLEMESİ (PARTIAL PROGRESS) ---
+
+    // İlerlemeyi Kaydet (LevelManager çağıracak)
+    public void SaveMissionProgress(int chapterID, int missionIndex, int progress)
+    {
+        // Listede var mı bak
+        int index = activeSave.missionProgresses.FindIndex(x => x.chapterID == chapterID && x.missionIndex == missionIndex);
+
+        if (index != -1)
+        {
+            // Varsa güncelle
+            MissionProgressSave data = activeSave.missionProgresses[index];
+            data.progress = progress;
+            activeSave.missionProgresses[index] = data;
+        }
+        else
+        {
+            // Yoksa yeni ekle
+            activeSave.missionProgresses.Add(new MissionProgressSave
+            {
+                chapterID = chapterID,
+                missionIndex = missionIndex,
+                progress = progress
+            });
+        }
+        SaveGame();
+    }
+
+    // İlerlemeyi Getir (LevelManager açılışta çağıracak)
+    public int GetMissionProgress(int chapterID, int missionIndex)
+    {
+        var data = activeSave.missionProgresses.Find(x => x.chapterID == chapterID && x.missionIndex == missionIndex);
+        // Bulursa progress döner, bulamazsa 0 döner (struct varsayılanı)
+        return (data.chapterID != 0) ? data.progress : 0;
+    }
+
+    // --- BÖLÜM KİLİT SİSTEMİ ---
+
+    // En son açılan bölüm kaç?
+    public int GetLastUnlockedLevel()
+    {
+        // Eğer veri 1'den küçükse (0 falansa) en az 1 döndür
+        return (activeSave.lastUnlockedLevel > 0) ? activeSave.lastUnlockedLevel : 1;
+    }
+
+    // Yeni bölüm kilidi aç
+    public void UnlockNextLevel(int completedLevelID)
+    {
+        // Eğer şu an bitirdiğim bölüm (Örn: 5), kayıtlı olandan (Örn: 4) büyükse güncelle
+        // Ama eğer 1. bölümü tekrar oynuyorsam ve zaten 10. bölüm açıksa, 1 yapma!
+        if (completedLevelID >= activeSave.lastUnlockedLevel)
+        {
+            activeSave.lastUnlockedLevel = completedLevelID + 1; // Bir sonrakini aç
+            SaveGame();
+        }
+    }
+
+    // --- ANA GÖREV TAKİBİ ---
+
+    public bool IsMainMissionDone(int chapterID)
+    {
+        if (activeSave.completedMainChapters == null) return false;
+        return activeSave.completedMainChapters.Contains(chapterID);
+    }
+
+    public void SetMainMissionDone(int chapterID)
+    {
+        if (activeSave.completedMainChapters == null)
+            activeSave.completedMainChapters = new List<int>();
+
+        if (!activeSave.completedMainChapters.Contains(chapterID))
+        {
+            activeSave.completedMainChapters.Add(chapterID);
+            SaveGame();
+        }
     }
 }

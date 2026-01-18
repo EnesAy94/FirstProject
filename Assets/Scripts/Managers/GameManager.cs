@@ -36,12 +36,12 @@ public class GameManager : MonoBehaviour
     {
         if (currentTile == null) return;
 
-        Debug.Log("📍 Oyuncu şu karede durdu: " + currentTile.type);
+        Debug.Log("Oyuncu şu karede durdu: " + currentTile.type);
 
         // 1. Eğer kare BOŞ ise (Ayak izi/Büyüteç)
         if (currentTile.type == TileType.Empty)
         {
-            Debug.Log("💨 Boş alan, bir şey olmuyor.");
+            Debug.Log("Boş alan, bir şey olmuyor.");
             // Burada belki "Boş" sesi çalabilirsin.
             // Zarı tekrar aktif etmek gerekebilir (Bunu ileride DiceManager'da yaparız)
             return;

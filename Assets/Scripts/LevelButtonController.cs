@@ -8,47 +8,71 @@ public class LevelButtonItem : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI scoreText;
 
-    // --- MEVCUT: BÖLÜMLER İÇİN ---
+    // --- BÖLÜMLER İÇİN (CHAPTERS) ---
+    // Not: highScore parametresi eski sistemden kalma olabilir, onu eziyoruz.
     public void Setup(ChapterData chapter, int highScore, System.Action onClickAction)
     {
         titleText.text = chapter.chapterName;
 
-        if (highScore > 0)
+        // 1. KRİTİK HAMLE: Puanı dışarıdan bekleme, SaveManager'dan en tazesini çek!
+        // (Eğer SaveManager henüz yoksa 0 kabul et)
+        int realScore = 0;
+        if (SaveManager.instance != null)
         {
-            scoreText.text = $"Bölüm Puanı: {highScore}";
+            realScore = SaveManager.instance.GetLevelBestScore(chapter.chapterID);
+        }
+
+        // 2. GÖRSEL AYARLAMA
+        if (realScore > 0)
+        {
+            scoreText.text = $"Puan: {realScore}";
             scoreText.gameObject.SetActive(true);
-            scoreText.color = Color.yellow;
+            scoreText.color = Color.yellow; // Puan varsa Sarı/Parlak
         }
         else
         {
-            scoreText.text = $"Bölüm Puanı: 0"; 
-
+            // Hiç oynanmamışsa
+            scoreText.text = "Puan: -"; 
+            scoreText.color = Color.gray;
         }
 
+        // Kilit İkonu Mantığı (Opsiyonel):
+        // Eğer önceki bölüm bitmemişse butonu kilitleyebilirsin.
+        // Şimdilik sadece tıklama olayını bağlıyoruz.
         myButton.onClick.RemoveAllListeners();
         myButton.onClick.AddListener(() => onClickAction.Invoke());
+        
+        // Butonu her ihtimale karşı aktif et (Kilitli değilse)
+        myButton.interactable = true;
+        GetComponent<Image>().color = Color.white;
     }
 
-    // --- YENİ: HİKAYELER İÇİN (Story Buttons) ---
-    public void SetupStory(string storyTitle, int averageScore, System.Action onClickAction)
+    // --- HİKAYELER İÇİN (STORY BUTTONS) ---
+    // Not: Hikaye toplam puanını, bu butonu oluşturan scriptin (LevelSelectionManager) hesaplayıp göndermesi lazım.
+    public void SetupStory(string storyTitle, int totalStoryScore, System.Action onClickAction)
     {
         // 1. Başlık
         titleText.text = storyTitle;
 
-        // 2. Ortalama Puan Gösterimi
-        // Hiç puan yoksa bile "0" gözüksün istiyorsan direkt yazdırıyoruz.
-        scoreText.text = $"Hikaye Puanı: {averageScore}";
+        // 2. Puan Gösterimi
         scoreText.gameObject.SetActive(true);
-        
-        // Renk ayrımı: Eğer puan 0 ise gri, yüksekse yeşil/sarı olsun
-        if (averageScore > 0) scoreText.color = Color.green;
-        else scoreText.color = Color.gray;
+        scoreText.text = $"Toplam Puan: {totalStoryScore}";
 
-        // 3. Tıklama
+        // 3. Renk Ayrımı
+        if (totalStoryScore > 0)
+        {
+            scoreText.color = Color.green; // Puan varsa Yeşil
+        }
+        else
+        {
+            scoreText.color = Color.gray; // Yoksa Gri
+        }
+
+        // 4. Tıklama
         myButton.onClick.RemoveAllListeners();
         myButton.onClick.AddListener(() => onClickAction.Invoke());
         
-        // Buton her zaman tıklanabilir olsun (Hikaye seçimi kilitli değilse)
+        // Görünüm sıfırla
         myButton.interactable = true;
         GetComponent<Image>().color = Color.white; 
     }
@@ -56,8 +80,8 @@ public class LevelButtonItem : MonoBehaviour
     public void LockButton()
     {
         myButton.interactable = false;
-        titleText.text += " (Kilitli)";
+        titleText.text += " 🔒"; // Kilit ikonu ekledim
         scoreText.gameObject.SetActive(false);
-        GetComponent<Image>().color = Color.gray;
+        GetComponent<Image>().color = Color.gray; // Butonu gri yap
     }
 }

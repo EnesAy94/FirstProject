@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour
     public List<MissionData> activeMissions;
     public bool isLevelFinished = false;
 
-    // Panel açılmayı bekliyor mu? (Çakışmayı önleyen değişken)
+    // Panel açılmayı bekliyor mu?
     public bool isCompletionPending = false;
     public bool isFailurePending = false;
 
@@ -34,10 +34,10 @@ public class LevelManager : MonoBehaviour
     public GameObject keepPlayingButton;
 
     [Header("Bilgilendirme (Info) Paneli")]
-    public GameObject notificationPanel;      // Uyarı Popup'ı
-    public TextMeshProUGUI notificationTitle; // Başlık
-    public TextMeshProUGUI notificationDesc;  // Açıklama
-    public Button notificationButton;         // "Devam/Başla" butonu
+    public GameObject notificationPanel;
+    public TextMeshProUGUI notificationTitle;
+    public TextMeshProUGUI notificationDesc;
+    public Button notificationButton;
 
     [Header("Ceza Köşesi Durumu")]
     public bool isPenaltyActive = false;
@@ -56,7 +56,6 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        // Başlangıçta tüm panelleri gizle
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
         if (levelFailedPanel != null) levelFailedPanel.SetActive(false);
         if (notificationPanel != null) notificationPanel.SetActive(false);
@@ -71,17 +70,19 @@ public class LevelManager : MonoBehaviour
     {
         isLevelFinished = false;
         hasCelebratedMainMissions = false;
-        isCompletionPending = false; // Bekleyen panel yok
+        isCompletionPending = false;
 
         currentScore = currentChapter.startingScore;
         UpdateScoreUI();
 
         activeMissions = new List<MissionData>();
 
-        string mainDoneKey = $"Chapter_{currentChapter.chapterID}_MainDone";
-        areMainMissionsDoneInitially = PlayerPrefs.GetInt(mainDoneKey, 0) == 1;
+        // --- DÜZELTME 1: PlayerPrefs -> SaveManager ---
+        // Eskiden: PlayerPrefs.GetInt($"Chapter_{currentChapter.chapterID}_MainDone", 0) == 1;
+        // Şimdi:
+        areMainMissionsDoneInitially = SaveManager.instance.IsMainMissionDone(currentChapter.chapterID);
+        // ----------------------------------------------
 
-        // Görevleri Kopyala ve Hazırla
         for (int i = 0; i < currentChapter.missions.Count; i++)
         {
             MissionData originalMission = currentChapter.missions[i];
@@ -89,13 +90,12 @@ public class LevelManager : MonoBehaviour
 
             if (missionCopy.isMainMission)
             {
-                missionCopy.currentProgress = 0; // Ana görevler her girişte sıfırlanır
+                missionCopy.currentProgress = 0;
             }
             else
             {
-                // Yan görevler hafızadan gelir (Kaldığı yerden devam)
-                string missionKey = $"Chapter_{currentChapter.chapterID}_Mission_{i}_Progress";
-                missionCopy.currentProgress = PlayerPrefs.GetInt(missionKey, 0);
+                // Yan görevler SaveManager'dan geliyor (Zaten yapmıştık)
+                missionCopy.currentProgress = SaveManager.instance.GetMissionProgress(currentChapter.chapterID, i);
             }
             activeMissions.Add(missionCopy);
         }
@@ -104,7 +104,6 @@ public class LevelManager : MonoBehaviour
     }
 
     // --- PUAN SİSTEMİ ---
-    // --- PUAN DÜŞÜRME FONKSİYONU GÜNCELLENDİ ---
     public void DecreaseScore()
     {
         if (isLevelFinished) return;
@@ -116,16 +115,14 @@ public class LevelManager : MonoBehaviour
 
         UpdateScoreUI();
 
-        // KRİTİK DEĞİŞİKLİK BURADA:
         if (currentScore <= 0)
         {
-            isLevelFinished = true; // Oyunu mekanik olarak durdur
-            isFailurePending = true; // Paneli açma, sıraya al!
-            Debug.Log("💀 Puan bitti! Başarısızlık paneli sıraya alındı.");
+            isLevelFinished = true;
+            isFailurePending = true;
+            Debug.Log("Puan bitti! Başarısızlık paneli sıraya alındı.");
         }
     }
 
-    // YENİ FONKSİYON: AnswerManager çağıracak
     public void OpenPendingLevelFailedPanel()
     {
         if (!isFailurePending) return;
@@ -135,7 +132,7 @@ public class LevelManager : MonoBehaviour
             levelFailedPanel.SetActive(true);
         }
 
-        isFailurePending = false; // Bekleme bitti
+        isFailurePending = false;
     }
 
     void UpdateScoreUI()
@@ -181,9 +178,8 @@ public class LevelManager : MonoBehaviour
 
                     if (!string.IsNullOrEmpty(mission.unlockAchievementKey))
                     {
-                        // Yazılıysa (Örn: "Mission_Hard_Done"), git bunu kaydet!
                         SaveManager.instance.CompleteMission(mission.unlockAchievementKey);
-                        Debug.Log($"🔓 Kilit Açıldı: {mission.unlockAchievementKey}");
+                        Debug.Log($"Kilit Açıldı: {mission.unlockAchievementKey}");
                     }
                 }
             }
@@ -194,13 +190,11 @@ public class LevelManager : MonoBehaviour
             if (OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
             SaveAllProgress();
 
-            // Eğer ana görevler zaten bitmişse ve şimdi yan görevi bitirdiysek
-            // Ve o yan görev son eksik parçaysa -> Bölümü Tamamen Bitir
             if (hasCelebratedMainMissions && yanGorevBitti)
             {
                 if (AreAllMissionsCompleted())
                 {
-                    Debug.Log("🌟 TEBRİKLER! HER ŞEY BİTTİ (Sıraya Alınıyor...)");
+                    Debug.Log("TEBRİKLER! HER ŞEY BİTTİ (Sıraya Alınıyor...)");
                     PrepareLevelCompletion();
                 }
             }
@@ -225,7 +219,7 @@ public class LevelManager : MonoBehaviour
 
         if (allMainDone)
         {
-            Debug.Log("🏆 ANA GÖREVLER BİTTİ (Sıraya Alınıyor...)");
+            Debug.Log("ANA GÖREVLER BİTTİ (Sıraya Alınıyor...)");
             hasCelebratedMainMissions = true;
             PrepareLevelCompletion();
         }
@@ -233,32 +227,26 @@ public class LevelManager : MonoBehaviour
 
     // --- BÖLÜM BİTİRME (SIRAYA ALMA & AÇMA) ---
 
-    // 1. AŞAMA: Verileri kaydet, bayrağı kaldır ama PANELİ AÇMA
     void PrepareLevelCompletion()
     {
-        isCompletionPending = true; // AnswerManager bunu kontrol edecek
+        isCompletionPending = true;
 
-        // Bölüm bitti kaydı
-        PlayerPrefs.SetInt($"Chapter_{currentChapter.chapterID}_MainDone", 1);
+        // --- DÜZELTME 2: MainDone Kaydı ---
+        // Eskiden: PlayerPrefs.SetInt($"Chapter_{currentChapter.chapterID}_MainDone", 1);
+        // Şimdi:
+        SaveManager.instance.SetMainMissionDone(currentChapter.chapterID);
 
-        // Bölüm kilidi açma
-        int savedLevel = PlayerPrefs.GetInt("CompletedLevelIndex", 0);
-        if (currentChapter.chapterID >= savedLevel)
-        {
-            PlayerPrefs.SetInt("CompletedLevelIndex", currentChapter.chapterID);
-        }
+        // --- DÜZELTME 3: Bölüm Kilidi Açma ---
+        // Eskiden: PlayerPrefs.GetInt("CompletedLevelIndex")... SetInt...
+        // Şimdi:
+        SaveManager.instance.UnlockNextLevel(currentChapter.chapterID);
 
-        // Yüksek skor kaydı
-        string scoreKey = $"HighScore_{currentChapter.chapterID}";
-        if (currentScore > PlayerPrefs.GetInt(scoreKey, 0))
-        {
-            PlayerPrefs.SetInt(scoreKey, currentScore);
-        }
+        // Yüksek skor kaydı (Zaten yapmıştık)
+        SaveManager.instance.SubmitLevelScore(currentChapter.chapterID, currentScore);
 
         SaveAllProgress();
     }
 
-    // 2. AŞAMA: AnswerManager "Devam" deyince burası çalışır ve PANELİ AÇAR
     public void OpenPendingLevelCompletePanel()
     {
         if (!isCompletionPending) return;
@@ -267,17 +255,15 @@ public class LevelManager : MonoBehaviour
         {
             levelCompletePanel.SetActive(true);
 
-            // Sonraki bölüm butonu
             if (nextLevelButton != null)
                 nextLevelButton.SetActive(currentChapter.nextChapter != null);
 
-            // Eğer her şey bittiyse "Devam Et" butonu çıkmasın
             bool herSeyBittiMi = AreAllMissionsCompleted();
             if (keepPlayingButton != null)
                 keepPlayingButton.SetActive(!herSeyBittiMi);
         }
 
-        isCompletionPending = false; // Bekleme bitti
+        isCompletionPending = false;
     }
 
     void LevelFailed()
@@ -289,16 +275,13 @@ public class LevelManager : MonoBehaviour
     // --- CEZA KÖŞESİ (PENALTY ZONE) ---
     public void EnterPenaltyZone()
     {
-        Debug.Log("⛔ CEZA KÖŞESİNE GİRİLDİ! Zar Kilitlendi.");
-
+        Debug.Log(" CEZA KÖŞESİNE GİRİLDİ! Zar Kilitlendi.");
         isPenaltyActive = true;
         penaltyCorrectCount = 0;
-
-        // DEĞİŞİKLİK 2: SetActive yerine Interactable kullanıyoruz
         SetDiceInteractable(false);
 
         ShowNotification(
-            "CEZA ALANI! ⛔",
+            "CEZA ALANI! ",
             "Bu alandan çıkmak için 3 soruyu doğru cevaplaman gerekiyor.\nHazır mısın?",
             () =>
             {
@@ -314,7 +297,7 @@ public class LevelManager : MonoBehaviour
 
     public void ExitPenaltyZone()
     {
-        Debug.Log("🔓 TEBRİKLER! Ceza Köşesinden Çıktın.");
+        Debug.Log("TEBRİKLER! Ceza Köşesinden Çıktın.");
 
         if (!string.IsNullOrEmpty(penaltyExitAchievementID))
         {
@@ -323,19 +306,16 @@ public class LevelManager : MonoBehaviour
 
         isPenaltyActive = false;
         penaltyCorrectCount = 0;
-
-        // DEĞİŞİKLİK 3: Ceza bitince zar tekrar aktif
         SetDiceInteractable(true);
     }
 
     // --- ZOR SORU KÖŞESİ (HARD ZONE) ---
     public void EnterHardZone()
     {
-        // Zor bölgeye girince de zar kilitlensin
         SetDiceInteractable(false);
 
         ShowNotification(
-            "RİSKLİ BÖLGE! ⚠️",
+            "RİSKLİ BÖLGE!",
             "Çok zor bir soruyla karşılaşacaksın.\nBilirsen ödül büyük, bilemezsen puanın düşer!",
             () =>
             {
@@ -368,8 +348,6 @@ public class LevelManager : MonoBehaviour
         if (diceButton != null)
         {
             diceButton.interactable = state;
-            // Görsel olarak sönük durması için Unity Button ayarlarının
-            // "Disabled Color" kısmının ayarlı olması lazım (Genelde gridir).
         }
     }
 
@@ -386,10 +364,8 @@ public class LevelManager : MonoBehaviour
     {
         for (int i = 0; i < activeMissions.Count; i++)
         {
-            string missionKey = $"Chapter_{currentChapter.chapterID}_Mission_{i}_Progress";
-            PlayerPrefs.SetInt(missionKey, activeMissions[i].currentProgress);
+            SaveManager.instance.SaveMissionProgress(currentChapter.chapterID, i, activeMissions[i].currentProgress);
         }
-        PlayerPrefs.Save();
     }
 
     public void OnClick_NextLevel()

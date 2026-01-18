@@ -55,7 +55,7 @@ public class QuestionManager : MonoBehaviour
 
             case TileType.Hard:
                 GenerateHardSoru(out esyaDetayi, out soruKurali, out dogruCevap);
-                baslik = "⚠️ RİSKLİ BÖLGE ⚠️"; // Başlık dikkat çekici olsun
+                baslik = "RİSKLİ BÖLGE"; // Başlık dikkat çekici olsun
                 break;
 
             case TileType.Empty:

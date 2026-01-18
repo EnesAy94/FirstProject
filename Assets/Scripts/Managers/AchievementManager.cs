@@ -27,8 +27,6 @@ public class AchievementManager : MonoBehaviour
         // 1. KONTROL: Görev yapıldı mı? (SaveManager'a soruyoruz)
         if (data.requiresMission)
         {
-            // ESKİSİ: if (PlayerPrefs.GetInt(data.requiredMissionKey, 0) == 0)
-            // YENİSİ:
             if (!SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
             {
                 Debug.Log($"[Achievement] {data.title} için önce ilgili görev yapılmalı!");
@@ -37,15 +35,11 @@ public class AchievementManager : MonoBehaviour
         }
 
         // 2. MEVCUT İLERLEMEYİ AL (SaveManager'dan)
-        // ESKİSİ: int currentCount = PlayerPrefs.GetInt(currentKey, 0);
-        // YENİSİ:
         int currentCount = SaveManager.instance.GetAchievementProgress(achievementID);
 
         // 3. ARTIR VE KAYDET (SaveManager'a)
         currentCount += amount;
-        
-        // ESKİSİ: PlayerPrefs.SetInt... PlayerPrefs.Save...
-        // YENİSİ:
+    
         SaveManager.instance.SetAchievementProgress(achievementID, currentCount);
 
         // 4. SEVİYE KONTROLÜ
@@ -77,7 +71,6 @@ public class AchievementManager : MonoBehaviour
         if (data == null) return (0, -1);
 
         // 1. İLERLEMEYİ ÇEK (SaveManager'dan)
-        // ESKİSİ: int count = PlayerPrefs.GetInt($"Ach_{data.id}_Count", 0);
         // YENİSİ:
         int count = SaveManager.instance.GetAchievementProgress(data.id);
 
@@ -88,7 +81,6 @@ public class AchievementManager : MonoBehaviour
         }
 
         // 2. GÖREV KİLİDİ KONTROLÜ (SaveManager'dan)
-        // ESKİSİ: if (data.requiresMission && PlayerPrefs.GetInt(...) == 0)
         // YENİSİ:
         if (data.requiresMission && !SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
         {

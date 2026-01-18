@@ -1,23 +1,28 @@
 using UnityEngine;
-using TMPro; // TextMeshPro yazılarını kullanmak için şart
+using TMPro;
 using System.Collections.Generic;
-using System.Linq; // Sıralama (OrderBy) için şart
+using System.Linq;
 
 public class ProfileUI : MonoBehaviour
 {
-    [Header("--- İSTATİSTİK YAZILARI (STATS) ---")]
-    public TextMeshProUGUI accuracyRateText;    // Normal Doğruluk %
-    public TextMeshProUGUI hardSuccessText;     // Zor Soru %
-    public TextMeshProUGUI penaltyVisitsText;   // Ceza Sayısı
-    public TextMeshProUGUI longestStreakText;   // En Uzun Seri
-    public TextMeshProUGUI playerNameText;      // İsim (Şimdilik boş kalabilir)
-    public TextMeshProUGUI totalPointText;      // Toplam Puan
+    [Header("--- GİRİŞ ALANLARI (INPUTS) ---")]
+    // Artık Text değil, InputField kullanıyoruz
+    public TMP_InputField nameInput;
+    public TMP_InputField surnameInput;
+    public TMP_InputField nicknameInput;
 
-    [Header("--- BAŞARIM LİSTESİ (ACHIEVEMENTS) ---")]
-    public GameObject achievementItemPrefab; // Küçük başarım kutucuğu
-    public Transform allContent;             // Scroll View içindeki Content objesi
+    [Header("--- İSTATİSTİK YAZILARI ---")]
+    public TextMeshProUGUI accuracyRateText;
+    public TextMeshProUGUI hardSuccessText;
+    public TextMeshProUGUI penaltyVisitsText;
+    public TextMeshProUGUI longestStreakText;
+    public TextMeshProUGUI totalPointText; // Toplam Puan
 
-    // Sıralama için yardımcı sınıf
+    [Header("--- BAŞARIM LİSTESİ ---")]
+    public GameObject achievementItemPrefab;
+    public Transform allContent;
+
+    // Sıralama sınıfı (Aynı kalıyor)
     private class AchievementSortData
     {
         public AchievementData data;
@@ -26,88 +31,111 @@ public class ProfileUI : MonoBehaviour
         public bool isUnlocked;
     }
 
-    // Panel açıldığı an çalışır
     void OnEnable()
     {
-        // 1. İstatistikleri Güncelle
-        UpdateStatTexts();
+        LoadProfileData(); // Verileri kutulara doldur
+        UpdateStatTexts(); // İstatistikleri hesapla
+        RefreshAchievements(); // Başarımları listele
 
-        // 2. Başarım Listesini Yenile
-        RefreshAchievements();
+        // Inputlar değiştiğinde kaydetmesi için dinleyiciler ekle
+        AddInputListeners();
     }
 
-    // --- BÖLÜM 1: İSTATİSTİK YAZILARI ---
-    void UpdateStatTexts()
+    void OnDisable()
     {
-        // SaveManager'dan verileri çekiyoruz
+        // Panel kapanırken son hali garanti olsun diye kaydedelim
+        SaveCurrentInputs();
+    }
+
+    // --- PROFİL VERİLERİNİ YÜKLE VE DİNLE ---
+    void LoadProfileData()
+    {
         PlayerData data = SaveManager.instance.activeSave;
 
-        // A. Normal Sorular Başarı Oranı
-        int totalNormal = data.normalCorrectCount + data.normalWrongCount;
-        float accuracy = 0;
-        if (totalNormal > 0)
+        // Kayıtlı isimleri kutulara yaz
+        if (nameInput != null) nameInput.text = data.playerName;
+        if (surnameInput != null) surnameInput.text = data.playerSurname;
+        if (nicknameInput != null) nicknameInput.text = data.playerNickname;
+    }
+
+    void AddInputListeners()
+    {
+        // Kullanıcı yazmayı bitirince (Enter veya Tıkla Çık) otomatik kaydet
+        // Her seferinde temizleyip ekliyoruz ki üst üste binmesin
+        if (nameInput != null)
         {
-            accuracy = ((float)data.normalCorrectCount / totalNormal) * 100f;
+            nameInput.onEndEdit.RemoveAllListeners();
+            nameInput.onEndEdit.AddListener(delegate { SaveCurrentInputs(); });
         }
+        if (surnameInput != null)
+        {
+            surnameInput.onEndEdit.RemoveAllListeners();
+            surnameInput.onEndEdit.AddListener(delegate { SaveCurrentInputs(); });
+        }
+        if (nicknameInput != null)
+        {
+            nicknameInput.onEndEdit.RemoveAllListeners();
+            nicknameInput.onEndEdit.AddListener(delegate { SaveCurrentInputs(); });
+        }
+    }
+
+    // UI'daki yazıları SaveManager'a gönder
+    public void SaveCurrentInputs()
+    {
+        string n = (nameInput != null) ? nameInput.text : "";
+        string s = (surnameInput != null) ? surnameInput.text : "";
+        string nick = (nicknameInput != null) ? nicknameInput.text : "";
+
+        SaveManager.instance.SaveProfileInfo(n, s, nick);
+    }
+
+    // --- İSTATİSTİK YAZILARI (Aynı) ---
+    void UpdateStatTexts()
+    {
+        PlayerData data = SaveManager.instance.activeSave;
+
+        // İstatistik hesaplamaları (Aynı kalıyor...)
+        int totalNormal = data.normalCorrectCount + data.normalWrongCount;
+        float accuracy = (totalNormal > 0) ? ((float)data.normalCorrectCount / totalNormal) * 100f : 0;
         accuracyRateText.text = "%" + accuracy.ToString("F0");
 
-        // B. Zor Sorular Başarı Oranı
         int totalHard = data.hardCorrectCount + data.hardWrongCount;
-        float hardSuccess = 0;
-        if (totalHard > 0)
-        {
-            hardSuccess = ((float)data.hardCorrectCount / totalHard) * 100f;
-        }
+        float hardSuccess = (totalHard > 0) ? ((float)data.hardCorrectCount / totalHard) * 100f : 0;
         hardSuccessText.text = "%" + hardSuccess.ToString("F0");
 
-        // C. Diğer Veriler
         int totalPenalty = data.penaltyCorrectCount + data.penaltyWrongCount;
-        float penaltySuccess = 0;
-
-        if (totalPenalty > 0)
-        {
-            penaltySuccess = ((float)data.penaltyCorrectCount / totalPenalty) * 100f;
-        }
-
-        // Ekrana yazdır (Örn: "%75")
+        float penaltySuccess = (totalPenalty > 0) ? ((float)data.penaltyCorrectCount / totalPenalty) * 100f : 0;
         penaltyVisitsText.text = "%" + penaltySuccess.ToString("F0");
 
-        // D. Streak
         longestStreakText.text = data.maxStreak.ToString();
 
+        // TOPLAM PUAN (Tüm bölümlerin toplamı)
         if (totalPointText != null)
             totalPointText.text = data.totalScore.ToString();
     }
 
-    // --- BÖLÜM 2: BAŞARIM LİSTESİ ---
+    // --- BAŞARIM LİSTESİ (Aynı) ---
     public void RefreshAchievements()
     {
-        // Önce temizlik: Content altındaki eski kutuları sil
         foreach (Transform child in allContent) Destroy(child.gameObject);
-
-        // AchievementManager'dan verileri alıp geçici listeye koy
         List<AchievementSortData> sortList = new List<AchievementSortData>();
 
         foreach (AchievementData ach in AchievementManager.instance.allAchievements)
         {
             var status = AchievementManager.instance.GetAchievementStatus(ach.id);
-
             AchievementSortData item = new AchievementSortData();
             item.data = ach;
             item.currentCount = status.currentCount;
             item.tierIndex = status.currentTierIndex;
             item.isUnlocked = (status.currentTierIndex != -1);
-
             sortList.Add(item);
         }
 
-        // Sıralama Yap: Önce kazanılanlar, sonra kazanılanlar içinde rütbesi yüksek olanlar
         var sortedList = sortList
             .OrderByDescending(x => x.isUnlocked)
             .ThenByDescending(x => x.tierIndex)
             .ToList();
 
-        // Listeyi Ekrana Bas
         foreach (var item in sortedList)
         {
             GameObject newItem = Instantiate(achievementItemPrefab, allContent);

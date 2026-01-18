@@ -47,7 +47,7 @@ public class DiceManager : MonoBehaviour
         if (hileliZar > 0 && hileliZar <= 6)
         {
             result = hileliZar; // Zorla o sayıyı yap
-            Debug.Log("🎲 Hileli Zar Devrede: " + result);
+            Debug.Log("Hileli Zar Devrede: " + result);
             
             // İşimiz bitti, bir sonraki el tekrar rastgele olsun diye sıfırla
             // (Eğer sürekli 6 gelmesini istersen bu alt satırı sil)

@@ -23,6 +23,15 @@ public class PlayerData
     public int currentStreak; // Şu anki seri (Hata yapana kadar artar)
     public int maxStreak;     // En yüksek rekor seri
 
+    // --- YENİ EKLENEN: PROFİL BİLGİLERİ ---
+    public string playerName = "";
+    public string playerSurname = "";
+    public string playerNickname = "";
+
+    // Hangi bölümden kaç puan aldığını burada tutacağız ki toplamı hesaplayabilelim.
+    public List<LevelScoreData> levelBestScores = new List<LevelScoreData>();
+    public List<MissionProgressSave> missionProgresses = new List<MissionProgressSave>();
+
     // Oyun Ayarları (Ses vs.)
     public float musicVolume = 1f;
     public float sfxVolume = 1f;
@@ -32,6 +41,8 @@ public class PlayerData
     public List<string> earnedAchievements = new List<string>();
 
     // Hangi görevler bitti? ID'leri tutuyoruz.
+    public int lastUnlockedLevel = 1; // Varsayılan 1. bölüm açık
+    public List<int> completedMainChapters = new List<int>();
     public List<string> completedMissions = new List<string>();
 
     // Başarım ilerlemeleri (Örn: "hard_master" -> 5 tane çözdü)
@@ -44,4 +55,20 @@ public struct ProgressData
 {
     public string id;
     public int amount;
+}
+
+[System.Serializable]
+public struct LevelScoreData
+{
+    public int chapterID;
+    public int bestScore;
+}
+
+// Görev ilerlemesini tutan küçük yapı
+[System.Serializable]
+public struct MissionProgressSave
+{
+    public int chapterID;
+    public int missionIndex; // O bölümdeki kaçıncı görev?
+    public int progress;     // Kaç tanesini yaptı?
 }

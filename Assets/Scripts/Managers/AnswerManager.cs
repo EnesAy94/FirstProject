@@ -137,12 +137,12 @@ public class AnswerManager : MonoBehaviour
         // Başlık ve Renk
         if (isCorrect)
         {
-            feedbackTitleText.text = "DOĞRU! ✅";
+            feedbackTitleText.text = "DOĞRU!";
             feedbackTitleText.color = Color.green;
         }
         else
         {
-            feedbackTitleText.text = "YANLIŞ! ❌";
+            feedbackTitleText.text = "YANLIŞ!";
             feedbackTitleText.color = Color.red;
         }
 
