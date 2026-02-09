@@ -133,7 +133,7 @@ public class AnswerManager : MonoBehaviour
     void HandlePenaltyFeedback(bool isCorrect)
     {
         if (LevelManager.instance != null) LevelManager.instance.CheckPenaltyProgress(isCorrect);
-        SaveManager.instance.RegisterAnswer(isCorrect, false, true);
+        SaveManager.instance.RegisterAnswer(isCorrect, false, true, false);
         ShowFeedbackPanel(isCorrect, true);
     }
 
@@ -160,11 +160,15 @@ public class AnswerManager : MonoBehaviour
             // Eğer cevap yanlışsa ve joker kullanmadan "Devam" dediysek CEZAYI KES
             if (feedbackTitleText.text.Contains("YANLIŞ"))
             {
-                bool isHard = (currentQuestionType == TileType.Hard);
-                bool isPenalty = (LevelManager.instance != null && LevelManager.instance.isPenaltyActive);
-                SaveManager.instance.RegisterAnswer(false, isHard, isPenalty);
+                // Sadece NORMAL moddaysa puan düşür.
+                // Ceza modundaysak (isPenaltyMode == true) puan düşmeyecek!
+                if (!isPenaltyMode && LevelManager.instance != null)
+                {
+                    LevelManager.instance.DecreaseScore();
+                }
 
-                if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
+                // İstatistik kaydını zaten yukarıda (Handle fonksiyonlarında) yapmıştık,
+                // burada tekrar kaydetmeye gerek yok, yoksa çift kayıt olur.
             }
 
             feedbackPanel.SetActive(false);

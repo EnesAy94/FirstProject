@@ -7,27 +7,23 @@ public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager instance;
 
-    // Hesplanan cevabı AnswerManager'a göndermek için geçici değişken
-    private int calculatedAnswer;
-
     void Awake()
     {
         instance = this;
     }
 
-    public void SoruOlusturVeSor(TileType tileType)
+    // GÜNCELLEME 1: isPenalty parametresi eklendi (Varsayılan: false)
+    public void SoruOlusturVeSor(TileType tileType, bool isPenalty = false)
     {
-        // 1. Bölüm Verisi Kontrolü
         if (LevelManager.instance == null || LevelManager.instance.currentChapter == null || LevelManager.instance.currentChapter.questionSet == null)
         {
-            Debug.LogError("HATA: LevelManager veya ChapterQuestionSet eksik! Lütfen ChapterData'ya soru seti atayın.");
+            Debug.LogError("HATA: Soru seti eksik!");
             return;
         }
 
         ChapterQuestionSet set = LevelManager.instance.currentChapter.questionSet;
         List<QuestionTemplate> targetList = null;
 
-        // 2. Renge Göre Listeyi Seç
         switch (tileType)
         {
             case TileType.Red: targetList = set.redTemplates; break;
@@ -35,31 +31,28 @@ public class QuestionManager : MonoBehaviour
             case TileType.Yellow: targetList = set.yellowTemplates; break;
             case TileType.Purple: targetList = set.purpleTemplates; break;
             case TileType.Green: targetList = set.greenTemplates; break;
-            case TileType.Orange: targetList = set.orangeTemplates; break; // Yeni Renk
+            case TileType.Orange: targetList = set.orangeTemplates; break;
             case TileType.Hard: targetList = set.hardTemplates; break;
         }
 
-        // 3. Listeden Rastgele Şablon Seç
         if (targetList != null && targetList.Count > 0)
         {
             int randomIndex = Random.Range(0, targetList.Count);
             QuestionTemplate template = targetList[randomIndex];
 
-            GenerateAndSendQuestion(template, tileType);
+            // Parametreyi buraya da iletiyoruz
+            GenerateAndSendQuestion(template, tileType, isPenalty);
         }
         else
         {
-            Debug.LogWarning($"UYARI: {tileType} rengi için soru şablonu bulunamadı! Varsayılan soru soruluyor.");
-            // Yedek soru (Hata vermemesi için)
+            // Yedek soru
             if (AnswerManager.instance != null)
                 AnswerManager.instance.SetQuestion("Yedek Soru: 5 + 5 = ?", 10, tileType);
         }
     }
 
-    // --- ŞABLONDAN SORU ÜRETME (HEPSİNİ BU YAPIYOR) ---
-    // QuestionManager.cs içindeki GenerateAndSendQuestion fonksiyonunu bununla değiştir:
-
-    void GenerateAndSendQuestion(QuestionTemplate tmpl, TileType type)
+    // GÜNCELLEME 2: isPenalty parametresi ve Metin Mantığı
+    void GenerateAndSendQuestion(QuestionTemplate tmpl, TileType type, bool isPenalty)
     {
         // 1. Sayıları Oluştur
         List<int> generatedValues = new List<int>();
@@ -75,71 +68,65 @@ public class QuestionManager : MonoBehaviour
             formatArgs[i] = val;
         }
 
-        // 2. Metni Oluştur
-        string finalQuestionText = string.Format(tmpl.questionText, formatArgs);
-
-        // 3. Formülü Oluştur
+        // 2. Formülü Hazırla (Hesaplama ve Gösterim için)
         string rawFormula = string.Format(tmpl.formula, formatArgs);
-
-        // --- DÜZELTME BURADA BAŞLIYOR ---
-
-        // Temizlik: Tırnak işaretlerini ve gereksiz boşlukları temizle
         string cleanFormula = rawFormula.Replace("\"", "").Replace("'", "").Trim();
+
+        // --- KRİTİK DEĞİŞİKLİK BURADA ---
+        string finalQuestionText;
+
+        if (isPenalty)
+        {
+            // Eğer CEZA ise: Hikayeyi çöpe at, sadece formülü göster!
+            // Örn: "45 + 8 + 7 = ?"
+            finalQuestionText = $"İŞLEMİ ÇÖZ:\n\n{cleanFormula} = ?";
+        }
+        else
+        {
+            // Eğer NORMAL ise: Hikayeli metni kullan
+            // Örn: "Ali'nin 45 elması var..."
+            finalQuestionText = string.Format(tmpl.questionText, formatArgs);
+        }
+        // ---------------------------------
 
         int calculatedAnswer = 0;
 
         try
         {
-            // Hesaplama Motoru
-            System.Data.DataTable dt = new System.Data.DataTable();
+            DataTable dt = new DataTable();
             var resultObj = dt.Compute(cleanFormula, "");
 
-            // Sonucu Güvenli Çevir
             if (resultObj is int) calculatedAnswer = (int)resultObj;
-            else if (resultObj is double) calculatedAnswer = (int)(double)resultObj;
-            else if (resultObj is float) calculatedAnswer = (int)(float)resultObj;
-            else if (resultObj is decimal) calculatedAnswer = (int)(decimal)resultObj;
             else calculatedAnswer = System.Convert.ToInt32(resultObj);
 
-            Debug.Log($"✅ Soru Hazır: {cleanFormula} = {calculatedAnswer}");
+            Debug.Log($"✅ Soru ({isPenalty}): {cleanFormula} = {calculatedAnswer}");
         }
         catch (System.Exception e)
         {
-            // HATA VARSA OYUN ÇÖKMESİN, LOG BASIP DEVAM ETSİN
-            Debug.LogError($"🚨 FORMÜL HATASI! Şablon: {tmpl.name} \n" +
-                           $"Hatalı Formül: '{cleanFormula}' (Orjinal: {tmpl.formula}) \n" +
-                           $"Hata Mesajı: {e.Message}");
-
-            // Acil durum cevabı (Oyun donmasın diye)
+            Debug.LogError($"Formül Hatası: {e.Message}");
             calculatedAnswer = 0;
-            finalQuestionText += " (Hata: Cevap 0)";
+            finalQuestionText = "Hatalı Soru (Cevap 0)";
         }
 
-        // 4. Gönder
+        // 3. Gönder
         if (AnswerManager.instance != null)
         {
             AnswerManager.instance.SetQuestion(finalQuestionText, calculatedAnswer, type);
         }
     }
 
-    // --- CEZA KÖŞESİ (RASTGELE SORU) ---
+    // GÜNCELLEME 3: Burası Ceza Köşesi olduğu için 'true' gönderiyoruz
     public void AskRandomNormalQuestion()
     {
-        // Joker, Start, Hard, Penalty HARİÇ diğerlerinden rastgele seç
         TileType[] validTypes = {
-            TileType.Red,
-            TileType.Blue,
-            TileType.Green,
-            TileType.Yellow,
-            TileType.Purple,
-            TileType.Orange
+            TileType.Red, TileType.Blue, TileType.Green,
+            TileType.Yellow, TileType.Purple, TileType.Orange
         };
 
         int randIndex = Random.Range(0, validTypes.Length);
         TileType selectedType = validTypes[randIndex];
 
-        Debug.Log("Ceza Köşesi: Rastgele Soru Türü -> " + selectedType);
-
-        SoruOlusturVeSor(selectedType);
+        // DİKKAT: Buradaki 'true', "Bu bir ceza sorusudur, hikaye yazma!" demek.
+        SoruOlusturVeSor(selectedType, true);
     }
 }

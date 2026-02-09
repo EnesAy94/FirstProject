@@ -132,30 +132,40 @@ public class SaveManager : MonoBehaviour
 
     // Soru çözüldüğünde bu fonksiyonu çağıracağız
     // GÜNCELLENMİŞ VERSİYON
-    public void RegisterAnswer(bool isCorrect, bool isHardQuestion, bool isPenaltyQuestion)
+    // GÜNCELLENMİŞ REGISTER ANSWER
+    // 'updateStreak' parametresi eklendi. Varsayılan değeri 'true'.
+    // Eğer false gönderirsek (Ceza alanı gibi), seri bozulmaz ve artmaz.
+    public void RegisterAnswer(bool isCorrect, bool isHardQuestion, bool isPenaltyQuestion, bool updateStreak = true)
     {
-        // 1. STREAK (SERİ) HESABI (Aynı kalıyor)
-        if (isCorrect)
+        // 1. STREAK (SERİ) HESABI
+        // Sadece 'updateStreak' true ise seriyi değiştiriyoruz.
+        if (updateStreak)
         {
-            activeSave.currentStreak++;
-            if (activeSave.currentStreak > activeSave.maxStreak)
-                activeSave.maxStreak = activeSave.currentStreak;
-        }
-        else
-        {
-            activeSave.currentStreak = 0;
+            if (isCorrect)
+            {
+                activeSave.currentStreak++;
+                // PlayerData'da 'maxStreak' olarak tanımlamışsın, onu kullanıyoruz.
+                if (activeSave.currentStreak > activeSave.maxStreak)
+                {
+                    activeSave.maxStreak = activeSave.currentStreak;
+                }
+            }
+            else
+            {
+                activeSave.currentStreak = 0;
+            }
         }
 
-        // 2. KATEGORİYE GÖRE KAYIT (Burası Değişti)
+        // 2. KATEGORİYE GÖRE KAYIT
+        // Burası 'updateStreak'ten bağımsız çalışır. 
+        // Hapiste bile olsa doğru/yanlış sayıları istatistiğe işlenir.
         if (isPenaltyQuestion)
         {
-            // Eğer Ceza alanındaysak buraya yaz
             if (isCorrect) activeSave.penaltyCorrectCount++;
             else activeSave.penaltyWrongCount++;
         }
         else if (isHardQuestion)
         {
-            // Zor soruysa buraya
             if (isCorrect) activeSave.hardCorrectCount++;
             else activeSave.hardWrongCount++;
         }
@@ -166,6 +176,7 @@ public class SaveManager : MonoBehaviour
             else activeSave.normalWrongCount++;
         }
 
+        // 3. KAYDET
         SaveGame();
     }
 
