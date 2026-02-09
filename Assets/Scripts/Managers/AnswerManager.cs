@@ -24,6 +24,7 @@ public class AnswerManager : MonoBehaviour
     public TMP_InputField answerInput;
     public Whiteboard whiteboard;
     public GameObject questionPanel;
+    public GameObject retryButton;
 
     [Header("Sonuç / Feedback UI")]
     public GameObject feedbackPanel;
@@ -81,43 +82,51 @@ public class AnswerManager : MonoBehaviour
     }
 
     // --- NORMAL OYUN SONUCU ---
+    // AnswerManager.cs içindeki fonksiyonun DÜZELTİLMİŞ HALİ:
+
     void HandleNormalFeedback(bool isCorrect)
     {
+        // 1. Önce Joker Butonunu HER İHTİMALE KARŞI gizle.
+        // Böylece doğru cevap verince veya joker bitince buton ekranda kalmaz.
+        if (retryButton != null) retryButton.SetActive(false);
+
         if (isCorrect)
         {
-            // 1. ÖNCE GÖREVİ İLERLET VE KİLİDİ AÇTIR! (Yer değiştirdi)
-            if (LevelManager.instance != null)
-            {
-                LevelManager.instance.CheckMissionProgress(currentQuestionType);
-            }
+            // --- DOĞRU CEVAP ---
+            if (LevelManager.instance != null) LevelManager.instance.CheckMissionProgress(currentQuestionType);
 
-            // 2. SONRA BAŞARIMI KONTROL ET (Artık kilit açık olduğu için işleyecek)
-            foreach (AchievementLink link in achievementLinks)
-            {
-                if (link.type == currentQuestionType)
-                {
-                    AchievementManager.instance.AddProgress(link.achievementID, 1);
-                    break;
-                }
-            }
+            bool isHard = (currentQuestionType == TileType.Hard);
+            bool isPenalty = (LevelManager.instance != null && LevelManager.instance.isPenaltyActive);
+            SaveManager.instance.RegisterAnswer(true, isHard, isPenalty);
 
             if (GameManager.instance != null) GameManager.instance.player.BonusMove(0);
+
+            ShowFeedbackPanel(true, false);
         }
         else
         {
-            if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
-        }
+            // --- YANLIŞ CEVAP ---
 
-        // İSTATİSTİK KAYDI:
-        bool isHard = (currentQuestionType == TileType.Hard);
-        bool isPenalty = false;
-        if (LevelManager.instance != null)
-        {
-            isPenalty = LevelManager.instance.isPenaltyActive;
-        }
-        SaveManager.instance.RegisterAnswer(isCorrect, isHard, isPenalty);
+            // 1. Streak'i hafızaya al
+            SaveManager.instance.SaveLastStreakBeforeReset();
 
-        ShowFeedbackPanel(isCorrect, false);
+            // 2. Joker Kontrolü: Oyuncunun "İkinci Şans" jokeri var mı?
+            bool hasJoker = false;
+
+            // BURASI KRİTİK: Anlık olarak envantere bakıyoruz.
+            // Eğer az önce kullandıysa ve sayısı 0'a düştüyse 'hasJoker' false olacak.
+            if (JokerManager.instance != null)
+                hasJoker = JokerManager.instance.HasSecondChance();
+
+            // 3. Paneli Aç
+            ShowFeedbackPanel(false, false);
+
+            // 4. Butonu SADECE joker varsa göster
+            if (retryButton != null)
+            {
+                retryButton.SetActive(hasJoker);
+            }
+        }
     }
 
     // --- CEZA MODU SONUCU ---
@@ -151,6 +160,16 @@ public class AnswerManager : MonoBehaviour
         // --- BUTON TIKLANINCA YAPILACAKLAR (SIRALI KONTROL) ---
         feedbackContinueButton.onClick.AddListener(() =>
         {
+            if (feedbackTitleText.text.Contains("YANLIŞ")) // Basit bir kontrol
+            {
+                // 1. İstatistiğe Yanlış olarak işle
+                bool isHard = (currentQuestionType == TileType.Hard);
+                bool isPenalty = (LevelManager.instance != null && LevelManager.instance.isPenaltyActive);
+                SaveManager.instance.RegisterAnswer(false, isHard, isPenalty); // Şimdi 'Yanlış' diye kaydediyoruz
+
+                // 2. Puan düşür
+                if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
+            }
             // 1. Önce Feedback Panelini Kapat
             feedbackPanel.SetActive(false);
 
@@ -220,5 +239,23 @@ public class AnswerManager : MonoBehaviour
                 else feedbackDescText.text = "Olsun, bir dahakine dikkat et.\nPuanın düştü.";
             }
         }
+    }
+
+    public void OnClick_UseSecondChanceJoker()
+    {
+        // Jokeri harca
+        JokerManager.instance.ConsumeSecondChance();
+
+        // Paneli kapat
+        feedbackPanel.SetActive(false);
+
+        // Input alanını temizle
+        answerInput.text = "";
+
+        // Soruyu tekrar aktif et (Input'a odaklan)
+        answerPanel.SetActive(true);
+        answerInput.ActivateInputField();
+
+        Debug.Log("🔁 Joker kullanıldı, soru tekrar soruluyor.");
     }
 }

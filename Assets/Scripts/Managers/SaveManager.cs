@@ -360,4 +360,28 @@ public class SaveManager : MonoBehaviour
             SaveGame();
         }
     }
+
+    // --- JOKER SİSTEMİ İÇİN ---
+
+    // Yanlış cevap verildiğinde, puan silinmeden önce bunu çağıracağız
+    public void SaveLastStreakBeforeReset()
+    {
+        // Eğer kayda değer bir seri varsa (0 değilse) hafızaya al
+        if (activeSave.currentStreak > 0)
+        {
+            activeSave.lastLostStreak = activeSave.currentStreak;
+            SaveGame();
+        }
+    }
+
+    // Joker 3 kullanıldığında bunu çağıracağız
+    public void RestoreLostStreak()
+    {
+        if (activeSave.lastLostStreak > 0)
+        {
+            activeSave.currentStreak = activeSave.lastLostStreak;
+            // Kullandık bitti, tekrar 0 yapabiliriz veya kalabilir. Şimdilik kalsın.
+            SaveGame();
+        }
+    }
 }

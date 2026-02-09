@@ -5,7 +5,10 @@ public class PlayerMovement : MonoBehaviour
 {
     public Route currentRoute;
 
-    public int routePosition = 0;
+    // DEĞİŞİKLİK 1: İsmi 'currentTileIndex' yaptık. 
+    // Diğer scriptler (JokerManager, LevelManager) konumu bu isimle arıyor.
+    public int currentTileIndex = 0;
+
     public int steps = 0;
     public bool isMoving = false;
 
@@ -21,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // NORMAL ZAR HAREKETİ
+    // NORMAL HAREKET (Zar veya Joker ile tetiklenir)
     IEnumerator Move()
     {
         if (isMoving) yield break;
@@ -30,17 +33,17 @@ public class PlayerMovement : MonoBehaviour
         while (steps > 0)
         {
             // İleri Git
-            routePosition++;
+            currentTileIndex++;
 
             // Harita sonuna gelince başa sar
-            routePosition %= currentRoute.childNodes.Count;
+            currentTileIndex %= currentRoute.childNodes.Count;
 
-            Vector3 nextPos = currentRoute.childNodes[routePosition].position;
+            Vector3 nextPos = currentRoute.childNodes[currentTileIndex].position;
 
             // Kamera Kontrolü
             CalculateSideAndRotate();
 
-            // Fiziksel Hareket
+            // Fiziksel Hareket (Yürüme Efekti)
             while (MoveToNextNode(nextPos)) { yield return null; }
 
             yield return new WaitForSeconds(0.1f);
@@ -64,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         int totalTiles = currentRoute.childNodes.Count;
         int sideLength = totalTiles / 4;
 
-        int newSideIndex = Mathf.Min(routePosition / sideLength, 3);
+        int newSideIndex = Mathf.Min(currentTileIndex / sideLength, 3);
 
         if (newSideIndex != currentSideIndex)
         {
@@ -78,21 +81,42 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // --- KARE KONTROLÜ ---
+    // --- KARE KONTROLÜ (CheckCurrentTile) ---
     void CheckCurrentTile()
     {
-        int safeIndex = routePosition % currentRoute.childNodes.Count;
-        Tile currentTile = currentRoute.childNodes[safeIndex].GetComponent<Tile>();
+        int safeIndex = currentTileIndex % currentRoute.childNodes.Count;
+        Transform currentNode = currentRoute.childNodes[safeIndex];
+
+        // Kutunun scriptine ulaşıyoruz
+        Tile currentTile = currentNode.GetComponent<Tile>();
 
         if (currentTile != null)
         {
-            if (currentTile.type == TileType.Penalty)
+            // --- JOKER KONTROLÜ (YENİ VE HIZLI YÖNTEM) ---
+            if (currentTile.type == TileType.Joker)
+            {
+                Debug.Log("🎁 Joker Kutusuna Geldin!");
+
+                // JokerManager varsa jokeri ver
+                if (JokerManager.instance != null)
+                {
+                    JokerManager.instance.EarnRandomJoker();
+                }
+
+                // Zarı tekrar aktif et (Soru sormayacağız)
+                if (LevelManager.instance != null)
+                    LevelManager.instance.SetDiceInteractable(true);
+
+                return; // Çıkış yap, aşağı inip soru sorma
+            }
+            // ----------------------------------------------
+
+            else if (currentTile.type == TileType.Penalty)
             {
                 LevelManager.instance.EnterPenaltyZone();
             }
             else if (currentTile.type == TileType.Hard)
             {
-                // DEĞİŞEN KISIM: Direkt soru sorma, LevelManager'a bildir
                 LevelManager.instance.EnterHardZone();
             }
             else if (currentTile.type == TileType.Start || currentTile.type == TileType.Empty)
@@ -117,13 +141,51 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // --- DEĞİŞEN KISIM BURASI ---
-    // Artık doğru/yanlış bilince piyonu oynatmıyoruz.
-    // Fonksiyon duruyor (AnswerManager hata vermesin diye) ama içi boş.
     public void BonusMove(int amount)
     {
-        // İÇİNİ BOŞALTTIK
-        // İstersen log bırakabilirsin:
-        // Debug.Log($"Bonus hareket (Puan sistemi aktif): {amount} birimlik hareket iptal edildi.");
+        // Boş bırakıyoruz (Puan sisteminde bonus hareket yok)
+    }
+
+    // --- JOKER HAREKET SİSTEMİ (En Temiz Hali) ---
+    public void GoToNearestColor(TileType targetType)
+    {
+        // Elimizde zaten rota var (currentRoute), tekrar liste yapmaya gerek yok!
+        var allNodes = currentRoute.childNodes;
+
+        int targetIdx = -1;
+
+        // Bulunduğumuz yerden sona kadar tara
+        for (int i = currentTileIndex + 1; i < allNodes.Count; i++)
+        {
+            // Kutunun içindeki Tile scriptine bak
+            Tile tile = allNodes[i].GetComponent<Tile>();
+
+            if (tile != null && tile.type == targetType)
+            {
+                targetIdx = i;
+                break;
+            }
+        }
+
+        // Hedef bulunduysa
+        if (targetIdx != -1)
+        {
+            // Kaç adım gitmesi gerektiğini hesapla
+            int stepsToWalk = targetIdx - currentTileIndex;
+
+            Debug.Log($"🏃 {targetType} rengine gidiliyor. Atılacak adım: {stepsToWalk}");
+
+            // Zarı biz atmışız gibi ayarla ve yürüt
+            this.steps = stepsToWalk;
+            StartMoving();
+        }
+        else
+        {
+            // LevelManager üzerinden uyarı ver
+            if (LevelManager.instance != null)
+            {
+                LevelManager.instance.ShowNotification("ÜZGÜNÜM", "İleride bu renkte kutu kalmadı!", () => { });
+            }
+        }
     }
 }

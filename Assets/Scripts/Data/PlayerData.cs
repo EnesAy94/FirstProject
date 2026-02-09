@@ -44,6 +44,7 @@ public class PlayerData
     public int lastUnlockedLevel = 1; // Varsayılan 1. bölüm açık
     public List<int> completedMainChapters = new List<int>();
     public List<string> completedMissions = new List<string>();
+    public int lastLostStreak = 0;
 
     // Başarım ilerlemeleri (Örn: "hard_master" -> 5 tane çözdü)
     // Dictionary Unity'de direkt serileşmez, basit bir struct listesi yapalım:

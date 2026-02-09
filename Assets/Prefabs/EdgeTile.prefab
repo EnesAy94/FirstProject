@@ -372,6 +372,11 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: b326936fb12c9b84cb1732f3fcebccfc, type: 2}
     icon: {fileID: 21300000, guid: 15ff3939b1c852b4997f66c38c4b7123, type: 3}
     title: "Whatsapp Mesajlar\u0131"
+  - name: 
+    type: 9
+    material: {fileID: 0}
+    icon: {fileID: 0}
+    title: JOKER
 --- !u!1 &6079657756920793574
 GameObject:
   m_ObjectHideFlags: 0

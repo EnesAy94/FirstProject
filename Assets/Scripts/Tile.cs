@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+// 1. ADIM: Listeye 'Joker' ekledik
 public enum TileType 
 { 
     Empty, 
@@ -13,13 +14,13 @@ public enum TileType
     Green,     
     Hard,
     Start,
-    Penalty
+    Penalty,
+    Joker // YENİ: Artık Joker kendine ait bir kimliğe sahip!
 }
 
 public class Tile : MonoBehaviour
 {
     [Header("Ayarlar")]
-    // BURAYI DEĞİŞTİRDİK: 'currentType' yerine eski kodunla uyumlu olsun diye 'type' yaptık.
     public TileType type; 
 
     [Header("Bileşen Bağlantıları")]
@@ -43,7 +44,6 @@ public class Tile : MonoBehaviour
 
     public void UpdateVisuals()
     {
-        // Burada da 'type' değişkenini kullanıyoruz
         TileTheme theme = themes.Find(x => x.type == type);
 
         if (theme != null)
@@ -53,15 +53,18 @@ public class Tile : MonoBehaviour
                 tileRenderer.material = theme.material;
             }
 
-            // 'type' kontrolü
+            // GÖRSEL AYARLAMA MANTIĞI
             if (type == TileType.Empty)
             {
+                // Empty ise yazıyı gizle, sadece ikon varsa göster (veya gizle)
                 if (canvasObject != null) canvasObject.SetActive(true);
                 if (titleText != null) titleText.text = ""; 
                 if (iconImage != null) iconImage.sprite = theme.icon; 
             }
             else 
             {
+                // JOKER BURAYA GİRER (Diğer renkler gibi)
+                // Böylece "JOKER" yazısı ve Hediye Kutusu ikonunu gösterebilirsin.
                 if (canvasObject != null) canvasObject.SetActive(true);
                 if (titleText != null) titleText.text = theme.title;
                 if (iconImage != null) iconImage.sprite = theme.icon;
