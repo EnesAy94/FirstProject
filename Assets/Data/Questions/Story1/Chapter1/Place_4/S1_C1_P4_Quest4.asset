@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P4_Quest4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "G\xF6zlem cam\u0131ndaki \u0131s\u0131t\u0131c\u0131lar {0}\xB0C
+    olan cam\u0131 {1}\xB0C \u0131s\u0131tt\u0131. Cam\u0131n \u015Fu anki s\u0131cakl\u0131\u011F\u0131
+    ka\xE7 derece?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: -19, y: -10}
+  - {x: 10, y: 19}

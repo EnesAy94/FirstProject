@@ -11,6 +11,9 @@ public class ChapterData : ScriptableObject
     [TextArea]
     public string introText;    // Bölüm başlarken çıkacak hikaye yazısı
 
+    [Header("Soru Bankası")]
+    public ChapterQuestionSet questionSet;
+
     [Header("Bu Bölümün Görevleri")]
     public List<MissionData> missions; // İçine görev dosyalarını sürükleyip bırakacağız
 

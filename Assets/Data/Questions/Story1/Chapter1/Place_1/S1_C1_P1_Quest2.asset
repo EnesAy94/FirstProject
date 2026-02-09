@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P1_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Lazer terminali iki farkl\u0131 sinyal yay\u0131yor. Birinci frekans
+    {0} birim, ikinci frekans ise {1} birim. Sistemin kap\u0131y\u0131 a\xE7mas\u0131
+    i\xE7in bu iki sinyalin toplam g\xFCc\xFCne ihtiyac\u0131 var. Toplam g\xFC\xE7
+    nedir?"
+  formula: '"{0}+{1}"'
+  variableRanges:
+  - {x: -55, y: -35}
+  - {x: 60, y: 80}

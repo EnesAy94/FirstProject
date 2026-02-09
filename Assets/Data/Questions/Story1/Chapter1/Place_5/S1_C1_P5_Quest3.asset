@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P5_Quest3
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Su tank\u0131 g\xF6stergesi hatal\u0131. Tank\u0131n i\xE7indeki
+    bas\u0131n\xE7 {0} pascal (vakum) seviyesindeyken i\xE7eri su pompaland\u0131
+    ve bas\u0131n\xE7 {1} pascal artt\u0131. Yeni bas\u0131n\xE7 de\u011Feri nedir?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: -390, y: -300}
+  - {x: 750, y: 950}

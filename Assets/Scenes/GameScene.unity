@@ -247,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5058396778991982321, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: type
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8422126896788385855, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: m_Name
@@ -311,10 +311,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: Turuncu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2424dfca8436074ab05d6fb0b23e180, type: 2}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile9
       objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 67fe694d916de8348bc3aca6ebb108c6, type: 3}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -1331,10 +1347,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: Turuncu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2424dfca8436074ab05d6fb0b23e180, type: 2}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 67fe694d916de8348bc3aca6ebb108c6, type: 3}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3082,10 +3114,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: Turuncu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2424dfca8436074ab05d6fb0b23e180, type: 2}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile (32)
       objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 67fe694d916de8348bc3aca6ebb108c6, type: 3}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -5017,10 +5065,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: Turuncu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2424dfca8436074ab05d6fb0b23e180, type: 2}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile (25)
       objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 67fe694d916de8348bc3aca6ebb108c6, type: 3}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -6010,7 +6074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_text
-      value: 
+      value: JOKER
       objectReference: {fileID: 0}
     - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -6018,7 +6082,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a85cf8dbb51ac9b4d99ee69c8cf39ee8, type: 2}
     - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: type
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
@@ -6027,7 +6091,7 @@ PrefabInstance:
     - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: b4b079346e2790b43b5539fec33d20e4, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -6920,61 +6984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe63298f3e203d48af3de2bd52a3074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
-  rawAntikaIsimler:
-  - Gramofon
-  - "K\xF6stekli Saat"
-  - "Gaz Lambas\u0131"
-  - "Bak\u0131r \u0130brik"
-  - Porselen Bebek
-  - "El Dokuma Hal\u0131"
-  - "G\xFCm\xFC\u015F \u015Eamdan"
-  - Daktilo
-  - "Osmanl\u0131 Tesbih"
-  - "Ah\u015Fap Radyo"
-  rawTeknolojiIsimler:
-  - "Ak\u0131ll\u0131 Telefon"
-  - "Oyun bilgisayar\u0131"
-  - Tablet
-  - "Kablosuz Kulakl\u0131k"
-  - "Ak\u0131ll\u0131 Saat"
-  - Drone
-  - Oyun Konsolu
-  - "VR G\xF6zl\xFCk"
-  - "Robot S\xFCp\xFCrge"
-  - Dijital Kamera
-  rawKuyumcuIsimler:
-  - "\xC7eyrek Alt\u0131n"
-  - "Tam Alt\u0131n"
-  - "Yar\u0131m Alt\u0131n"
-  - Bilezik
-  - "Tekta\u015F Y\xFCz\xFCk"
-  - "P\u0131rlanta Kolye"
-  - "1kg G\xFCm\xFC\u015F"
-  - Dolar
-  - Euro
-  - "K\xFCpe"
-  rawMorFilmler:
-  - "Ba\u015Flang\u0131\xE7"
-  - "Sihirbazlar \xC7etesi"
-  - "\u0130talyan \u0130\u015Fi"
-  - "K\xF6stebek"
-  - "S\u0131k\u0131ysaYakala"
-  - "Rezervuar K\xF6pekleri"
-  - "Ola\u011Fan \u015E\xFCpheliler"
-  - Esaretin Bedeli
-  - Baba
-  - Pembe Panter
-  rawMorKitaplar:
-  - "Arsen L\xFCpen"
-  - Sherlock Holmes
-  - "Su\xE7 ve Ceza"
-  - Sefiller
-  - Monte Kristo Kontu
-  - "Da Vinci \u015Eifresi"
-  - "Melekler ve \u015Eeytanlar"
-  - "Simyac\u0131"
-  - "Kibar H\u0131rs\u0131z"
-  - "H\u0131rs\u0131z"
 --- !u!4 &1153481620
 Transform:
   m_ObjectHideFlags: 0
@@ -7017,6 +7026,7 @@ MonoBehaviour:
   feedbackTitleText: {fileID: 1684765707}
   feedbackDescText: {fileID: 380071421}
   feedbackContinueButton: {fileID: 926969685}
+  currentCorrectAnswer: 0
 --- !u!114 &1153481622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7639,7 +7649,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -125, y: -10}
+  m_AnchoredPosition: {x: -125, y: -25}
   m_SizeDelta: {x: 1250, y: 190}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1249582574
@@ -8294,7 +8304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5058396778991982321, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: type
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8422126896788385855, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: m_Name
@@ -10026,13 +10036,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: JOKER
+      objectReference: {fileID: 0}
     - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: type
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -10483,7 +10501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5058396778991982321, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: type
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8422126896788385855, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: m_Name
@@ -11746,9 +11764,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: JOKER
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: themes.Array.data[6].type
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -12865,10 +12899,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3482835956545971233, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_text
+      value: Turuncu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483224387252391539, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2424dfca8436074ab05d6fb0b23e180, type: 2}
+    - target: {fileID: 4546661437836837785, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: type
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728624655604045871, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_Name
       value: EdgeTile1
       objectReference: {fileID: 0}
+    - target: {fileID: 6106129184305766546, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 67fe694d916de8348bc3aca6ebb108c6, type: 3}
     - target: {fileID: 8300792321498011761, guid: ce6fa684d1b35ca4fbad8f4f95d66ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -12958,6 +13008,10 @@ PrefabInstance:
     - target: {fileID: 230808089966741875, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5058396778991982321, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
+      propertyPath: type
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8422126896788385855, guid: f52f213b61719c14ca5ea13f8a04bf22, type: 3}
       propertyPath: m_Name

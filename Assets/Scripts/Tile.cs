@@ -11,11 +11,12 @@ public enum TileType
     Blue,   
     Yellow,   
     Purple,  
-    Green,     
+    Green,
+    Orange,     
     Hard,
     Start,
     Penalty,
-    Joker // YENİ: Artık Joker kendine ait bir kimliğe sahip!
+    Joker 
 }
 
 public class Tile : MonoBehaviour

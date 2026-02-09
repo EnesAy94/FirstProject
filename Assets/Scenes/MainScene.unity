@@ -4423,6 +4423,7 @@ MonoBehaviour:
     lastUnlockedLevel: 1
     completedMainChapters: 
     completedMissions: []
+    lastLostStreak: 0
     achievementProgress: []
 --- !u!4 &1256171549
 Transform:

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P2_Quest3
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "S\u0131f\u0131r Noktas\u0131 \xF6rg\xFCt\xFC sisteme sahte bir kod
+    y\xFCkledi. Kodun a\u011F\u0131rl\u0131\u011F\u0131 {0} sat\u0131r. Sen ise anti-vir\xFCs
+    ile bu koda {1} sat\u0131rl\u0131k bir temizleme verisi ekledin. Sistemde kalan
+    y\xFCk\xFC hesapla."
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: 500000, y: 750000}
+  - {x: -400000, y: -250000}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P5_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Ekmek pi\u015Firme f\u0131r\u0131n\u0131 kapal\u0131yken oda s\u0131cakl\u0131\u011F\u0131
+    olan {0}\xB0C'deydi. \xC7al\u0131\u015Ft\u0131r\u0131ld\u0131\u011F\u0131nda
+    \u0131s\u0131s\u0131 {1}\xB0C artt\u0131. F\u0131r\u0131n \u015Fu an ka\xE7 derece?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: 21, y: 39}
+  - {x: 170, y: 190}

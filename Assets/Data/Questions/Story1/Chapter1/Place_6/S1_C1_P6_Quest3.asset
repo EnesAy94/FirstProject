@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P6_Quest3
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Navigasyon koordinatlar\u0131nda bir kayma var. Enlem verisi {0}
+    birimken, sistem bunu d\xFCzeltmek i\xE7in {1} birimlik bir yama uygulad\u0131.
+    G\xFCncel koordinat verisi nedir?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: -590000, y: -500000}
+  - {x: 120000, y: 150000}

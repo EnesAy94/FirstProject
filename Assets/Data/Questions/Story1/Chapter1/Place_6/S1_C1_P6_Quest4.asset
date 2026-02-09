@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P6_Quest4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Kalk\u0131\u015F i\xE7in gereken iti\u015F g\xFCc\xFC {0} Newton.
+    Ancak ters r\xFCzgar {1} Newton'luk bir diren\xE7 uyguluyor. Helikopterin net
+    kalk\u0131\u015F g\xFCc\xFC ne kadar olur?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: 900000, y: 999999}
+  - {x: -325000, y: -225000}

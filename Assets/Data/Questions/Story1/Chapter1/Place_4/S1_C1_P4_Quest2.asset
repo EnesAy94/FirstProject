@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C1_P4_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "R\xFCzgar g\xFCl\xFC {0} derecelik bir a\xE7\u0131yla do\u011Fuya
+    sapm\u0131\u015F. F\u0131rt\u0131na r\xFCzgar\u0131 onu {1} derece daha ayn\u0131
+    y\xF6ne itti. Toplam sapma a\xE7\u0131s\u0131 ka\xE7 oldu?"
+  formula: '{0}+{1}'
+  variableRanges:
+  - {x: -19, y: -11}
+  - {x: -39, y: -21}
