@@ -22,3 +22,90 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 262542de773685242b7553a977efbd31, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 10
+  locationStories:
+  - tileType: 1
+    locationName: Resepsiyon
+    locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    introDescription: "Binaya s\u0131zd\u0131\u011F\u0131nda g\xFCvenlik sistemi
+      seni bir \"say\u0131 tuza\u011F\u0131na\" \xE7ekti. Giri\u015F turnikeleri,
+      ge\xE7en insan say\u0131s\u0131n\u0131 (toplama) ve g\xFCvenlik kart\u0131n\u0131
+      okutup \xE7\u0131kanlar\u0131 (\xE7\u0131karma) ayn\u0131 anda hesaplaman\u0131
+      istiyor. E\u011Fer dengeyi bulamazsan alarm \xE7alacak."
+    successMessage: "Turnikeler ye\u015Fil yand\u0131! Giri\u015F ve \xE7\u0131k\u0131\u015F
+      yapanlar\u0131n dengesini kusursuz hesaplad\u0131n. G\xFCvenlik g\xF6revlileri
+      senin s\u0131radan bir ziyaret\xE7i oldu\u011Funu san\u0131yor. \u0130\xE7eridesin
+      Ajan Neon."
+    failMessage: "K\u0131rm\u0131z\u0131 alarm! Say\u0131 tuza\u011F\u0131na d\xFC\u015Ft\xFCn.
+      Turnikeler kilitlendi ve g\xFCvenlik ekibi asans\xF6rlere do\u011Fru ko\u015Fuyor.
+      Yakalanmadan \xF6nce dengeyi tekrar hesapla!"
+  - tileType: 2
+    locationName: "Merkezi Asans\xF6r Bo\u015Flu\u011Fu"
+    locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    introDescription: "Asans\xF6r\xFCn algoritmas\u0131 bozuldu. Panelde sadece \"Gitmen
+      gereken kat\" yaz\u0131yor ama tu\u015Flar \xE7al\u0131\u015Fm\u0131yor. \xD6rne\u011Fin;
+      -2. kattas\u0131n ve 15 kat yukar\u0131 \xE7\u0131k\u0131p sonra 4 kat a\u015Fa\u011F\u0131
+      inmen gerekiyor. Bu kar\u0131\u015F\u0131k komutlar\u0131 tek bir i\u015Flemle
+      \xE7\xF6z\xFCp do\u011Fru kata ula\u015Fmal\u0131s\u0131n."
+    successMessage: "Ding! Asans\xF6r tam olarak hedefledi\u011Fin katta durdu. Algoritmay\u0131
+      \xE7\xF6zd\xFCn ve g\xFCvenlik katlar\u0131n\u0131 tek bir hamleyle atlatarak
+      do\u011Fru kata ula\u015Ft\u0131n."
+    failMessage: "Asans\xF6r sars\u0131larak yanl\u0131\u015F bir katta durdu! Buras\u0131
+      d\xFC\u015Fman devriyeleriyle dolu. Katlar aras\u0131ndaki fark\u0131 ve y\xF6n\xFC
+      (art\u0131/eksi) tekrar hesaplamazsan asans\xF6rde mahsur kalacaks\u0131n."
+  - tileType: 3
+    locationName: "Borsa \u0130\u015Flem Merkezi"
+    locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    introDescription: "Devasa ekranlarda hisse senedi de\u011Ferleri ak\u0131yor.
+      Bir hisse \xF6nce +1500 puan art\u0131yor, sonra -2400 puan d\xFC\u015F\xFCyor
+      ve ard\u0131ndan +800 puan daha ekleniyor. Neon, bu dalgalanmalar\u0131n sonundaki
+      net de\u011Fi\u015Fim de\u011Ferini bulup sisteme girmeli."
+    successMessage: "Borsa verileri stabilize edildi! Net de\u011Fi\u015Fim de\u011Ferini
+      sisteme girerek 'S\u0131f\u0131r Noktas\u0131'n\u0131n finansal sald\u0131r\u0131s\u0131n\u0131
+      durdurdun. Ekranlar normale d\xF6n\xFCyor."
+    failMessage: "Hatal\u0131 i\u015Flem! Piyasa kaosa s\xFCr\xFCkleniyor ve rakamlar
+      birbirine giriyor. Art\u0131\u015F ve azal\u0131\u015Flar\u0131 do\u011Fru
+      toplamazsan sistem tamamen \xE7\xF6kecek!"
+  - tileType: 4
+    locationName: Kasa Dairesi
+    locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
+    introDescription: "Binan\u0131n en alt\u0131ndaki s\u0131\u011F\u0131naktas\u0131n.
+      Burada dijital paralar transfer ediliyor. Bir hesaba y\xFCkl\xFC miktarda para
+      giri\u015Fi yap\u0131l\u0131rken (toplama), ba\u015Fka bir hesaptan gizlice
+      para \xE7ekiliyor (\xE7\u0131karma). Neon, bu iki i\u015Flem aras\u0131ndaki
+      \"net bakiyeyi\" hesaplayarak h\u0131rs\u0131zl\u0131\u011F\u0131 durdurmal\u0131."
+    successMessage: "H\u0131rs\u0131zl\u0131k engellendi! Transferleri dondurdun
+      ve net bakiyeyi sabitledin. Dijital paralar g\xFCvende, 'S\u0131f\u0131r Noktas\u0131'n\u0131n
+      kasas\u0131 bo\u015F kald\u0131."
+    failMessage: "Sistem uyar\u0131s\u0131: 'Yetkisiz Transfer!' Giren ve \xE7\u0131kan
+      miktar aras\u0131ndaki fark\u0131 yanl\u0131\u015F buldu\u011Fun i\xE7in paralar
+      hala hackerlar\u0131n hesab\u0131na ak\u0131yor. Hesab\u0131 hemen d\xFCzelt!"
+  - tileType: 5
+    locationName: "Havaland\u0131rma ve Tesisat Kat\u0131"
+    locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
+    introDescription: "Bina \xE7ok s\u0131cak! Is\u0131tma sistemi +25 dereceden
+      ba\u015Fl\u0131yor, sen so\u011Futucuyla -40 derece m\xFCdahale ediyorsun,
+      ard\u0131ndan g\xFCne\u015F \u0131\u015F\u0131\u011F\u0131 +12 derece art\u0131r\u0131yor.
+      Fanlar\u0131n \xE7al\u0131\u015Fmas\u0131 i\xE7in son s\u0131cakl\u0131k de\u011Ferini
+      do\u011Fru hesaplamal\u0131s\u0131n."
+    successMessage: "Fanlar d\xF6nmeye ba\u015Flad\u0131! S\u0131cakl\u0131k h\u0131zla
+      normale d\xFC\u015F\xFCyor. Binadaki a\u015F\u0131r\u0131 \u0131s\u0131nma
+      krizini \xE7\xF6zd\xFCn, art\u0131k sistemler daha rahat \xE7al\u0131\u015F\u0131yor."
+    failMessage: "Sistem dondu veya a\u015F\u0131r\u0131 \u0131s\u0131nd\u0131! Yanl\u0131\u015F
+      de\u011Fer giri\u015Fi havaland\u0131rmay\u0131 bozdu. Borulardan buhar \xE7\u0131kmaya
+      ba\u015Fl\u0131yor, son s\u0131cakl\u0131\u011F\u0131 hatas\u0131z bulmal\u0131s\u0131n."
+  - tileType: 6
+    locationName: "\xC7at\u0131 Kat\u0131 ve Anten Kulesi"
+    locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
+    introDescription: "Final sahnesi! \"S\u0131f\u0131r Noktas\u0131\" lideri helikopterle
+      ka\xE7mak \xFCzere. Anten kulesindeki sinyal bozucu, 6 basamakl\u0131 devasa
+      say\u0131lar\u0131 hem topluyor hem \xE7\u0131kar\u0131yor. Neon, binan\u0131n
+      tepesinde r\xFCzgara kar\u015F\u0131 dururken, bu karma\u015F\u0131k \"D\xF6rt
+      \u0130\u015Flem \xD6ncesi\" final s\u0131nav\u0131n\u0131 ge\xE7ip ana sinyali
+      kesmeli."
+    successMessage: "Sinyal kesildi! Anten kulesindeki karma\u015F\u0131k denklemi
+      saniyeler i\xE7inde \xE7\xF6zd\xFCn. Ka\xE7\u0131\u015F helikopteri kalk\u0131\u015F
+      yapam\u0131yor ve 'S\u0131f\u0131r Noktas\u0131'n\u0131n ana sinyali susturuldu.
+      G\xF6rev ba\u015Far\u0131yla tamamland\u0131!"
+    failMessage: "Ba\u011Flant\u0131 kurulamad\u0131! R\xFCzgar ve parazitler aras\u0131nda
+      karma\u015F\u0131k say\u0131lar\u0131 yanl\u0131\u015F toplad\u0131n/\xE7\u0131kard\u0131n.
+      Helikopter havalanmak \xFCzere, son \u015Fans\u0131n; ana sinyali hemen kes!"

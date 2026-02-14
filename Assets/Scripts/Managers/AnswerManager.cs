@@ -31,6 +31,14 @@ public class AnswerManager : MonoBehaviour
     public TextMeshProUGUI feedbackDescText;
     public Button feedbackContinueButton;
 
+    [Header("Soru Durumu (QuestionManager tarafından yönetilir)")]
+    public bool isStoryPhase = false;       // Şu an hikayeli (ilk 5) soruda mıyız?
+    public bool isFinalStoryQuestion = false; // Bu, o mekanın 5. ve son sorusu mu?
+
+    [Header("Özel Mesaj Sistemi")]
+    public string currentSuccessMsg = ""; // Mekandan gelen özel doğru mesajı
+    public string currentFailMsg = "";    // Mekandan gelen özel yanlış mesajı
+
     // ŞU ANKİ DOĞRU CEVAP (QuestionManager burayı güncelleyecek)
     public string currentCorrectAnswer;
     private TileType currentQuestionType;
@@ -156,68 +164,93 @@ public class AnswerManager : MonoBehaviour
     }
 
     // --- PANEL GÖSTERME ---
+    // ShowFeedbackPanel fonksiyonunu BU YENİ MANTIKLA değiştir:
     void ShowFeedbackPanel(bool isCorrect, bool isPenaltyMode)
     {
         if (feedbackPanel == null) return;
         feedbackPanel.SetActive(true);
 
+        // --- 1. DOĞRU CEVAP MANTIĞI ---
         if (isCorrect)
         {
             feedbackTitleText.text = "DOĞRU!";
             feedbackTitleText.color = Color.green;
+
+            // KURAL: Özel Başarı Mesajı SADECE 5. (Son) Hikaye Sorusunda Çıkar!
+            if (isFinalStoryQuestion && !string.IsNullOrEmpty(currentSuccessMsg))
+            {
+                feedbackDescText.text = currentSuccessMsg; // Örn: "Gizli geçidi buldun!"
+            }
+            else if (isPenaltyMode)
+            {
+                int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
+                int needed = 3 - current;
+                if (current >= 3) feedbackDescText.text = "Özgürlüğüne kavuştun!";
+                else feedbackDescText.text = $"Harika! {needed} tane kaldı.";
+            }
+            else
+            {
+                // İlk 4 hikaye sorusu veya Zor sorular için standart mesaj
+                feedbackDescText.text = "Tebrikler, harika gidiyorsun!";
+            }
         }
+        // --- 2. YANLIŞ CEVAP MANTIĞI ---
         else
         {
             feedbackTitleText.text = "YANLIŞ!";
             feedbackTitleText.color = Color.red;
+
+            // KURAL: Özel Yanlış Mesajı, TÜM Hikaye Sorularında (1-5) Çıkar.
+            // Ama Zor (Hard) sorulara geçince artık standart mesaj çıkar.
+            if (isStoryPhase && !string.IsNullOrEmpty(currentFailMsg))
+            {
+                feedbackDescText.text = currentFailMsg; // Örn: "Tüpler patladı!"
+            }
+            else if (isPenaltyMode)
+            {
+                int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
+                int needed = 3 - current;
+                feedbackDescText.text = $"Bilemedin. Hala {needed} tane lazım.";
+            }
+            else
+            {
+                // Zor sorularda veya özel mesaj yoksa standart uyarı
+                if (LevelManager.instance != null && LevelManager.instance.currentScore <= 0)
+                    feedbackDescText.text = "Eyvah! Puanın tükendi...";
+                else
+                    feedbackDescText.text = "Dikkatli ol, yanlış cevap.\nPuanın düştü.";
+            }
         }
 
+        // --- BUTON VE KAPANIŞ İŞLEMLERİ (Aynen Kalıyor) ---
         feedbackContinueButton.onClick.RemoveAllListeners();
         feedbackContinueButton.onClick.AddListener(() =>
         {
-            // Eğer cevap yanlışsa ve joker kullanmadan "Devam" dediysek CEZAYI KES
             if (feedbackTitleText.text.Contains("YANLIŞ"))
             {
-                // Sadece NORMAL moddaysa puan düşür.
-                // Ceza modundaysak (isPenaltyMode == true) puan düşmeyecek!
-                if (!isPenaltyMode && LevelManager.instance != null)
-                {
-                    LevelManager.instance.DecreaseScore();
-                }
-
-                // İstatistik kaydını zaten yukarıda (Handle fonksiyonlarında) yapmıştık,
-                // burada tekrar kaydetmeye gerek yok, yoksa çift kayıt olur.
+                if (!isPenaltyMode && LevelManager.instance != null) LevelManager.instance.DecreaseScore();
             }
 
             feedbackPanel.SetActive(false);
 
-            // Oyun Sonu Kontrolleri
+            // Mesajları temizle
+            currentSuccessMsg = "";
+            currentFailMsg = "";
+
+            // Durumları sıfırla (Güvenlik için)
+            isStoryPhase = false;
+            isFinalStoryQuestion = false;
+
             if (LevelManager.instance != null)
             {
-                if (LevelManager.instance.isFailurePending)
-                {
-                    LevelManager.instance.OpenPendingLevelFailedPanel();
-                    return;
-                }
-                if (LevelManager.instance.isCompletionPending)
-                {
-                    LevelManager.instance.OpenPendingLevelCompletePanel();
-                    return;
-                }
+                if (LevelManager.instance.isFailurePending) { LevelManager.instance.OpenPendingLevelFailedPanel(); return; }
+                if (LevelManager.instance.isCompletionPending) { LevelManager.instance.OpenPendingLevelCompletePanel(); return; }
 
                 if (isPenaltyMode)
                 {
                     int current = LevelManager.instance.penaltyCorrectCount;
-                    if (isCorrect && current >= 3)
-                    {
-                        LevelManager.instance.ExitPenaltyZone();
-                        if (LevelManager.instance.isCompletionPending)
-                            LevelManager.instance.OpenPendingLevelCompletePanel();
-                    }
-                    else
-                    {
-                        QuestionManager.instance.AskRandomNormalQuestion();
-                    }
+                    if (isCorrect && current >= 3) { LevelManager.instance.ExitPenaltyZone(); if (LevelManager.instance.isCompletionPending) LevelManager.instance.OpenPendingLevelCompletePanel(); }
+                    else { QuestionManager.instance.AskRandomNormalQuestion(); }
                 }
                 else
                 {
@@ -225,26 +258,6 @@ public class AnswerManager : MonoBehaviour
                 }
             }
         });
-
-        // Açıklama Metinleri
-        if (isPenaltyMode)
-        {
-            int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
-            int needed = 3 - current;
-            if (isCorrect && current >= 3) feedbackDescText.text = "Özgürlüğüne kavuştun!";
-            else feedbackDescText.text = isCorrect ? $"Harika! {needed} tane kaldı." : $"Bilemedin. Hala {needed} tane lazım.";
-        }
-        else
-        {
-            if (isCorrect) feedbackDescText.text = "Tebrikler, yola devam!";
-            else
-            {
-                if (LevelManager.instance != null && LevelManager.instance.currentScore <= 0)
-                    feedbackDescText.text = "Eyvah! Puanın tükendi...";
-                else
-                    feedbackDescText.text = "Olsun, bir dahakine dikkat et.\nPuanın düştü.";
-            }
-        }
     }
 
     // --- JOKER BUTONUNUN ÇALIŞTIRACAĞI FONKSİYON ---
@@ -262,5 +275,13 @@ public class AnswerManager : MonoBehaviour
         }
 
         Debug.Log("🔁 Joker kullanıldı, soru tekrar soruluyor.");
+    }
+
+    // Mekandan gelen özel mesajları kaydeder
+    public void SetCustomFeedbackMessages(string success, string fail)
+    {
+        currentSuccessMsg = success;
+        currentFailMsg = fail;
+        Debug.Log($"Özel Mesajlar Alındı: D-{success} / Y-{fail}");
     }
 }

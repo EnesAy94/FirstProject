@@ -21,3 +21,71 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 10
+  locationStories:
+  - tileType: 1
+    locationName: "Veri Kap\u0131s\u0131"
+    locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    introDescription: "Merkezin kap\u0131s\u0131 devasa bir veri duvar\u0131yla korunuyor.
+      Bu yo\u011Fun veri y\xFCk\xFCn\xFC e\u015Fit kapasiteli g\xFCvenlik portlar\u0131na
+      payla\u015Ft\u0131rarak sistemi kand\u0131rmal\u0131 ve ge\xE7i\u015F izni
+      almal\u0131s\u0131n."
+    successMessage: "Veri paketleri portlara m\xFCkemmel da\u011F\u0131ld\u0131!
+      Siber uzay\u0131n kalbine giden yol art\u0131k a\xE7\u0131k."
+    failMessage: "Dengesiz veri da\u011F\u0131t\u0131m\u0131! Portlardan biri a\u015F\u0131r\u0131
+      y\xFCklendi ve sistem kendini kilitledi."
+  - tileType: 2
+    locationName: "\u015Eifreleme T\xFCneli"
+    locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    introDescription: "Karanl\u0131k t\xFCnelde veriler s\xFCrekli i\u015Faret de\u011Fi\u015Ftiriyor.
+      Bir veri blo\u011Funu daha k\xFC\xE7\xFCk par\xE7alara b\xF6lerek g\xFCvenli
+      bir enerji kayna\u011F\u0131 olu\u015Fturmal\u0131s\u0131n. \u0130ki negatif
+      y\xFCk\xFCn \xE7arp\u0131\u015Fmas\u0131ndan do\u011Fan o \u0131\u015F\u0131k,
+      yolu ayd\u0131nlatacak."
+    successMessage: "I\u015F\u0131k patlamas\u0131! \u0130ki negatif de\u011Ferin
+      b\xF6l\xFCm\xFC t\xFCneli bembeyaz bir enerjiyle doldurdu."
+    failMessage: "Yanl\u0131\u015F: Karanl\u0131k \xE7\xF6k\xFCyor! \u0130\u015Faret
+      hatas\u0131 nedeniyle enerji \xFCretilemedi, t\xFCnelde mahsur kald\u0131n."
+  - tileType: 3
+    locationName: "\u0130\u015Flemci \xC7ekirde\u011Fi"
+    locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    introDescription: "Merkezi i\u015Flemci a\u015F\u0131r\u0131 \u0131s\u0131 y\xFCk\xFC
+      alt\u0131nda yanmak \xFCzere! Bu y\xFCk\xFC so\u011Futma emilimi yapabilen
+      \xE7ekirdeklere da\u011F\u0131tmal\u0131s\u0131n. Ka\xE7 \xE7ekirde\u011Fin
+      bu y\xFCk\xFC kald\u0131rabilece\u011Fini saptaman gerek."
+    successMessage: "So\u011Futma sistemi stabil! \xC7ekirdekler tam kapasite \xE7al\u0131\u015F\u0131yor
+      ve \u0131s\u0131 h\u0131zla d\xFC\u015F\xFCyor."
+    failMessage: "Kritik s\u0131cakl\u0131k! \xC7ekirdek say\u0131s\u0131 yetersiz
+      hesapland\u0131, i\u015Flemci erimeye ba\u015Fl\u0131yor!"
+  - tileType: 4
+    locationName: "Dijital U\xE7urum"
+    locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
+    introDescription: "Hackerlar siber d\xFCnyada mant\u0131k bo\u015Fluklar\u0131
+      yarat\u0131yor. Kar\u015F\u0131na \xE7\u0131kan i\u015Flemlerden biri ger\xE7ek
+      bir sonu\xE7 verirken, di\u011Feri evrenin kurallar\u0131n\u0131 yok eden bir
+      \"tan\u0131ms\u0131zl\u0131k\" tuza\u011F\u0131. Mant\u0131ks\u0131z olan\u0131
+      bul ve yok et!"
+    successMessage: "Bomba etkisiz! Matemati\u011Fin sars\u0131lmaz mant\u0131\u011F\u0131n\u0131
+      kullanarak tuza\u011F\u0131 bozdun ve ilerliyorsun."
+    failMessage: "Mant\u0131k hatas\u0131! Tan\u0131ms\u0131z olan b\xF6lgeyi se\xE7emedin
+      ve sistemde bir kara delik olu\u015Ftu."
+  - tileType: 5
+    locationName: Ana Bellek
+    locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
+    introDescription: "Veriler parampar\xE7a edilmi\u015F. Bu devasa veri y\u0131\u011F\u0131n\u0131n\u0131,
+      bozuk sekt\xF6r alanlar\u0131na b\xF6lerek her bir noktay\u0131 tek tek n\xF6tralize
+      etmelisin. Bir siber cerrah gibi hassas olmal\u0131s\u0131n."
+    successMessage: "Haf\u0131za temizlendi! Veri y\u0131\u011F\u0131n\u0131 bozuk
+      alanlara tam olarak b\xF6l\xFCnd\xFC ve etkisiz hale getirildi."
+    failMessage: "Bellek s\u0131z\u0131nt\u0131s\u0131! Yanl\u0131\u015F b\xF6lme
+      i\u015Flemi sistemi yava\u015Flat\u0131yor, hackerlar seni fark etmek \xFCzere!"
+  - tileType: 6
+    locationName: "S\u0131f\u0131r Noktas\u0131 \xC7ekirde\u011Fi"
+    locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
+    introDescription: "\u0130\u015Fte ana vir\xFCs\xFCn kalbi! Bu karma\u015F\u0131k
+      kodun savunmas\u0131n\u0131 k\u0131rmak i\xE7in onu do\u011Fru anahtarlara
+      b\xF6lmelisin. Final \u015Fifresini \xE7\xF6zd\xFC\u011F\xFCn an, d\xFCnya
+      say\u0131sal dengesine tekrar kavu\u015Facak."
+    successMessage: "ER\u0130\u015E\u0130M ONAYLANDI! Ana vir\xFCs par\xE7alanarak
+      yok oluyor. D\xFCnyay\u0131 karanl\u0131ktan kurtard\u0131n, Neon!"
+    failMessage: "Eri\u015Fim reddedildi! Final \u015Fifresi yanl\u0131\u015F. Vir\xFCs
+      kendini kopyalamaya ba\u015Flad\u0131, sistem \xE7\xF6k\xFCyor!"

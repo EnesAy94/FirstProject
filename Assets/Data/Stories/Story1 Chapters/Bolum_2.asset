@@ -22,3 +22,97 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 69c9f43319a21e44e911a054071917ff, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 20
+  locationStories:
+  - tileType: 1
+    locationName: "Bas\u0131n\xE7 Odas\u0131"
+    locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    introDescription: "Denizalt\u0131na giri\u015F yapmak o kadar kolay de\u011Fildi.
+      D\u0131\u015Far\u0131daki devasa su bas\u0131nc\u0131 ile denizalt\u0131n\u0131n
+      i\xE7 bas\u0131nc\u0131 aras\u0131nda devasa bir fark vard\u0131. Neon, kap\u0131n\u0131n
+      a\xE7\u0131lmas\u0131 i\xE7in bu iki de\u011Fer aras\u0131ndaki fark\u0131
+      (\xE7\u0131karma i\u015Flemini) hatas\u0131z hesaplay\u0131p e\u015Fitlemeliydi.
+      Bir birimlik hata, denizalt\u0131n\u0131n bir ka\u011F\u0131t gibi ezilmesine
+      neden olabilirdi."
+    successMessage: "\u0130\xE7 ve d\u0131\u015F bas\u0131n\xE7 tam olarak e\u015Fitlendi!
+      Kap\u0131daki a\u011F\u0131r metal kilitler b\xFCy\xFCk bir t\u0131slama sesiyle
+      a\xE7\u0131l\u0131yor. Denizalt\u0131na g\xFCvenle s\u0131zd\u0131n, operasyon
+      ba\u015Fl\u0131yor."
+    failMessage: "Bas\u0131n\xE7 dengelenemedi! Metal g\xF6vdeden gelen g\u0131c\u0131rt\u0131lar
+      korkutucu. E\u011Fer fark\u0131 do\u011Fru hesaplamazsan Abyss-7 bir ka\u011F\u0131t
+      gibi ezilecek. Say\u0131lar\u0131 tekrar \xE7\u0131kar!"
+  - tileType: 2
+    locationName: Makine Dairesi
+    locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    introDescription: "Abyss-7'nin motorlar\u0131, S\u0131f\u0131r Noktas\u0131'n\u0131n
+      g\xF6nderdi\u011Fi bir vir\xFCs nedeniyle normalden fazla enerji t\xFCketmeye
+      ba\u015Flam\u0131\u015Ft\u0131. Neon, ana jenerat\xF6rdeki toplam enerjiden,
+      s\u0131zd\u0131ran pillerin t\xFCketti\u011Fi enerjiyi \xE7\u0131kararak sistemin
+      ne kadar daha dayanabilece\u011Fini bulmak zorundayd\u0131. Her saniye, enerji
+      havuzundan eksilen bir say\u0131yd\u0131."
+    successMessage: "Enerji ka\xE7a\u011F\u0131n\u0131 tespit ettin ve jenerat\xF6r\xFC
+      stabilize ettin! I\u015F\u0131klar tekrar maviye d\xF6nd\xFC. Sistemin ne kadar
+      dayanaca\u011F\u0131n\u0131 art\u0131k biliyoruz, AIDA rotay\u0131 g\xFCncelliyor."
+    failMessage: "Hatal\u0131 hesaplama! Jenerat\xF6rdeki enerji h\u0131zla s\u0131f\u0131ra
+      yakla\u015F\u0131yor. T\xFCketilen miktar\u0131 do\u011Fru bulamazsan karanl\u0131kta
+      mahsur kalacaks\u0131n."
+  - tileType: 3
+    locationName: "Sonar \u0130stasyonu"
+    locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    introDescription: "Denizalt\u0131n\u0131n camlar\u0131 bu derinlikte i\u015Fe
+      yaramazd\u0131; tek g\xF6z\xFC sonard\u0131. Ekranda iki farkl\u0131 sinyal
+      belirdi: Birisi Abyss-7, di\u011Feri ise ka\xE7an d\xFC\u015Fman denizalt\u0131s\u0131.
+      Neon, iki denizalt\u0131n\u0131n deniz seviyesine olan uzakl\u0131klar\u0131n\u0131
+      kar\u015F\u0131la\u015Ft\u0131rarak aralar\u0131ndaki derinlik fark\u0131n\u0131
+      bulmal\u0131yd\u0131. D\xFC\u015Fman ka\xE7 metre daha derindeydi?"
+    successMessage: "Sinyaller netle\u015Fti! D\xFC\u015Fman denizalt\u0131s\u0131
+      ile arandaki derinlik fark\u0131n\u0131 tam olarak saptad\u0131n. Hedef radar\u0131nda,
+      art\u0131k ka\xE7acak yerleri yok."
+    failMessage: "Ekran parazitleniyor! Derinlik fark\u0131n\u0131 yanl\u0131\u015F
+      girdi\u011Fin i\xE7in sonar yanl\u0131\u015F yeri g\xF6steriyor. Hedefi kaybetmeden
+      \xF6nce mesafeyi tekrar \xF6l\xE7."
+  - tileType: 4
+    locationName: "Kablo Kesim Noktas\u0131"
+    locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
+    introDescription: "Neon, \xF6zel bas\u0131n\xE7l\u0131 giysisiyle d\u0131\u015Far\u0131
+      \xE7\u0131kt\u0131. Okyanus taban\u0131ndaki devasa kablo hatt\u0131 zarar
+      g\xF6rm\xFC\u015Ft\xFC. Kablonun bir ucu deniz seviyesinin \xE7ok alt\u0131nda,
+      di\u011Fer ucu ise bir su alt\u0131 kanyonunun dibindeydi. \u0130ki u\xE7 aras\u0131ndaki
+      devasa mesafe fark\u0131n\u0131 hesaplamak, kabloyu onaracak yamay\u0131 haz\u0131rlamak
+      i\xE7in kritikti."
+    successMessage: "Yama tam \xF6l\xE7\xFCs\xFCnde haz\u0131rland\u0131! Okyanus
+      taban\u0131ndaki veri hatt\u0131n\u0131 onard\u0131n. 'S\u0131f\u0131r Noktas\u0131'n\u0131n
+      d\xFCnyaya yayd\u0131\u011F\u0131 vir\xFCs\xFCn ilk b\xFCy\xFCk par\xE7as\u0131
+      koptu."
+    failMessage: "Yama k\u0131sa kald\u0131! \u0130ki u\xE7 aras\u0131ndaki devasa
+      fark\u0131 yanl\u0131\u015F hesaplad\u0131n. Ak\u0131nt\u0131 seni s\xFCr\xFCklemeden
+      \xF6nce aradaki mesafeyi hatas\u0131z \xE7\u0131karmal\u0131s\u0131n!"
+  - tileType: 5
+    locationName: Oksijen Rezervleri
+    locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
+    introDescription: "D\u0131\u015F g\xF6rev s\u0131ras\u0131nda Neon'un oksijen
+      tank\u0131nda bir s\u0131z\u0131nt\u0131 meydana geldi. Mevcut oksijen seviyesinden,
+      ge\xE7en her dakikadaki kayb\u0131 \xE7\u0131karmas\u0131 gerekiyordu. AIDA
+      (Yapay Zeka), Neon'a s\xFCrekli negatif de\u011Ferler f\u0131s\u0131ld\u0131yordu.
+      \"Kalan\" oksijeni bulmak, hayatta kalman\u0131n tek yoluydu."
+    successMessage: "Kalan oksijen miktar\u0131 do\u011Fruland\u0131. AIDA tasarruf
+      moduna ge\xE7ti ve nefes alabilece\u011Fin s\xFCreyi uzatt\u0131. Bu s\xFCre
+      operasyonu tamamlaman i\xE7in yeterli!"
+    failMessage: "\"AIDA uyar\u0131yor: 'Oksijen seviyesi kritik e\u015Fi\u011Fin
+      alt\u0131nda!' Kay\u0131p miktar\u0131n\u0131 yanl\u0131\u015F hesaplad\u0131\u011F\u0131n
+      i\xE7in sistem verileri i\u015Fleyemiyor. \xC7abuk, kalan havay\u0131 bul!"
+  - tileType: 6
+    locationName: "Mariana \xC7ukuru"
+    locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
+    introDescription: "S\u0131f\u0131r Noktas\u0131'n\u0131n liderlerinden biri olan
+      \"G\xF6lge Kaptan\", ka\xE7\u0131\u015F mod\xFCl\xFCyle d\xFCnyan\u0131n en
+      derin noktas\u0131na, Mariana \xC7ukuru'na do\u011Fru dal\u0131\u015Fa ge\xE7ti.
+      Neon, kendi derinli\u011Fi ile \xE7ukurun en dip noktas\u0131 aras\u0131ndaki
+      o devasa 6 basamakl\u0131 fark\u0131 hesaplayarak torpidolar\u0131 ate\u015Flemeli
+      ve vir\xFCs\xFCn ana merkezini yok etmeliydi."
+    successMessage: "Hesaplama kusursuz! Torpidolar tam hedefi vurdu. 'G\xF6lge Kaptan'\u0131n
+      ka\xE7\u0131\u015F mod\xFCl\xFC etkisiz hale getirildi ve vir\xFCs merkezi
+      yok edildi. Derinliklerin kahraman\u0131 sensin, Ajan Neon!"
+    failMessage: "\"Iskalad\u0131n! Derinlik fark\u0131 yanl\u0131\u015F oldu\u011Fu
+      i\xE7in torpidolar karanl\u0131k bo\u015Flu\u011Fa gitti. G\xF6lge Kaptan Mariana
+      \xC7ukuru'nun dibine ula\u015Fmadan \xF6nce son \xE7\u0131karma i\u015Flemini
+      do\u011Fru yap!"

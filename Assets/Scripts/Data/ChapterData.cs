@@ -1,6 +1,27 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// --- YENİ EKLENEN YAPI (Mekan Hikayeleri) ---
+// Bu kısmı ChapterData class'ının dışına (üstüne) koyabilirsin
+[System.Serializable]
+public struct LocationStoryInfo
+{
+    public TileType tileType;       // Hangi renk? (Örn: Green)
+    public string locationName;     // Örn: "Antik Kütüphane"
+    public Sprite locationIcon;     // Mekanın ikonu (Kartta görünecek resim)
+
+    [TextArea(3, 5)]
+    public string introDescription; // Karta gelince çıkacak yazı (Örn: "Tozlu raflar arasında...")
+
+    [Header("Sonuç Mesajları")]
+    [TextArea(2, 4)]
+    public string successMessage;   // Doğru bilince (Örn: "Şifreyi çözdün!")
+
+    [TextArea(2, 4)]
+    public string failMessage;      // Yanlış bilince (Örn: "Alarm çaldı!")
+}
+
+// --- SENİN MEVCUT CHAPTER DATA CLASS'IN (GÜNCELLENMİŞ HALİ) ---
 [CreateAssetMenu(fileName = "NewChapter", menuName = "StorySystem/Chapter")]
 public class ChapterData : ScriptableObject
 {
@@ -20,4 +41,16 @@ public class ChapterData : ScriptableObject
     [Header("Zorluk Ayarları")]
     public int startingScore = 100; // Başlangıç puanı (Genelde 100)
     public int penaltyPerWrongAnswer = 10; // Yanlış yapınca kaç puan düşsün?
+
+    // --- YENİ EKLENEN LİSTE BURASI ---
+    [Header("Mekan Hikayeleri")]
+    public List<LocationStoryInfo> locationStories;
+
+    // --- YENİ YARDIMCI FONKSİYON ---
+    // Renge göre o mekanın bilgilerini bulup getirir
+    public LocationStoryInfo GetStoryInfo(TileType type)
+    {
+        // Listede bu renge ait bir hikaye var mı diye arar
+        return locationStories.Find(x => x.tileType == type);
+    }
 }

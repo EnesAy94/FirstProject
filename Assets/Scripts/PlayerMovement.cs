@@ -82,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // --- KARE KONTROLÜ (CheckCurrentTile) ---
+    // --- KARE KONTROLÜ (CheckCurrentTile) - GÜNCELLENMİŞ HALİ ---
     void CheckCurrentTile()
     {
         int safeIndex = currentTileIndex % currentRoute.childNodes.Count;
@@ -92,25 +93,15 @@ public class PlayerMovement : MonoBehaviour
 
         if (currentTile != null)
         {
-            // --- JOKER KONTROLÜ (YENİ VE HIZLI YÖNTEM) ---
+            // --- JOKER KONTROLÜ ---
             if (currentTile.type == TileType.Joker)
             {
                 Debug.Log("🎁 Joker Kutusuna Geldin!");
-
-                // JokerManager varsa jokeri ver
-                if (JokerManager.instance != null)
-                {
-                    JokerManager.instance.EarnRandomJoker();
-                }
-
-                // Zarı tekrar aktif et (Soru sormayacağız)
-                if (LevelManager.instance != null)
-                    LevelManager.instance.SetDiceInteractable(true);
-
-                return; // Çıkış yap, aşağı inip soru sorma
+                if (JokerManager.instance != null) JokerManager.instance.EarnRandomJoker();
+                if (LevelManager.instance != null) LevelManager.instance.SetDiceInteractable(true);
+                return;
             }
-            // ----------------------------------------------
-
+            // --- CEZA & RİSKLİ ALANLAR ---
             else if (currentTile.type == TileType.Penalty)
             {
                 LevelManager.instance.EnterPenaltyZone();
@@ -119,13 +110,57 @@ public class PlayerMovement : MonoBehaviour
             {
                 LevelManager.instance.EnterHardZone();
             }
+            // --- BOŞ ALANLAR ---
             else if (currentTile.type == TileType.Start || currentTile.type == TileType.Empty)
             {
                 LevelManager.instance.SetDiceInteractable(true);
             }
+            // --- HİKAYELİ MEKAN KARTLARI (BURASI DEĞİŞTİ) ---
             else
             {
-                QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
+                // 1. Önce LevelManager'dan bu rengin hikayesi var mı diye bakıyoruz
+                if (LevelManager.instance != null && LevelManager.instance.currentChapter != null)
+                {
+                    // LevelManager'a eklediğimiz 'locationCardPanel' referansını kullanacağız
+                    LocationStoryInfo info = LevelManager.instance.currentChapter.GetStoryInfo(currentTile.type);
+
+                    // Eğer bu renk için dolu bir hikaye bilgisi varsa
+                    if (!string.IsNullOrEmpty(info.locationName))
+                    {
+                        // A) Doğru/Yanlış mesajlarını AnswerManager'a yükle
+                        if (AnswerManager.instance != null)
+                        {
+                            AnswerManager.instance.SetCustomFeedbackMessages(info.successMessage, info.failMessage);
+                        }
+
+                        // B) Kart Panelini Aç (LevelManager üzerinde tanımlı olmalı)
+                        if (LevelManager.instance.locationCardPanel != null)
+                        {
+                            LevelManager.instance.locationCardPanel.ShowLocationCard(info, () =>
+                            {
+                                // "Devam" butonuna basılınca burası çalışır: Soruyu Sor
+                                QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
+                            });
+                        }
+                        else
+                        {
+                            // Panel yoksa direkt sor (Hata olmasın diye)
+                            QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
+                        }
+                    }
+                    else
+                    {
+                        // Hikaye yoksa direkt sor (Eski sistem)
+                        // Mesajları temizle ki eski mekanın mesajı kalmasın
+                        if (AnswerManager.instance != null) AnswerManager.instance.SetCustomFeedbackMessages("", "");
+                        QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
+                    }
+                }
+                else
+                {
+                    // LevelManager yoksa direkt sor
+                    QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
+                }
             }
         }
     }

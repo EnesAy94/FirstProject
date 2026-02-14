@@ -17,108 +17,92 @@ public class QuestionManager : MonoBehaviour
     {
         if (LevelManager.instance == null || LevelManager.instance.currentChapter == null || LevelManager.instance.currentChapter.questionSet == null)
         {
-            Debug.LogError("HATA: Soru seti veya Bölüm verisi eksik!");
+            Debug.LogError("HATA: Soru seti eksik!");
             return;
         }
 
         ChapterQuestionSet set = LevelManager.instance.currentChapter.questionSet;
         int currentChapterID = LevelManager.instance.currentChapter.chapterID;
 
-        // 1. İlgili Listeleri Belirle (Normal ve Zor/Yedek)
+        // 1. Listeleri Belirle
         List<QuestionTemplate> storyList = null;
         List<QuestionTemplate> hardList = null;
 
         switch (tileType)
         {
-            case TileType.Red:
-                storyList = set.redTemplates;
-                hardList = set.redHardTemplates;
-                break;
-            case TileType.Blue:
-                storyList = set.blueTemplates;
-                hardList = set.blueHardTemplates;
-                break;
-            case TileType.Yellow:
-                storyList = set.yellowTemplates;
-                hardList = set.yellowHardTemplates;
-                break;
-            case TileType.Purple:
-                storyList = set.purpleTemplates;
-                hardList = set.purpleHardTemplates;
-                break;
-            case TileType.Green:
-                storyList = set.greenTemplates;
-                hardList = set.greenHardTemplates;
-                break;
-            case TileType.Orange:
-                storyList = set.orangeTemplates;
-                hardList = set.orangeHardTemplates;
-                break;
-            case TileType.Hard:
-                // Riskli alanın hafızası yoktur, direkt havuzdan rastgele seçer
-                PickRandomFromList(set.hardTemplates, tileType, true);
-                return;
+            case TileType.Red: storyList = set.redTemplates; hardList = set.redHardTemplates; break;
+            case TileType.Blue: storyList = set.blueTemplates; hardList = set.blueHardTemplates; break;
+            case TileType.Yellow: storyList = set.yellowTemplates; hardList = set.yellowHardTemplates; break;
+            case TileType.Purple: storyList = set.purpleTemplates; hardList = set.purpleHardTemplates; break;
+            case TileType.Green: storyList = set.greenTemplates; hardList = set.greenHardTemplates; break;
+            case TileType.Orange: storyList = set.orangeTemplates; hardList = set.orangeHardTemplates; break;
+            case TileType.Hard: PickRandomFromList(set.hardTemplates, tileType, true); return;
         }
 
-        // 2. Hafızadan Kullanılanları Getir (Yoksa yeni oluşturur)
         UsedQuestionData data = GetUsedData(currentChapterID, tileType);
-
-        // 3. SEÇİM MANTIĞI
         QuestionTemplate selectedTemplate = null;
 
-        // A) Önce Hikayeli Sorulara Bak (Henüz hepsi çözülmediyse)
+        // --- YENİ MANTIK: AnswerManager'a Durumu Bildir ---
+
+        // Varsayılan olarak sıfırla
+        if (AnswerManager.instance != null)
+        {
+            AnswerManager.instance.isStoryPhase = false;
+            AnswerManager.instance.isFinalStoryQuestion = false;
+        }
+
+        // A) HİKAYELİ SORU MU?
         if (storyList != null && data.usedStoryIndices.Count < storyList.Count)
         {
-            // Kullanılmamış bir hikayeli soru indeksi bul
             int index = GetRandomUnusedIndex(storyList.Count, data.usedStoryIndices);
             selectedTemplate = storyList[index];
-
-            // Kaydet (Bir daha çıkmasın)
             data.usedStoryIndices.Add(index);
             SaveManager.instance.SaveGame();
+
+            // DURUM GÜNCELLEME:
+            if (AnswerManager.instance != null)
+            {
+                AnswerManager.instance.isStoryPhase = true; // Evet, hikaye modundayız (Yanlış yaparsa özel mesaj çıkacak)
+
+                // Eğer kullanılan soru sayısı, toplam soru sayısına eşitlendiyse bu SON sorudur.
+                if (data.usedStoryIndices.Count == storyList.Count)
+                {
+                    AnswerManager.instance.isFinalStoryQuestion = true; // Evet, bu son soru (Doğru yaparsa özel mesaj çıkacak)
+                }
+            }
         }
-        // B) Hikayeliler bitti, Zorlara geç (Henüz hepsi çözülmediyse)
+        // B) ZOR (YEDEK) SORU MU?
         else if (hardList != null && data.usedHardIndices.Count < hardList.Count)
         {
-            // Kullanılmamış bir zor soru indeksi bul
             int index = GetRandomUnusedIndex(hardList.Count, data.usedHardIndices);
             selectedTemplate = hardList[index];
-
-            // Kaydet
             data.usedHardIndices.Add(index);
             SaveManager.instance.SaveGame();
+
+            // Burası StoryPhase DEĞİL. Standart mesajlar çıkacak.
         }
-        // C) HEPSİ BİTTİ (Sonsuz Döngü) -> Sadece Zorları Sıfırla
+        // C) DÖNGÜ (HARD RESET)
         else
         {
-            Debug.Log($"{tileType} rengi için tüm havuz bitti! Zor sorular sıfırlanıyor (Döngü)...");
-
-            // Hikayeli sorulara (usedStoryIndices) dokunmuyoruz, onlar bitti olarak kalsın.
+            Debug.Log($"{tileType} döngüye girdi.");
             data.usedHardIndices.Clear();
-
-            // Zor listesinden yeni bir tane seçerek devam et
             if (hardList != null && hardList.Count > 0)
             {
                 int index = Random.Range(0, hardList.Count);
                 selectedTemplate = hardList[index];
-
                 data.usedHardIndices.Add(index);
                 SaveManager.instance.SaveGame();
             }
         }
 
-        // 4. Soruyu Gönder
         if (selectedTemplate != null)
         {
-            // Mekan içindeki zor sorular 'isPenalty' veya 'HardTile' DEĞİLDİR. Normal soru gibi davranır.
             GenerateAndSendQuestion(selectedTemplate, tileType, isPenalty);
         }
         else
         {
-            Debug.LogWarning("Soru bulunamadı! Listeler boş olabilir.");
-            // Acil durum yedeği
             if (AnswerManager.instance != null)
-                AnswerManager.instance.SetQuestion("Yedek Soru: 10 + 10 = ?", "20", tileType);
+                AnswerManager.instance.SetQuestion("Yedek Soru: 10+10=?", "20", tileType);
         }
     }
 

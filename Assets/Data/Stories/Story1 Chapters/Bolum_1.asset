@@ -23,3 +23,72 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 262542de773685242b7553a977efbd31, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 25
+  locationStories:
+  - tileType: 1
+    locationName: "Donmu\u015F D\u0131\u015F Kap\u0131"
+    locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    introDescription: "Ajan Neon, kap\u0131n\u0131n dijital kilidini a\u015Fmak i\xE7in
+      sens\xF6rlerden gelen k\xFC\xE7\xFCk verileri birle\u015Ftirmelidir"
+    successMessage: "Buzlanma \xE7\xF6z\xFCl\xFCyor! Sens\xF6rler ye\u015File d\xF6nd\xFC
+      ve kap\u0131 mekanizmas\u0131 a\u011F\u0131r bir g\xFCr\xFClt\xFCyle a\xE7\u0131l\u0131yor.
+      Ajan Neon, i\xE7eri s\u0131zd\u0131n!"
+    failMessage: "Kilit paneli hala donuk. Hatal\u0131 veri giri\u015Fi nedeniyle
+      sens\xF6rler alarm veriyor! \xC7abuk ol, parmaklar\u0131n donmadan birdahaki
+      sefere do\u011Fru de\u011Feri tekrar hesapla."
+  - tileType: 2
+    locationName: "Ana Sunucu Odas\u0131"
+    locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    introDescription: "Sunucular a\u015F\u0131r\u0131 y\xFCklenmi\u015F durumda.
+      Veri ak\u0131\u015F\u0131n\u0131 dengelemek i\xE7in devasa say\u0131larla i\u015Flem
+      yapmal\u0131s\u0131n."
+    successMessage: "Veri kalkan\u0131 stabilize edildi! Anti-vir\xFCs yaz\u0131l\u0131m\u0131
+      'S\u0131f\u0131r Noktas\u0131'n\u0131n kodlar\u0131n\u0131 temizliyor. Dev
+      sunucular\u0131n u\u011Fultusu normale d\xF6n\xFCyor."
+    failMessage: "Sistem \xE7\xF6kme uyar\u0131s\u0131 veriyor! Hatal\u0131 veri
+      y\xFCk\xFC i\u015Flemcileri a\u015F\u0131r\u0131 \u0131s\u0131t\u0131yor. E\u011Fer
+      veriyi do\u011Fru e\u015Fitlemezsen t\xFCm sistem havaya u\xE7acak!"
+  - tileType: 3
+    locationName: "Yeralt\u0131 Deposu"
+    locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    introDescription: " Karanl\u0131k koridorlarda, eksik ekipmanlar\u0131 ve derinli\u011Fi
+      hesaplama zaman\u0131."
+    successMessage: "Asans\xF6r do\u011Fru katta durdu ve m\xFChimmat sand\u0131klar\u0131
+      senkronize edildi. Deponun karanl\u0131k koridorlar\u0131nda ilerlemek i\xE7in
+      gereken yolu a\xE7t\u0131n."
+    failMessage: "Sens\xF6rler hata veriyor! Asans\xF6r yanl\u0131\u015F derinlikte
+      kilitlendi ve depo kap\u0131lar\u0131 hala kapal\u0131. Derinli\u011Fi ve stoklar\u0131
+      tekrar g\xF6zden ge\xE7ir."
+  - tileType: 4
+    locationName: "G\xF6zlem Kulesi"
+    locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
+    introDescription: " R\xFCzgarl\u0131 zirvede, antenleri hizalamak i\xE7in y\xF6n
+      ve y\xFCkseklik toplamal\u0131s\u0131n."
+    successMessage: "Antenler tam hizas\u0131na geldi! Sinyal g\xFCc\xFC %100'e ula\u015Ft\u0131
+      ve harita netle\u015Fti. Art\u0131k t\xFCm b\xF6lgeyi yukar\u0131dan kontrol
+      edebiliyorsun."
+    failMessage: "G\xF6r\xFCnt\xFC hala parazitli. Yanl\u0131\u015F a\xE7\u0131yla
+      anteni r\xFCzgar\u0131n i\xE7ine ittin. Rak\u0131m\u0131 ve sapma pay\u0131n\u0131
+      do\u011Fru toplayarak sinyali yakala!"
+  - tileType: 5
+    locationName: "Mutfak ve Erzak Odas\u0131"
+    locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
+    introDescription: "Ajanlar\u0131n b\u0131rakt\u0131\u011F\u0131 izleri takip
+      etmek i\xE7in termal ve a\u011F\u0131rl\u0131k verilerini topla."
+    successMessage: "Termal denge sa\u011Fland\u0131! Buzdolab\u0131 alarm\u0131
+      sustu ve stok kay\u0131tlar\u0131ndaki a\xE7\u0131k kapand\u0131. Gizli dosyaya
+      giden yol mutfak robotunun i\xE7inden ge\xE7iyor."
+    failMessage: "Is\u0131 sens\xF6rleri k\u0131rm\u0131z\u0131 yan\u0131yor! Hatal\u0131
+      bas\u0131n\xE7 hesab\u0131 mutfaktaki cihazlar\u0131 bozmak \xFCzere. Kay\u0131p
+      verileri ve \u0131s\u0131 de\u011Fi\u015Fimini yeniden hesaplamal\u0131s\u0131n."
+  - tileType: 6
+    locationName: Helikopter Pisti
+    locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
+    introDescription: "Final hesapla\u015Fmas\u0131! Helikopter kalkmadan \xF6nce
+      devasa verileri birle\u015Ftirerek sistemi kilitle."
+    successMessage: "Paller d\xF6nmeye ba\u015Flad\u0131! Navigasyon verileri do\u011Fruland\u0131
+      ve yak\u0131t tank\u0131 tam dolulukta. Ajan Neon, 'S\u0131f\u0131r Noktas\u0131'n\u0131n
+      elindeki anahtar\u0131 ele ge\xE7irdin ve b\xF6lgeden ayr\u0131l\u0131yorsun!"
+    failMessage: "Kalk\u0131\u015F ba\u015Far\u0131s\u0131z! Motorlar yeterli iti\u015F
+      g\xFCc\xFCne ula\u015Famad\u0131 ve navigasyon koordinatlar\u0131 uyu\u015Fmuyor.
+      Helikopter d\xFC\u015Fmeden \xF6nce son \u015Fifreyi ve verileri do\u011Fru
+      girmelisin!"

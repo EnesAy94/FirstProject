@@ -21,3 +21,104 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 10
+  locationStories:
+  - tileType: 1
+    locationName: "Kaz\u0131 Alan\u0131 Giri\u015Fi"
+    locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    introDescription: "Tap\u0131na\u011F\u0131n devasa ta\u015F kap\u0131s\u0131n\u0131n
+      \xFCzerinde iki farkl\u0131 zaman\u0131 temsil eden kum saatleri var. Sol taraftaki
+      tozlu saatler karanl\u0131k ge\xE7mi\u015Fi (negatif), sa\u011Fdaki parlayan
+      saatler ise gelece\u011Fi (pozitif) simgeliyor. Kap\u0131n\u0131n kadim mekanizmas\u0131,
+      bu iki \xE7a\u011F\u0131n \xE7arp\u0131\u015Fmas\u0131ndan do\u011Fan say\u0131ya
+      mevcut y\u0131l\u0131 eklemeni bekliyor. Bir hata yaparsan, kap\u0131 bin y\u0131l
+      boyunca bir daha a\xE7\u0131lmamak \xFCzere kilitlenecek."
+    successMessage: "Zaman \xE7arklar\u0131 d\xF6nmeye ba\u015Flad\u0131! Tarihler
+      birbirine kenetlendi ve devasa kap\u0131 b\xFCy\xFCk bir g\xFCr\xFClt\xFCyle
+      yana kayd\u0131. Ge\xE7mi\u015Fin s\u0131rr\u0131na bir ad\u0131m daha yakla\u015Ft\u0131n."
+    failMessage: "Kum saatleri durdu. \u0130\u015Faret hatas\u0131 zaman\u0131 dondurdu.
+      Ge\xE7mi\u015Fi ve gelece\u011Fi do\u011Fru harmanlamazsan bu kap\u0131 sana
+      asla a\xE7\u0131lmayacak."
+  - tileType: 2
+    locationName: "Hiyeroglif Duvar\u0131"
+    locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    introDescription: "Koridorun duvarlar\u0131 canl\u0131ym\u0131\u015F gibi g\xF6r\xFCnen
+      kabartmalarla dolu. AIDA, duvardaki sembollerin asl\u0131nda say\u0131sal birer
+      katsay\u0131 oldu\u011Funu fark ediyor. \"S\u0131f\u0131r Noktas\u0131\", bu
+      duvar\u0131 a\u015Fmak i\xE7in belirli bir sembol kombinasyonunun toplam de\u011Ferinden
+      negatif bir puan \xE7\u0131kar\u0131lmas\u0131n\u0131 \u015Fart ko\u015Fan
+      bir yaz\u0131l\u0131m y\xFCklemi\u015F. Ku\u015Flar ve g\xF6zler sana bakarken,
+      gizli ge\xE7idi a\xE7acak o net say\u0131y\u0131 bulmal\u0131s\u0131n."
+    successMessage: "Semboller alt\u0131n sar\u0131s\u0131 bir \u0131\u015F\u0131kla
+      parlad\u0131! Hiyerogliflerin i\xE7indeki gizli algoritmay\u0131 \xE7\xF6zd\xFCn
+      ve duvar\u0131n arkas\u0131ndaki gizli oda sessizce a\xE7\u0131ld\u0131."
+    failMessage: "Duvar sars\u0131l\u0131yor! Yanl\u0131\u015F sembol kombinasyonu
+      savunma sistemini tetikledi. Katsay\u0131lar\u0131 \xE7arp\u0131p aradaki fark\u0131
+      bulamazsan buradan \xE7\u0131k\u0131\u015F yok."
+  - tileType: 3
+    locationName: "Tuzakl\u0131 Koridor"
+    locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    introDescription: "Kar\u015F\u0131daki odaya giden tek yol, \xFCzerinde karma\u015F\u0131k
+      desenler olan karolardan ge\xE7iyor. AIDA uyar\u0131s\u0131 kulaklar\u0131nda
+      \xE7\u0131nl\u0131yor: \"Dikkat Neon, yerdeki bloklar\u0131n her biri devasa
+      bir negatif y\xFCk ta\u015F\u0131yor.\" Baz\u0131 bloklar\u0131 sistemden \xE7\u0131kar\u0131p
+      kendi a\u011F\u0131rl\u0131\u011F\u0131n\u0131 (pozitif y\xFCk) ekledi\u011Finde
+      zeminin \xE7\xF6kmemesi i\xE7in gereken hassas dengeyi hesaplamal\u0131s\u0131n.
+      Tek bir yanl\u0131\u015F ad\u0131m, seni dipsiz bir kuyuya g\xF6nderir."
+    successMessage: "T\u0131k! Karo yerine oturdu. A\u011F\u0131rl\u0131k dengesi
+      tam istedi\u011Fin gibi. \xD6l\xFCmc\xFCl m\u0131zraklar yuvalar\u0131na geri
+      \xE7ekildi, g\xFCvenle kar\u015F\u0131ya ge\xE7ebilirsin."
+    failMessage: "Zemin ayaklar\u0131n\u0131n alt\u0131nda titriyor! Yanl\u0131\u015F
+      hesaplama y\xFCz\xFCnden denge bozuldu. A\u011F\u0131rl\u0131klar\u0131n toplam
+      etkisini ve kendi y\xFCk\xFCn\xFC tekrar hesapla, yoksa a\u015Fa\u011F\u0131
+      d\xFC\u015Feceksin!"
+  - tileType: 4
+    locationName: "Mumya Odas\u0131"
+    locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
+    introDescription: "Binlerce y\u0131ll\u0131k mumyalar\u0131n oldu\u011Fu odaya
+      girdi\u011Finde S\u0131f\u0131r Noktas\u0131'n\u0131n sistemi sabote etti\u011Fini
+      g\xF6r\xFCyorsun. G\xFCne\u015F \u0131\u015F\u0131\u011F\u0131 (pozitif enerji)
+      i\xE7eri s\u0131zarken, koruyucu so\u011Futma t\xFCpleri (negatif enerji) birer
+      birer patl\u0131yor. Odadaki termal dengeyi korumak i\xE7in saniyeler i\xE7inde
+      son s\u0131cakl\u0131k de\u011Ferini saptaman gerek. E\u011Fer oda \xE7ok \u0131s\u0131n\u0131rsa
+      tarih yok olacak!"
+    successMessage: "Is\u0131 dengeleyici devreye girdi! S\u0131cakl\u0131k tam olmas\u0131
+      gereken noktada sabitlendi. Kadim yaz\u0131tlar ve mumyalar art\u0131k g\xFCvende,
+      Neon."
+    failMessage: "S\u0131cakl\u0131k uyar\u0131s\u0131! Oda h\u0131zla \u0131s\u0131n\u0131yor
+      ve antik kal\u0131nt\u0131lar zarar g\xF6rmeye ba\u015Flad\u0131. So\u011Futma
+      t\xFCplerinin etkisini ana \u0131s\u0131ya do\u011Fru ekledi\u011Finden emin
+      ol."
+  - tileType: 5
+    locationName: Gizli Hazinelik
+    locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
+    introDescription: "Sonunda hazine odas\u0131ndas\u0131n! Sand\u0131klar dolusu
+      alt\u0131n (pozitif de\u011Fer) seni kar\u015F\u0131l\u0131yor ama her sand\u0131\u011F\u0131n
+      yan\u0131nda S\u0131f\u0131r Noktas\u0131'n\u0131n b\u0131rakt\u0131\u011F\u0131
+      \"lanetli bor\xE7 senetleri\" (negatif \xE7arpanlar) duruyor. Te\u015Fkilat\u0131n
+      bu operasyonu s\xFCrd\xFCrebilmesi i\xE7in bu hazinenin net de\u011Ferini bilmesi
+      gerekiyor. Ger\xE7ek zenginli\u011Fi sahte bor\xE7lardan ay\u0131klayabilecek
+      misin?"
+    successMessage: "Analiz tamamland\u0131! Bor\xE7 senetlerini sistemden sildin
+      ve ger\xE7ek hazine de\u011Ferini merkeze bildirdin. D\xFC\u015Fman\u0131n
+      finansal g\xFCc\xFCn\xFC ellerinden ald\u0131n."
+    failMessage: "Hazine parl\u0131yor ama say\u0131lar tutmuyor! Lanetli senetlerin
+      \xE7arpan etkisini yanl\u0131\u015F hesaplad\u0131n. Ger\xE7ek de\u011Feri
+      bulamazsan hazine sadece bir toz y\u0131\u011F\u0131n\u0131na d\xF6n\xFC\u015Fecek."
+  - tileType: 6
+    locationName: "Sonsuzluk Tableti Odas\u0131"
+    locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
+    introDescription: "Tap\u0131na\u011F\u0131n kalbinde, havada as\u0131l\u0131
+      duran Sonsuzluk Tableti seni bekliyor. \xC7evresindeki enerji kalkan\u0131,
+      evrenin temel matematik yasalar\u0131yla \xF6r\xFClm\xFC\u015F. AIDA, \"Bu
+      son hamle Neon, i\u015Flem \xF6nceli\u011Fini kar\u0131\u015Ft\u0131r\u0131rsan
+      tabletin i\xE7indeki t\xFCm veriler sonsuza dek silinecek\" diyor. \xC7arpma
+      ve toplamalar\u0131n aras\u0131ndaki o ince \xE7izgide y\xFCr\xFCyerek son
+      kilidi k\u0131rmal\u0131s\u0131n."
+    successMessage: "Kalkan bir cam gibi \xE7atlay\u0131p da\u011F\u0131ld\u0131!
+      \u0130\u015Flem \xF6nceli\u011Fi kural\u0131n\u0131 kusursuz uygulad\u0131n.
+      Sonsuzluk Tableti art\u0131k ellerinde. D\xFCnyan\u0131n say\u0131sal dengesini
+      kurtard\u0131n, Ajan Neon!"
+    failMessage: "Kalkan bir cam gibi \xE7atlay\u0131p da\u011F\u0131ld\u0131! \u0130\u015Flem
+      \xF6nceli\u011Fi kural\u0131n\u0131 kusursuz uygulad\u0131n. Sonsuzluk Tableti
+      art\u0131k ellerinde. D\xFCnyan\u0131n say\u0131sal dengesini kurtard\u0131n,
+      Ajan Neon!"

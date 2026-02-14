@@ -22,6 +22,8 @@ public class LevelManager : MonoBehaviour
 
     private bool hasCelebratedMainMissions = false;
     private bool areMainMissionsDoneInitially = false;
+    public LocationInfoPanel locationCardPanel;
+    public Route mapRoute; // Inspector'dan atayacağız
 
     [Header("Puan Sistemi")]
     public int currentScore;
@@ -63,6 +65,7 @@ public class LevelManager : MonoBehaviour
         if (GameSession.activeChapter != null) currentChapter = GameSession.activeChapter;
 
         if (currentChapter != null) StartChapter();
+        UpdateBoardVisuals();
     }
 
     // --- BÖLÜM BAŞLATMA ---
@@ -399,5 +402,34 @@ public class LevelManager : MonoBehaviour
     public void RetryLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // Tahtadaki tüm kareleri, seçili bölümün temasına göre günceller
+    void UpdateBoardVisuals()
+    {
+        if (currentChapter == null) return;
+        if (mapRoute == null)
+        {
+            Debug.LogWarning("Route atanmamış! Kareler güncellenemiyor.");
+            return;
+        }
+
+        // 1. Rota üzerindeki tüm çocuk objeleri (kareleri) gez
+        foreach (Transform child in mapRoute.childNodes)
+        {
+            Tile tileScript = child.GetComponent<Tile>();
+
+            if (tileScript != null)
+            {
+                // 2. Bu karenin rengine ait hikaye verisi var mı?
+                LocationStoryInfo info = currentChapter.GetStoryInfo(tileScript.type);
+
+                // 3. Veri varsa (İsim doluysa) güncelle
+                if (!string.IsNullOrEmpty(info.locationName))
+                {
+                    tileScript.UpdateVisuals(info.locationIcon, info.locationName);
+                }
+            }
+        }
     }
 }
