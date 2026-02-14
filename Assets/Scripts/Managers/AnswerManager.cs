@@ -32,7 +32,7 @@ public class AnswerManager : MonoBehaviour
     public Button feedbackContinueButton;
 
     // ŞU ANKİ DOĞRU CEVAP (QuestionManager burayı güncelleyecek)
-    public int currentCorrectAnswer;
+    public string currentCorrectAnswer;
     private TileType currentQuestionType;
 
     void Awake()
@@ -44,26 +44,23 @@ public class AnswerManager : MonoBehaviour
 
     // --- YENİ SİSTEM: SORUYU AÇMA ---
     // QuestionManager burayı çağıracak
-    public void SetQuestion(string questionText, int correctAnswer, TileType type)
+    // ESKİSİ: public void SetQuestion(string questionText, int correctAnswer, TileType type)
+    // YENİSİ:
+    public void SetQuestion(string questionText, string correctAnswer, TileType type)
     {
         currentCorrectAnswer = correctAnswer;
         currentQuestionType = type;
 
-        // UI Hazırla
         if (answerPanel != null) answerPanel.SetActive(true);
         if (infoText != null) infoText.text = questionText;
 
-        // Inputu Temizle ve Odakla
         if (answerInput != null)
         {
             answerInput.text = "";
             answerInput.ActivateInputField();
         }
 
-        // Tahtayı Temizle
         if (whiteboard != null) whiteboard.ClearBoard();
-
-        // Zarı Kilitle (Oyun arkada akmasın)
         if (LevelManager.instance != null) LevelManager.instance.SetDiceInteractable(false);
     }
 
@@ -72,16 +69,37 @@ public class AnswerManager : MonoBehaviour
     {
         if (answerInput == null || string.IsNullOrEmpty(answerInput.text)) return;
 
-        int oyuncuCevabi;
-        // Sadece sayı girilmesine izin veriyoruz
-        if (!int.TryParse(answerInput.text, out oyuncuCevabi)) return;
+        // Kullanıcının yazdığını al, boşlukları sil ve küçük harfe çevir
+        string pInput = answerInput.text.Trim().ToLower();
+        bool isCorrect = false;
 
-        bool isCorrect = (oyuncuCevabi == currentCorrectAnswer);
+        // --- YENİ KURAL: TANIMSIZ KONTROLÜ ---
+        if (currentCorrectAnswer == "tanımsız")
+        {
+            // Kullanıcı "tanimsiz" veya "tanımsız" yazmış olabilir, tolerans gösterelim
+            string normalizedInput = pInput.Replace("ı", "i");
+            if (normalizedInput == "tanimsiz")
+            {
+                isCorrect = true;
+            }
+            // Yanlış yazdıysa isCorrect 'false' olarak kalır ve ceza alır.
+        }
+        else
+        {
+            // --- NORMAL SAYISAL KONTROL ---
+            // Eğer cevap sayıysa ama oyuncu yanlışlıkla harf girdiyse (örn: 'asd'), butona basmayı reddet.
+            if (!int.TryParse(pInput, out int oyuncuCevabi)) return;
+
+            if (int.TryParse(currentCorrectAnswer, out int gercekCevap))
+            {
+                isCorrect = (oyuncuCevabi == gercekCevap);
+            }
+        }
 
         // Soru panelini kapat
         if (answerPanel != null) answerPanel.SetActive(false);
 
-        // Mod Kontrolü (Ceza mı Normal mi?)
+        // Mod Kontrolü
         if (LevelManager.instance != null && LevelManager.instance.isPenaltyActive)
         {
             HandlePenaltyFeedback(isCorrect);

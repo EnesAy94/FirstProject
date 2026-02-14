@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P4_Quest5
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Okyanus taban\u0131ndaki devasa veri kablolar\u0131n\u0131 onarmak
+    i\xE7in hassas \xF6l\xE7\xFCmler yap.\r\n* Kabloyu koruyan \xE7elik z\u0131rh\u0131n
+    dayan\u0131kl\u0131l\u0131\u011F\u0131 {0} psi. Okyanus taban\u0131ndaki bas\u0131n\xE7
+    etkisi ise {1} psi'l\u0131k bir y\xFCk bindiriyor. Net koruma g\xFCc\xFC nedir?"
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: 800000, y: 900000}
+  - {x: 250000, y: 350000}

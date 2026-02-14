@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P2_Quest4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Vir\xFCs enerjiyi emiyor. Kalan g\xFCc\xFC ve s\u0131z\u0131nt\u0131y\u0131
+    hesaplayarak karanl\u0131kta kalmay\u0131 \xF6nle.\n* Motorun \xE7al\u0131\u015Fma
+    s\u0131cakl\u0131\u011F\u0131 {0}\xB0C olmal\u0131. Ancak so\u011Futma sistemi
+    \xE7\xF6kt\xFC\u011F\xFC i\xE7in s\u0131cakl\u0131k {1}\xB0C'ye \xE7\u0131kt\u0131.
+    Normal seviyeye d\xF6nmek i\xE7in s\u0131cakl\u0131k ka\xE7 derece d\xFC\u015Fmeli?"
+  formula: '{1}-{0}'
+  variableRanges:
+  - {x: 75, y: 95}
+  - {x: 145, y: 175}

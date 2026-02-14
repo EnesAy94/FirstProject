@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P2_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Vir\xFCs enerjiyi emiyor. Kalan g\xFCc\xFC ve s\u0131z\u0131nt\u0131y\u0131
+    hesaplayarak karanl\u0131kta kalmay\u0131 \xF6nle.\n* Ak\xFC blo\u011Fundaki
+    voltaj {0} volttan, bir ar\u0131za nedeniyle {1} volta d\xFC\u015Ft\xFC. Voltajdaki
+    toplam de\u011Fi\u015Fimi (fark\u0131) bul."
+  formula: '{1}-{0}'
+  variableRanges:
+  - {x: 400, y: 500}
+  - {x: -75, y: -25}

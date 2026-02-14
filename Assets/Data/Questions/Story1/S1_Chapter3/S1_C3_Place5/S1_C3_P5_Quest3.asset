@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P5_Quest3
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Hava filtresi \xF6mr\xFC {0} g\xFCnd\xFC. Kullan\u0131mdan dolay\u0131
+    {1} g\xFCn d\xFC\u015Ft\xFC, \xF6zel bir bak\u0131m s\u0131v\u0131s\u0131yla
+    {2} g\xFCn \xF6m\xFCr kazand\u0131. Kalan \xF6m\xFCr ka\xE7 g\xFCn?"
+  formula: '{0}-{1}+{2}'
+  variableRanges:
+  - {x: 100, y: 120}
+  - {x: 30, y: 50}
+  - {x: 10, y: 20}

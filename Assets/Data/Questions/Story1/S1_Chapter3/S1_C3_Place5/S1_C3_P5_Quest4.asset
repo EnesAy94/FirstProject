@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P5_Quest4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Bas\u0131n\xE7 vanas\u0131 {0} bar \xFCzerindeydi. Bo\u015Faltma
+    i\u015Flemiyle {1} bar azalt\u0131ld\u0131, sonra {2} bar hava bas\u0131ld\u0131.
+    G\xF6sterge ka\xE7\u0131 g\xF6steriyor?"
+  formula: '{0}-{1}+{2}'
+  variableRanges:
+  - {x: 3, y: 5}
+  - {x: 6, y: 9}
+  - {x: 2, y: 4}

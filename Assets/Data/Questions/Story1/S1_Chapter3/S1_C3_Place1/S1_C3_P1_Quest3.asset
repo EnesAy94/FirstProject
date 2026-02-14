@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P1_Quest3
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Zemin kat\u0131n alt\u0131na s\u0131zman gerekiyor. \u015Eu an 0
+    noktas\u0131ndas\u0131n. \xD6nce {0} kat indin, sonra yanl\u0131\u015F oldu\u011Funu
+    fark edip {1} kat \xE7\u0131kt\u0131n. Sonra tekrar {2} kat a\u015Fa\u011F\u0131
+    s\xFCz\xFCld\xFCn. Hangi kattas\u0131n?"
+  formula: '{3}-{0}+{1}-{2}'
+  variableRanges:
+  - {x: 3, y: 6}
+  - {x: 2, y: 4}
+  - {x: 4, y: 8}
+  - {x: 0, y: 0}

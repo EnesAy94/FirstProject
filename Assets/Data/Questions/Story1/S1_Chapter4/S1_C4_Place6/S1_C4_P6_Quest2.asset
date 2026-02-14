@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C4_P6_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Liderin enerji kalkan\u0131 her saniye {0} birim zay\u0131fl\u0131yor.
+    {1} saniye sonra kalkan ne kadar zay\u0131flam\u0131\u015F olur?"
+  formula: '{0}*{1}'
+  variableRanges:
+  - {x: -1750, y: -1250}
+  - {x: 500, y: 700}

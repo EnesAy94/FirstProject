@@ -17,102 +17,325 @@ public class QuestionManager : MonoBehaviour
     {
         if (LevelManager.instance == null || LevelManager.instance.currentChapter == null || LevelManager.instance.currentChapter.questionSet == null)
         {
-            Debug.LogError("HATA: Soru seti eksik!");
+            Debug.LogError("HATA: Soru seti veya Bölüm verisi eksik!");
             return;
         }
 
         ChapterQuestionSet set = LevelManager.instance.currentChapter.questionSet;
-        List<QuestionTemplate> targetList = null;
+        int currentChapterID = LevelManager.instance.currentChapter.chapterID;
+
+        // 1. İlgili Listeleri Belirle (Normal ve Zor/Yedek)
+        List<QuestionTemplate> storyList = null;
+        List<QuestionTemplate> hardList = null;
 
         switch (tileType)
         {
-            case TileType.Red: targetList = set.redTemplates; break;
-            case TileType.Blue: targetList = set.blueTemplates; break;
-            case TileType.Yellow: targetList = set.yellowTemplates; break;
-            case TileType.Purple: targetList = set.purpleTemplates; break;
-            case TileType.Green: targetList = set.greenTemplates; break;
-            case TileType.Orange: targetList = set.orangeTemplates; break;
-            case TileType.Hard: targetList = set.hardTemplates; break;
+            case TileType.Red:
+                storyList = set.redTemplates;
+                hardList = set.redHardTemplates;
+                break;
+            case TileType.Blue:
+                storyList = set.blueTemplates;
+                hardList = set.blueHardTemplates;
+                break;
+            case TileType.Yellow:
+                storyList = set.yellowTemplates;
+                hardList = set.yellowHardTemplates;
+                break;
+            case TileType.Purple:
+                storyList = set.purpleTemplates;
+                hardList = set.purpleHardTemplates;
+                break;
+            case TileType.Green:
+                storyList = set.greenTemplates;
+                hardList = set.greenHardTemplates;
+                break;
+            case TileType.Orange:
+                storyList = set.orangeTemplates;
+                hardList = set.orangeHardTemplates;
+                break;
+            case TileType.Hard:
+                // Riskli alanın hafızası yoktur, direkt havuzdan rastgele seçer
+                PickRandomFromList(set.hardTemplates, tileType, true);
+                return;
         }
 
-        if (targetList != null && targetList.Count > 0)
-        {
-            int randomIndex = Random.Range(0, targetList.Count);
-            QuestionTemplate template = targetList[randomIndex];
+        // 2. Hafızadan Kullanılanları Getir (Yoksa yeni oluşturur)
+        UsedQuestionData data = GetUsedData(currentChapterID, tileType);
 
-            // Parametreyi buraya da iletiyoruz
-            GenerateAndSendQuestion(template, tileType, isPenalty);
+        // 3. SEÇİM MANTIĞI
+        QuestionTemplate selectedTemplate = null;
+
+        // A) Önce Hikayeli Sorulara Bak (Henüz hepsi çözülmediyse)
+        if (storyList != null && data.usedStoryIndices.Count < storyList.Count)
+        {
+            // Kullanılmamış bir hikayeli soru indeksi bul
+            int index = GetRandomUnusedIndex(storyList.Count, data.usedStoryIndices);
+            selectedTemplate = storyList[index];
+
+            // Kaydet (Bir daha çıkmasın)
+            data.usedStoryIndices.Add(index);
+            SaveManager.instance.SaveGame();
+        }
+        // B) Hikayeliler bitti, Zorlara geç (Henüz hepsi çözülmediyse)
+        else if (hardList != null && data.usedHardIndices.Count < hardList.Count)
+        {
+            // Kullanılmamış bir zor soru indeksi bul
+            int index = GetRandomUnusedIndex(hardList.Count, data.usedHardIndices);
+            selectedTemplate = hardList[index];
+
+            // Kaydet
+            data.usedHardIndices.Add(index);
+            SaveManager.instance.SaveGame();
+        }
+        // C) HEPSİ BİTTİ (Sonsuz Döngü) -> Sadece Zorları Sıfırla
+        else
+        {
+            Debug.Log($"{tileType} rengi için tüm havuz bitti! Zor sorular sıfırlanıyor (Döngü)...");
+
+            // Hikayeli sorulara (usedStoryIndices) dokunmuyoruz, onlar bitti olarak kalsın.
+            data.usedHardIndices.Clear();
+
+            // Zor listesinden yeni bir tane seçerek devam et
+            if (hardList != null && hardList.Count > 0)
+            {
+                int index = Random.Range(0, hardList.Count);
+                selectedTemplate = hardList[index];
+
+                data.usedHardIndices.Add(index);
+                SaveManager.instance.SaveGame();
+            }
+        }
+
+        // 4. Soruyu Gönder
+        if (selectedTemplate != null)
+        {
+            // Mekan içindeki zor sorular 'isPenalty' veya 'HardTile' DEĞİLDİR. Normal soru gibi davranır.
+            GenerateAndSendQuestion(selectedTemplate, tileType, isPenalty);
         }
         else
         {
-            // Yedek soru
+            Debug.LogWarning("Soru bulunamadı! Listeler boş olabilir.");
+            // Acil durum yedeği
             if (AnswerManager.instance != null)
-                AnswerManager.instance.SetQuestion("Yedek Soru: 5 + 5 = ?", 10, tileType);
+                AnswerManager.instance.SetQuestion("Yedek Soru: 10 + 10 = ?", "20", tileType);
         }
     }
 
+    void PickRandomFromList(List<QuestionTemplate> list, TileType type, bool isHardTile)
+    {
+        if (list != null && list.Count > 0)
+        {
+            int r = Random.Range(0, list.Count);
+            // Sadece burası 'Hard' istatistiğine işleyecekse isHardTile parametresini kullanabiliriz
+            // Ama sen mekan içindeki soruları normal saymak istedin, o yüzden burayı false yolluyoruz.
+            // Ancak bu fonksiyon sadece "TileType.Hard" (Kuru Kafa) için çağrıldığı için type zaten Hard gidecek.
+            GenerateAndSendQuestion(list[r], type, false);
+        }
+    }
+
+    UsedQuestionData GetUsedData(int chapterID, TileType color)
+    {
+        PlayerData save = SaveManager.instance.activeSave;
+        UsedQuestionData found = save.usedQuestions.Find(x => x.chapterID == chapterID && x.color == color);
+
+        if (found == null)
+        {
+            found = new UsedQuestionData();
+            found.chapterID = chapterID;
+            found.color = color;
+            save.usedQuestions.Add(found);
+        }
+        return found;
+    }
+
+    int GetRandomUnusedIndex(int totalCount, List<int> usedIndices)
+    {
+        List<int> available = new List<int>();
+        for (int i = 0; i < totalCount; i++)
+        {
+            if (!usedIndices.Contains(i)) available.Add(i);
+        }
+
+        if (available.Count == 0) return 0;
+        return available[Random.Range(0, available.Count)];
+    }
+
     // GÜNCELLEME 2: isPenalty parametresi ve Metin Mantığı
+    // --- YENİ NESİL HESAPLAMA SİSTEMİ (Min Katı Korumalı ve EKOK Destekli) ---
+    // --- YENİ NESİL HESAPLAMA SİSTEMİ (Sıfıra Bölme ve Tanımsız Korumalı) ---
     void GenerateAndSendQuestion(QuestionTemplate tmpl, TileType type, bool isPenalty)
     {
-        // 1. Sayıları Oluştur
-        List<int> generatedValues = new List<int>();
+        int[] finalValues = new int[tmpl.variableRanges.Count];
         object[] formatArgs = new object[tmpl.variableRanges.Count];
+        bool isUndefined = false; // Bu soru tanımsız mı?
 
+        // 1. SAYILARI ÜRET (Senin yazdığın doğru mantık)
         for (int i = 0; i < tmpl.variableRanges.Count; i++)
         {
             int min = tmpl.variableRanges[i].x;
             int max = tmpl.variableRanges[i].y;
-            int val = Random.Range(min, max + 1);
 
-            generatedValues.Add(val);
-            formatArgs[i] = val;
+            if (tmpl.useMinMultiplierRule && (min != 0 || max != 0))
+            {
+                // X ve Y'den hangisi 0'a daha yakınsa onu çarpan yap
+                int multiplier = Mathf.Min(Mathf.Abs(min), Mathf.Abs(max));
+                if (multiplier == 0) multiplier = Mathf.Max(Mathf.Abs(min), Mathf.Abs(max));
+
+                int steps = (max - min) / multiplier;
+                if (steps < 0) steps = 0;
+
+                finalValues[i] = min + (Random.Range(0, steps + 1) * multiplier);
+            }
+            else if (Mathf.Abs(min) >= 100)
+            {
+                int min10 = Mathf.CeilToInt(min / 10f);
+                int max10 = Mathf.FloorToInt(max / 10f);
+                if (min10 > max10) max10 = min10;
+                finalValues[i] = Random.Range(min10, max10 + 1) * 10;
+            }
+            else
+            {
+                finalValues[i] = Random.Range(min, max + 1);
+            }
         }
 
-        // 2. Formülü Hazırla (Hesaplama ve Gösterim için)
+        // 2. AKILLI DÜZELTME & SIFIRA BÖLME KONTROLÜ (GÜNCELLENDİ)
+        if (tmpl.divisionPairs != null && tmpl.divisionPairs.Count > 0)
+        {
+            Dictionary<int, int> combinedDivisors = new Dictionary<int, int>();
+
+            foreach (Vector2Int pair in tmpl.divisionPairs)
+            {
+                int dividendIndex = pair.x;
+                int divisorIndex = pair.y;
+
+                if (dividendIndex < finalValues.Length && divisorIndex < finalValues.Length)
+                {
+                    int divisor = finalValues[divisorIndex];
+
+                    // --- KRİTİK DÜZELTME BURADA ---
+                    // Eğer bölen 0 ise; onu 1 yapmıyoruz! 'isUndefined' olarak işaretliyoruz.
+                    if (divisor == 0)
+                    {
+                        isUndefined = true;
+                        continue; // Döngüyü pas geç, bu sayıyı düzeltme listesine ekleme
+                    }
+
+                    // Zincirleme bölme için bölenleri birleştir
+                    if (combinedDivisors.ContainsKey(dividendIndex))
+                        combinedDivisors[dividendIndex] *= divisor;
+                    else
+                        combinedDivisors[dividendIndex] = divisor;
+                }
+            }
+
+            // Eğer soru Tanımsız DEĞİLSE sayıları düzelt (Sıfırsa dokunma)
+            if (!isUndefined)
+            {
+                foreach (var kvp in combinedDivisors)
+                {
+                    int dividendIndex = kvp.Key;
+                    int totalDivisor = Mathf.Abs(kvp.Value);
+                    int originalDividend = finalValues[dividendIndex];
+
+                    // Tam bölünmüyorsa EKOK mantığıyla düzelt
+                    if (originalDividend % totalDivisor != 0)
+                    {
+                        int step = 1;
+                        int minVal = tmpl.variableRanges[dividendIndex].x;
+
+                        if (tmpl.useMinMultiplierRule && minVal != 0) step = Mathf.Abs(minVal);
+                        else if (Mathf.Abs(minVal) >= 100) step = 10;
+
+                        int targetMultiple = LCM(step, totalDivisor);
+                        int cleanDividend = (originalDividend / targetMultiple) * targetMultiple;
+
+                        if (cleanDividend == 0) cleanDividend = targetMultiple;
+                        finalValues[dividendIndex] = cleanDividend;
+                    }
+                }
+            }
+        }
+
+        // 3. Object dizisine aktar
+        for (int i = 0; i < finalValues.Length; i++) formatArgs[i] = finalValues[i];
+
+        // 4. Metin ve Formül Hazırla
         string rawFormula = string.Format(tmpl.formula, formatArgs);
         string cleanFormula = rawFormula.Replace("\"", "").Replace("'", "").Trim();
-
-        // --- KRİTİK DEĞİŞİKLİK BURADA ---
         string finalQuestionText;
 
-        if (isPenalty)
+        if (isPenalty) finalQuestionText = $"İŞLEMİ ÇÖZ:\n\n{cleanFormula} = ?";
+        else finalQuestionText = string.Format(tmpl.questionText, formatArgs);
+
+        // 5. HESAPLA
+        string calculatedAnswerStr = "";
+
+        if (isUndefined)
         {
-            // Eğer CEZA ise: Hikayeyi çöpe at, sadece formülü göster!
-            // Örn: "45 + 8 + 7 = ?"
-            finalQuestionText = $"İŞLEMİ ÇÖZ:\n\n{cleanFormula} = ?";
+            // SIFIRA BÖLME VARSA CEVAP DİREKT TANIMSIZ
+            calculatedAnswerStr = "tanımsız";
+            Debug.Log($"✅ Soru Hazır (TANIMSIZ): {cleanFormula} = tanımsız");
         }
         else
         {
-            // Eğer NORMAL ise: Hikayeli metni kullan
-            // Örn: "Ali'nin 45 elması var..."
-            finalQuestionText = string.Format(tmpl.questionText, formatArgs);
+            try
+            {
+                System.Data.DataTable dt = new System.Data.DataTable();
+                var resultObj = dt.Compute(cleanFormula, "");
+
+                int intResult = 0;
+                if (resultObj is int) intResult = (int)resultObj;
+                else if (resultObj is double) intResult = (int)(double)resultObj;
+                else if (resultObj is float) intResult = (int)(float)resultObj;
+                else if (resultObj is decimal) intResult = (int)(decimal)resultObj;
+                else intResult = System.Convert.ToInt32(resultObj);
+
+                calculatedAnswerStr = intResult.ToString();
+                Debug.Log($"✅ Soru Hazır: {cleanFormula} = {calculatedAnswerStr}");
+            }
+            catch (System.Exception e)
+            {
+                // DataTable içinde görünmez bir sıfıra bölme olursa yakala
+                if (e is System.DivideByZeroException || e.Message.ToLower().Contains("zero"))
+                {
+                    calculatedAnswerStr = "tanımsız";
+                }
+                else
+                {
+                    Debug.LogError($"Hesaplama Hatası: {e.Message}");
+                    calculatedAnswerStr = "0";
+                    finalQuestionText += " (Hata)";
+                }
+            }
         }
-        // ---------------------------------
 
-        int calculatedAnswer = 0;
-
-        try
-        {
-            DataTable dt = new DataTable();
-            var resultObj = dt.Compute(cleanFormula, "");
-
-            if (resultObj is int) calculatedAnswer = (int)resultObj;
-            else calculatedAnswer = System.Convert.ToInt32(resultObj);
-
-            Debug.Log($"✅ Soru ({isPenalty}): {cleanFormula} = {calculatedAnswer}");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Formül Hatası: {e.Message}");
-            calculatedAnswer = 0;
-            finalQuestionText = "Hatalı Soru (Cevap 0)";
-        }
-
-        // 3. Gönder
+        // 6. Gönder
         if (AnswerManager.instance != null)
         {
-            AnswerManager.instance.SetQuestion(finalQuestionText, calculatedAnswer, type);
+            AnswerManager.instance.SetQuestion(finalQuestionText, calculatedAnswerStr, type);
         }
+    }
+
+    // --- MATEMATİK YARDIMCILARI (EBOB ve EKOK) ---
+    // En Büyük Ortak Bölen
+    int GCD(int a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    // En Küçük Ortak Kat
+    int LCM(int a, int b)
+    {
+        if (a == 0 || b == 0) return 0;
+        return (a / GCD(a, b)) * b;
     }
 
     // GÜNCELLEME 3: Burası Ceza Köşesi olduğu için 'true' gönderiyoruz

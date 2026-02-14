@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547af13606dfe73439015c067a9b24e6, type: 3}
+  m_Name: S1_C1_Quests
+  m_EditorClassIdentifier: Assembly-CSharp::ChapterQuestionSet
+  chapterName: "\"Buzul Operasyonu\" (Tam Say\u0131larda Toplama) "
+  redTemplates:
+  - {fileID: 11400000, guid: d8573d41004590449b6768d938a721da, type: 2}
+  - {fileID: 11400000, guid: 024ca2f9d79315a40b026b7c869a9a7d, type: 2}
+  - {fileID: 11400000, guid: 2eee35e79661c514ab8244b96c7d60d5, type: 2}
+  - {fileID: 11400000, guid: 78904253746fc9a4fad57c14ddf0c997, type: 2}
+  - {fileID: 11400000, guid: 607bb374bb7696d4b81a6b67845c2c44, type: 2}
+  redHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  blueTemplates:
+  - {fileID: 11400000, guid: b4eea745ce427994599ed652c876ebc6, type: 2}
+  - {fileID: 11400000, guid: 20909e3b3d275864ab523ea30990d779, type: 2}
+  - {fileID: 11400000, guid: 598fa7c4f078c9444a02a092c317d938, type: 2}
+  - {fileID: 11400000, guid: 5639089a5759eeb4090ea7d2c870fce6, type: 2}
+  - {fileID: 11400000, guid: a6aaf18da71e3574da9d7f3a578b471c, type: 2}
+  blueHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  yellowTemplates:
+  - {fileID: 11400000, guid: 967c51d527109b949978866389f394e8, type: 2}
+  - {fileID: 11400000, guid: 9f3ac6ea36494d14a9321f0ed88df6c2, type: 2}
+  - {fileID: 11400000, guid: 6d1a2474fec1849429666136348005ec, type: 2}
+  - {fileID: 11400000, guid: 513993cb7da199647bd801c50af33f10, type: 2}
+  - {fileID: 11400000, guid: b01e2c05868ab0740a2fe3cc6b4722d9, type: 2}
+  yellowHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  purpleTemplates:
+  - {fileID: 11400000, guid: abd1f9109b0f48d49b43559d6f05f237, type: 2}
+  - {fileID: 11400000, guid: 6dde6602ccd605144a35135954b2f917, type: 2}
+  - {fileID: 11400000, guid: 03a687c3d1515804cac6a820fdb89ff3, type: 2}
+  - {fileID: 11400000, guid: 4c538776a6831dd4e8b5a8e78a77bb3e, type: 2}
+  - {fileID: 11400000, guid: 7bdf06c2711be1e4cbffc02d250a063c, type: 2}
+  purpleHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  greenTemplates:
+  - {fileID: 11400000, guid: f6f0b8839020556448e2e0402af1edaa, type: 2}
+  - {fileID: 11400000, guid: 22c9379142df275489d8273a1cac6710, type: 2}
+  - {fileID: 11400000, guid: ef06478f568a61f418281ac36b31fbf5, type: 2}
+  - {fileID: 11400000, guid: 1a15c799528102946b0dc3dd4c02e29d, type: 2}
+  - {fileID: 11400000, guid: df034cf453878f94483a7835d37cf98a, type: 2}
+  greenHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  orangeTemplates:
+  - {fileID: 11400000, guid: f03e05703bac9584cae2903b77aab78e, type: 2}
+  - {fileID: 11400000, guid: df1407c188fe28145b7eb5c030c8682a, type: 2}
+  - {fileID: 11400000, guid: 26190caf5713ba1429fc5a6ee1a6b6da, type: 2}
+  - {fileID: 11400000, guid: e28bbf3c098491c47a3a5e68dfed18fd, type: 2}
+  - {fileID: 11400000, guid: fff2c60032cbc7d42b68c235e4e38671, type: 2}
+  orangeHardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}
+  hardTemplates:
+  - {fileID: 11400000, guid: 129385da01bd8ed4ea9d688c5d4ab260, type: 2}
+  - {fileID: 11400000, guid: cea117b1f57d72841b3c716b51360cb2, type: 2}
+  - {fileID: 11400000, guid: 3f747f426fcdd5243a4fa35984bba64b, type: 2}
+  - {fileID: 11400000, guid: 5395fa17d8ed5de428e2a50c87128f7e, type: 2}
+  - {fileID: 11400000, guid: 42ebce4dcd6abf74caa1b8803aad0c71, type: 2}

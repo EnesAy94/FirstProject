@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P6_Quest5
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "G\xF6lge Kaptan en derine ka\xE7\u0131yor. Final vuru\u015Fu i\xE7in
+    devasa farklar\u0131 hesapla.\n* Ajan Neon, vir\xFCs\xFC yok edecek anti-kod
+    \u015Fu iki de\u011Ferin fark\u0131d\u0131r: {0} ile {1}. Kodun sonucunu gir
+    ve sistemi kurtar!"
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: -550000, y: -450000}
+  - {x: -650000, y: -600000}

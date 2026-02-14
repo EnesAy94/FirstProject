@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547af13606dfe73439015c067a9b24e6, type: 3}
+  m_Name: S1_C7_Quests
+  m_EditorClassIdentifier: Assembly-CSharp::ChapterQuestionSet
+  chapterName: "\"Uzay \u0130stasyonu: Son S\u0131n\u0131r\" (D\xF6rt \u0130\u015Flem
+    Kar\u0131\u015F\u0131k)"
+  redTemplates:
+  - {fileID: 11400000, guid: e159c3d7f7d3e2d41b4a1df492f2e1cc, type: 2}
+  - {fileID: 11400000, guid: 00d60865ec4c57a49bc3b77520a8cf22, type: 2}
+  - {fileID: 11400000, guid: 469fa37e26ac29c469f508f6313300b4, type: 2}
+  - {fileID: 11400000, guid: aa71687a7c0529d4489aa7704f4a67aa, type: 2}
+  - {fileID: 11400000, guid: 7f3df39dc0e49784a90ae8b0c8d03b7b, type: 2}
+  redHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  blueTemplates:
+  - {fileID: 11400000, guid: abca2cc118933e348a0837b57ba86896, type: 2}
+  - {fileID: 11400000, guid: 050fdf654fc084d488f668be79efb47e, type: 2}
+  - {fileID: 11400000, guid: cdbce8a21dfa1c54f9d4e8138a46baba, type: 2}
+  - {fileID: 11400000, guid: f3576bb213dc9cb468284689db617ab7, type: 2}
+  - {fileID: 11400000, guid: dbcf8c4454ee1e04db249de8907d8f22, type: 2}
+  blueHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  yellowTemplates:
+  - {fileID: 11400000, guid: ef6e25ebbf1427b46ab03b873a603e84, type: 2}
+  - {fileID: 11400000, guid: 22c76e9494d1b114e9845f2f45ae7f8a, type: 2}
+  - {fileID: 11400000, guid: 3d28a836bc7d50e488625195337c6395, type: 2}
+  - {fileID: 11400000, guid: b52c910bf568bdc4698f2099cc2f676d, type: 2}
+  - {fileID: 11400000, guid: f1a6324cc49de0848a97b94f9921f62f, type: 2}
+  yellowHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  purpleTemplates:
+  - {fileID: 11400000, guid: 2ab4853cf4cb0734a90d40ea31fb6c00, type: 2}
+  - {fileID: 11400000, guid: e5e47d7cb1ac9424e94b7c411bd7a540, type: 2}
+  - {fileID: 11400000, guid: af8b14c143f4004449ba8488d70d5bb3, type: 2}
+  - {fileID: 11400000, guid: 8c4114bcab0a51e4aaa3fdbedfcc63e0, type: 2}
+  - {fileID: 11400000, guid: 99d5cfd9cdcecf84e8cbff5f4a56a152, type: 2}
+  purpleHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  greenTemplates:
+  - {fileID: 11400000, guid: 716498d109af7f145b53f677420cd9fa, type: 2}
+  - {fileID: 11400000, guid: 2f9dd0b854b57a242bc3f41bf643d164, type: 2}
+  - {fileID: 11400000, guid: 0527256acb021cc4f881ada0ecd90cba, type: 2}
+  - {fileID: 11400000, guid: 40c13282f5f2b47438086ec44697a178, type: 2}
+  - {fileID: 11400000, guid: 1360205ec8f7e8347a49f6440170c5a9, type: 2}
+  greenHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  orangeTemplates:
+  - {fileID: 11400000, guid: a1b9475cfe084944582c41423b7c1c0c, type: 2}
+  - {fileID: 11400000, guid: c67358f3831eb6044a278633c5eba73c, type: 2}
+  - {fileID: 11400000, guid: e599c944f9e5d8e488559ddc8e7f4e9d, type: 2}
+  - {fileID: 11400000, guid: 548bbd9df38a40a439bc9a22a5124816, type: 2}
+  - {fileID: 11400000, guid: 11565b6f00365034c9017f57f5d447a1, type: 2}
+  orangeHardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}
+  hardTemplates:
+  - {fileID: 11400000, guid: 002c4a2a41e675f4fbeabaf13b913908, type: 2}
+  - {fileID: 11400000, guid: 996b782276a4d344b89f50389ebfc1e6, type: 2}
+  - {fileID: 11400000, guid: a60e04637560f93489230395fefc8e47, type: 2}
+  - {fileID: 11400000, guid: f04841a3136c15a4bb9280af5f694ccc, type: 2}
+  - {fileID: 11400000, guid: 7d070a80fb4215541b70445f338708d8, type: 2}

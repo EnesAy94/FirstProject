@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P2_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Asans\xF6r paneli \u015Fu komutu verdi:\r\n {0} + ({1}) - ({2})\r\nBu
+    karma\u015F\u0131k i\u015Flemin sonucu asans\xF6r\xFCn duraca\u011F\u0131 gizli
+    kat\u0131 temsil ediyor. Hangi kat bu?"
+  formula: '{0}+{1}-{2}'
+  variableRanges:
+  - {x: 10, y: 15}
+  - {x: -20, y: -10}
+  - {x: -9, y: -3}

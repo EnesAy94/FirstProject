@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P4_Quest2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Lazer g\xFCvenlik sistemi {0} voltla \xE7al\u0131\u015F\u0131yor.
+    Bir sabotaj voltaj\u0131 {1} birim d\xFC\u015F\xFCrd\xFC, sen yedek g\xFC\xE7le
+    {2} birim ekledin. Voltaj \u015Fu an ka\xE7?"
+  formula: '{0}-{1}+{2}'
+  variableRanges:
+  - {x: 200, y: 250}
+  - {x: 100, y: 120}
+  - {x: 40, y: 60}

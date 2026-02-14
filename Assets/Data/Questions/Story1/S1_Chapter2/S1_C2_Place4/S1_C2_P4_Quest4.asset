@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P4_Quest4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Okyanus taban\u0131ndaki devasa veri kablolar\u0131n\u0131 onarmak
+    i\xE7in hassas \xF6l\xE7\xFCmler yap.\r\n* \u0130ki veri santrali aras\u0131ndaki
+    mesafe fark\u0131 \u015Fifreyi verecek. A Santrali {0} koordinat\u0131nda, B
+    Santrali {1} koordinat\u0131nda. $(A - B)$ i\u015Fleminin sonucunu gir."
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: -250000, y: -200000}
+  - {x: -650000, y: -550000}

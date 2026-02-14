@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P6_Quest1
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "G\xF6lge Kaptan en derine ka\xE7\u0131yor. Final vuru\u015Fu i\xE7in
+    devasa farklar\u0131 hesapla.\n* Mariana \xC7ukuru'nun en dip noktas\u0131 {0}
+    metre. Senin denizalt\u0131n \u015Fu an {1} metrede. En dibe ula\u015Fmak i\xE7in
+    ne kadar daha yolun var?"
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: -11034, y: -11034}
+  - {x: -8000, y: -5000}

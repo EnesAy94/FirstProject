@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P2_Quest1
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Vir\xFCs enerjiyi emiyor. Kalan g\xFCc\xFC ve s\u0131z\u0131nt\u0131y\u0131
+    hesaplayarak karanl\u0131kta kalmay\u0131 \xF6nle.\n* Ana jenerat\xF6r {0} kW
+    enerji \xFCretiyor. Vir\xFCs\xFCn emdi\u011Fi enerji miktar\u0131 {1} kW. Sistemde
+    kalan net enerjiyi hesapla."
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: 5000, y: 6000}
+  - {x: 1100, y: 1250}

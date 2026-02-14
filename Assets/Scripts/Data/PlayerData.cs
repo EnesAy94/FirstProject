@@ -31,6 +31,7 @@ public class PlayerData
     // Hangi bölümden kaç puan aldığını burada tutacağız ki toplamı hesaplayabilelim.
     public List<LevelScoreData> levelBestScores = new List<LevelScoreData>();
     public List<MissionProgressSave> missionProgresses = new List<MissionProgressSave>();
+    public List<UsedQuestionData> usedQuestions = new List<UsedQuestionData>();
 
     // Oyun Ayarları (Ses vs.)
     public float musicVolume = 1f;
@@ -72,4 +73,13 @@ public struct MissionProgressSave
     public int chapterID;
     public int missionIndex; // O bölümdeki kaçıncı görev?
     public int progress;     // Kaç tanesini yaptı?
+}
+
+[System.Serializable]
+public class UsedQuestionData
+{
+    public int chapterID;
+    public TileType color;
+    public List<int> usedStoryIndices = new List<int>(); // Çözülen hikayeli sorular
+    public List<int> usedHardIndices = new List<int>();  // Çözülen zor sorular
 }

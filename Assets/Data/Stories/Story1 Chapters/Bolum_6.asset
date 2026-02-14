@@ -16,6 +16,7 @@ MonoBehaviour:
   chapterName: "H\u0131rs\u0131z 6"
   nextChapter: {fileID: 11400000, guid: 0f1c5d8534632114e9af617a447d13f9, type: 2}
   introText: 
+  questionSet: {fileID: 11400000, guid: 88391df3483f1ab4d8de0068f73c55ad, type: 2}
   missions:
   - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
   startingScore: 100

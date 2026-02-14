@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C3_P6_Quest5
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Final Kilidi \u015Eifresi: G\xF6rev boyunca toplad\u0131\u011F\u0131n
+    en b\xFCy\xFCk pozitif ve en k\xFC\xE7\xFCk negatif de\u011Ferlerin toplam\u0131d\u0131r!\r\n
+    {0} + ({1}) + {2}\r\n\u015Eifreyi gir ve binay\u0131 kurtar!"
+  formula: '{0}+{1}+{2}'
+  variableRanges:
+  - {x: 900000, y: 999999}
+  - {x: -950000, y: -850000}
+  - {x: 1400, y: 1500}

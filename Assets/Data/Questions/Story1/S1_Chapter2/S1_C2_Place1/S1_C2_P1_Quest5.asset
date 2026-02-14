@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P1_Quest5
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "Denizalt\u0131na g\xFCvenle girebilmek i\xE7in d\u0131\u015Far\u0131daki
+    devasa bas\u0131n\xE7la i\xE7eriyi dengelemelisin.\n* \u0130\xE7 b\xF6lme kap\u0131s\u0131
+    i\xE7in \u015Fifre: 'Maksimum bas\u0131n\xE7' ile 'Mevcut bas\u0131n\xE7' aras\u0131ndaki
+    farkt\u0131r. Maksimum {0}, mevcut {1}. \u015Eifreyi gir."
+  formula: '{0}-{1}'
+  variableRanges:
+  - {x: 200, y: 300}
+  - {x: 100, y: 150}

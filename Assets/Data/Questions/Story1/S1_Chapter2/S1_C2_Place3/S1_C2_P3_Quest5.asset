@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P3_Quest5
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "D\xFC\u015Fman denizalt\u0131s\u0131 sessizce s\xFCz\xFCl\xFCyor.
+    Aran\u0131zdaki mesafeyi sonar verileriyle bul\n* D\xFC\u015Fman denizalt\u0131s\u0131
+    derinli\u011Fini {0} metreden {1} metreye \xE7\u0131kard\u0131. Derinli\u011Findeki
+    toplam de\u011Fi\u015Fim nedir?"
+  formula: '{1}-{0}'
+  variableRanges:
+  - {x: -650, y: -500}
+  - {x: -400, y: -300}

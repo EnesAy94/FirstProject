@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff8b2990cb24364fafa57a82420eea1, type: 3}
+  m_Name: S1_C2_P3_Quest1
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionTemplate
+  questionText: "D\xFC\u015Fman denizalt\u0131s\u0131 sessizce s\xFCz\xFCl\xFCyor.
+    Aran\u0131zdaki mesafeyi sonar verileriyle bul\n* Sen deniz seviyesinin {0} metre
+    alt\u0131ndas\u0131n. D\xFC\u015Fman denizalt\u0131s\u0131 ise {1} metrede. Onunla
+    arandaki derinlik fark\u0131 ka\xE7t\u0131r?"
+  formula: '{1}-{0}'
+  variableRanges:
+  - {x: -350, y: -250}
+  - {x: -550, y: -450}
