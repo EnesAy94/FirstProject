@@ -29,6 +29,9 @@ MonoBehaviour:
       Bu yo\u011Fun veri y\xFCk\xFCn\xFC e\u015Fit kapasiteli g\xFCvenlik portlar\u0131na
       payla\u015Ft\u0131rarak sistemi kand\u0131rmal\u0131 ve ge\xE7i\u015F izni
       almal\u0131s\u0131n."
+    robotHint: "Neon, b\xF6lme ve \xE7arpmada i\u015Faret kurallar\u0131 karde\u015Ftir.
+      \u0130\u015Faretler ayn\u0131ysa sonu\xE7 Pozitif (+), z\u0131tsa Negatif (-)
+      olur. Bu kadar basit!"
     successMessage: "Veri paketleri portlara m\xFCkemmel da\u011F\u0131ld\u0131!
       Siber uzay\u0131n kalbine giden yol art\u0131k a\xE7\u0131k."
     failMessage: "Dengesiz veri da\u011F\u0131t\u0131m\u0131! Portlardan biri a\u015F\u0131r\u0131
@@ -41,6 +44,11 @@ MonoBehaviour:
       bir enerji kayna\u011F\u0131 olu\u015Fturmal\u0131s\u0131n. \u0130ki negatif
       y\xFCk\xFCn \xE7arp\u0131\u015Fmas\u0131ndan do\u011Fan o \u0131\u015F\u0131k,
       yolu ayd\u0131nlatacak."
+    robotHint: "Neon, b\xF6lme i\u015Flemi \xE7arpma i\u015Fleminin aynadaki aksidir.
+      \u0130\u015Faret kurallar\u0131 de\u011Fi\u015Fmez; ama unutma, pay\u0131n
+      (\xFCstteki say\u0131) 0 olmas\u0131 seni 0'a g\xF6t\xFCr\xFCrken, paydan\u0131n
+      (alttaki say\u0131) 0 olmas\u0131 seni yoklu\u011Fa g\xF6t\xFCr\xFCr. S\u0131f\u0131r\u0131
+      asla b\xF6len koltu\u011Funa oturtma!"
     successMessage: "I\u015F\u0131k patlamas\u0131! \u0130ki negatif de\u011Ferin
       b\xF6l\xFCm\xFC t\xFCneli bembeyaz bir enerjiyle doldurdu."
     failMessage: "Yanl\u0131\u015F: Karanl\u0131k \xE7\xF6k\xFCyor! \u0130\u015Faret
@@ -52,6 +60,9 @@ MonoBehaviour:
       alt\u0131nda yanmak \xFCzere! Bu y\xFCk\xFC so\u011Futma emilimi yapabilen
       \xE7ekirdeklere da\u011F\u0131tmal\u0131s\u0131n. Ka\xE7 \xE7ekirde\u011Fin
       bu y\xFCk\xFC kald\u0131rabilece\u011Fini saptaman gerek."
+    robotHint: "Neon, b\xF6lme ve \xE7arpmada i\u015Faret kurallar\u0131 karde\u015Ftir.
+      \u0130\u015Faretler ayn\u0131ysa sonu\xE7 Pozitif (+), z\u0131tsa Negatif (-)
+      olur. Bu kadar basit!"
     successMessage: "So\u011Futma sistemi stabil! \xC7ekirdekler tam kapasite \xE7al\u0131\u015F\u0131yor
       ve \u0131s\u0131 h\u0131zla d\xFC\u015F\xFCyor."
     failMessage: "Kritik s\u0131cakl\u0131k! \xC7ekirdek say\u0131s\u0131 yetersiz
@@ -64,6 +75,9 @@ MonoBehaviour:
       bir sonu\xE7 verirken, di\u011Feri evrenin kurallar\u0131n\u0131 yok eden bir
       \"tan\u0131ms\u0131zl\u0131k\" tuza\u011F\u0131. Mant\u0131ks\u0131z olan\u0131
       bul ve yok et!"
+    robotHint: "Elinde 10 adet veri paketi var ve bunlar\u0131 hi\xE7 kimseye (0
+      ki\u015Fi) da\u011F\u0131tman gerekiyor. Bu mant\u0131ksal bir paradokstur.
+      Paketler ortadan kaybolamaz ama da\u011F\u0131t\u0131lamaz da.\r\n"
     successMessage: "Bomba etkisiz! Matemati\u011Fin sars\u0131lmaz mant\u0131\u011F\u0131n\u0131
       kullanarak tuza\u011F\u0131 bozdun ve ilerliyorsun."
     failMessage: "Mant\u0131k hatas\u0131! Tan\u0131ms\u0131z olan b\xF6lgeyi se\xE7emedin
@@ -74,6 +88,9 @@ MonoBehaviour:
     introDescription: "Veriler parampar\xE7a edilmi\u015F. Bu devasa veri y\u0131\u011F\u0131n\u0131n\u0131,
       bozuk sekt\xF6r alanlar\u0131na b\xF6lerek her bir noktay\u0131 tek tek n\xF6tralize
       etmelisin. Bir siber cerrah gibi hassas olmal\u0131s\u0131n."
+    robotHint: "Matematiksel evrende $0$ say\u0131s\u0131na b\xF6lmek, i\u015Flemcinin
+      sonsuz bir d\xF6ng\xFCye girip \"Tan\u0131ms\u0131z\" bir bo\u015Flu\u011Fa
+      d\xFC\u015Fmesine neden olur. Siber B\xF6lge'de bu, sistemin imhas\u0131 demektir."
     successMessage: "Haf\u0131za temizlendi! Veri y\u0131\u011F\u0131n\u0131 bozuk
       alanlara tam olarak b\xF6l\xFCnd\xFC ve etkisiz hale getirildi."
     failMessage: "Bellek s\u0131z\u0131nt\u0131s\u0131! Yanl\u0131\u015F b\xF6lme
@@ -85,6 +102,8 @@ MonoBehaviour:
       kodun savunmas\u0131n\u0131 k\u0131rmak i\xE7in onu do\u011Fru anahtarlara
       b\xF6lmelisin. Final \u015Fifresini \xE7\xF6zd\xFC\u011F\xFCn an, d\xFCnya
       say\u0131sal dengesine tekrar kavu\u015Facak."
+    robotHint: " B\xF6lme, \xE7arpman\u0131n tersidir. 10 : 2 = 5 deriz \xE7\xFCnk\xFC
+      5 * 2 = 10 eder."
     successMessage: "ER\u0130\u015E\u0130M ONAYLANDI! Ana vir\xFCs par\xE7alanarak
       yok oluyor. D\xFCnyay\u0131 karanl\u0131ktan kurtard\u0131n, Neon!"
     failMessage: "Eri\u015Fim reddedildi! Final \u015Fifresi yanl\u0131\u015F. Vir\xFCs

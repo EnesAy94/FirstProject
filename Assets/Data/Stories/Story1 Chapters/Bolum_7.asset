@@ -29,6 +29,9 @@ MonoBehaviour:
       \u0130stasyonun y\xF6r\xFCngede savrulmas\u0131n\u0131 \xF6nlemek i\xE7in koordinat
       sistemini kilitlemelisin. Veri dizisindeki negatif ve pozitif ak\u0131\u015Flar\u0131
       \xE7arp\u0131p b\xF6lerek istasyonun konumunu tam merkeze sabitle."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "Koordinatlar kilitlendi! \u0130stasyon y\xF6r\xFCngesine oturdu
       ve D\xFCnya ile sinyal hatt\u0131 tekrar kuruldu."
     failMessage: "Sinyal kayb\u0131! Koordinatlar uzay bo\u015Flu\u011Funa y\xF6nlendi.
@@ -42,6 +45,9 @@ MonoBehaviour:
       neden oldu\u011Fu enerji kayb\u0131n\u0131 dengelemen gerekiyor. Enerji tanklar\u0131n\u0131
       doldurmak i\xE7in \xFCretim ve t\xFCketim aras\u0131ndaki o kritik fark\u0131
       saptamal\u0131s\u0131n."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "Enerji tanklar\u0131 doluyor! \u0130stasyonun sistemleri tekrar
       tam kapasite \xE7al\u0131\u015Fmaya ba\u015Flad\u0131."
     failMessage: "Karartma ba\u015Flad\u0131! S\u0131z\u0131nt\u0131 miktar\u0131
@@ -55,6 +61,9 @@ MonoBehaviour:
       negatif y\xFCkl\xFC antimadde i\xE7eren nesneleri do\u011Fru gruplara ay\u0131r\u0131p
       a\u011F\u0131rl\u0131k dengesini s\u0131f\u0131rlayarak yapay yer\xE7ekimini
       tekrar aktif etmelisin."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "Yer\xE7ekimi geri d\xF6nd\xFC! Nesneler yava\u015F\xE7a zemine
       indi ve denge sa\u011Fland\u0131."
     failMessage: "Nesneler birbirine \xE7arp\u0131yor! Antimadde dengesini kuramad\u0131\u011F\u0131n
@@ -67,6 +76,9 @@ MonoBehaviour:
       aras\u0131nda e\u015Fit \u015Fekilde payla\u015Ft\u0131r\u0131p, \xFCzerine
       uyanma haz\u0131rl\u0131k s\xFCresini ekleyerek ajanlar\u0131 do\u011Fru zamanda
       uyand\u0131rmal\u0131s\u0131n."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "Personel uyanma d\xF6ng\xFCs\xFC normalize edildi. Ekip operasyon
       i\xE7in haz\u0131r ve zinde!"
     failMessage: "Zaman kaymas\u0131 \xE7\xF6z\xFClemedi! Ajanlar ya \xE7ok erken
@@ -80,6 +92,9 @@ MonoBehaviour:
       fark\u0131 kapatman gerekiyor. Bu fark\u0131 kalkan katsay\u0131s\u0131 ile
       birle\u015Ftirip g\xFCvenli tahliye seviyesine b\xF6ld\xFC\u011F\xFCnde kap\u0131
       a\xE7\u0131lacak."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "Bas\u0131n\xE7 e\u015Fitlendi! Hava kilidi g\xFCvenle a\xE7\u0131l\u0131yor,
       d\u0131\u015F g\xF6reve \xE7\u0131kmaya haz\u0131rs\u0131n Neon."
     failMessage: "Alarm! \u0130\xE7 ve d\u0131\u015F bas\u0131n\xE7 aras\u0131ndaki
@@ -93,6 +108,9 @@ MonoBehaviour:
       evrenden silmek i\xE7in en karma\u015F\u0131k \u015Fifreleme protokol\xFCn\xFC
       \xE7\xF6zmen gerekiyor. \u0130\u015Flem \xF6nceli\u011Fi senin tek silah\u0131n.
       Bu kodu girdi\u011Fin an her \u015Fey sona erecek."
+    robotHint: "Neon, i\u015Flem \xF6nceli\u011Fi hiyerar\u015Fisini (Parantez >
+      \xC7arpma/B\xF6lme > Toplama/\xC7\u0131karma) bozmad\u0131\u011F\u0131n i\xE7in
+      sistem istikrara kavu\u015Ftu."
     successMessage: "S\u0130STEM RESETLEND\u0130! T\xFCm d\xFCnyadaki veriler orijinal
       haline d\xF6nd\xFC ve \"S\u0131f\u0131r Noktas\u0131\" tarihe kar\u0131\u015Ft\u0131.
       Tebrikler Ajan Neon."

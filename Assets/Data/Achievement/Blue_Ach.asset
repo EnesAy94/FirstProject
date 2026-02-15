@@ -16,7 +16,7 @@ MonoBehaviour:
   title: Blue Master
   description: Solved Blue Question
   requiresMission: 1
-  requiredMissionKey: Mission_Blue_Done
+  requiredMissionKey: blue_master
   tiers:
   - tierName: 1
     targetCount: 1

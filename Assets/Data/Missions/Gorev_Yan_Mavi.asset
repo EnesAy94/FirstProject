@@ -17,5 +17,5 @@ MonoBehaviour:
   type: 1
   targetAmount: 1
   icon: {fileID: 0}
-  unlockAchievementKey: Mission_Blue_Done
+  unlockAchievementKey: blue_master
   currentProgress: 0

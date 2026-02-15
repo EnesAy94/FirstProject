@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04943bed99a63af4499141c75dec297a, type: 3}
   m_Name: Gorev_Kirmizi_Topla
   m_EditorClassIdentifier: Assembly-CSharp::MissionData
-  description: "Bir soruyu do\u011Fru \xE7\xF6z"
+  description: "\xDC\xE7 soruyu do\u011Fru \xE7\xF6z"
   isMainMission: 1
   type: 5
-  targetAmount: 1
+  targetAmount: 3
   icon: {fileID: 0}
+  unlockAchievementKey: 
   currentProgress: 0

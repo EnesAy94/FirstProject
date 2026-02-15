@@ -118,48 +118,46 @@ public class PlayerMovement : MonoBehaviour
             // --- HİKAYELİ MEKAN KARTLARI (BURASI DEĞİŞTİ) ---
             else
             {
-                // 1. Önce LevelManager'dan bu rengin hikayesi var mı diye bakıyoruz
                 if (LevelManager.instance != null && LevelManager.instance.currentChapter != null)
                 {
-                    // LevelManager'a eklediğimiz 'locationCardPanel' referansını kullanacağız
                     LocationStoryInfo info = LevelManager.instance.currentChapter.GetStoryInfo(currentTile.type);
 
-                    // Eğer bu renk için dolu bir hikaye bilgisi varsa
                     if (!string.IsNullOrEmpty(info.locationName))
                     {
-                        // A) Doğru/Yanlış mesajlarını AnswerManager'a yükle
+                        // 1. Cevap Panelinde çıkacak mesajları yükle
                         if (AnswerManager.instance != null)
                         {
                             AnswerManager.instance.SetCustomFeedbackMessages(info.successMessage, info.failMessage);
+
+                            // YENİ: Robotun söyleyeceği ipucunu da yükle (Ama robot henüz konuşmayacak)
+                            AnswerManager.instance.SetRobotHint(info.robotHint);
                         }
 
-                        // B) Kart Panelini Aç (LevelManager üzerinde tanımlı olmalı)
+                        // 2. Kart Panelini Aç (Robot BURADA KONUŞMAYACAK)
                         if (LevelManager.instance.locationCardPanel != null)
                         {
                             LevelManager.instance.locationCardPanel.ShowLocationCard(info, () =>
                             {
-                                // "Devam" butonuna basılınca burası çalışır: Soruyu Sor
+                                // Devam'a basınca AnswerManager.SetQuestion çalışacak
+                                // ve robot orada konuşacak.
                                 QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
                             });
                         }
                         else
                         {
-                            // Panel yoksa direkt sor (Hata olmasın diye)
                             QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
                         }
                     }
                     else
                     {
-                        // Hikaye yoksa direkt sor (Eski sistem)
-                        // Mesajları temizle ki eski mekanın mesajı kalmasın
-                        if (AnswerManager.instance != null) AnswerManager.instance.SetCustomFeedbackMessages("", "");
+                        // Hikaye yoksa mesajları ve ipucunu temizle
+                        if (AnswerManager.instance != null)
+                        {
+                            AnswerManager.instance.SetCustomFeedbackMessages("", "");
+                            AnswerManager.instance.SetRobotHint(""); // İpucu yok
+                        }
                         QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
                     }
-                }
-                else
-                {
-                    // LevelManager yoksa direkt sor
-                    QuestionManager.instance.SoruOlusturVeSor(currentTile.type);
                 }
             }
         }

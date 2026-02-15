@@ -33,6 +33,9 @@ MonoBehaviour:
       (\xE7\u0131karma i\u015Flemini) hatas\u0131z hesaplay\u0131p e\u015Fitlemeliydi.
       Bir birimlik hata, denizalt\u0131n\u0131n bir ka\u011F\u0131t gibi ezilmesine
       neden olabilirdi."
+    robotHint: "Neon, bir say\u0131dan di\u011Ferini \xE7\u0131kar\u0131rken aradaki
+      mesafeyi \xF6l\xE7\xFCyoruz. E\u011Fer negatif bir say\u0131 \xE7\u0131kar\u0131yorsan,
+      asl\u0131nda ters y\xF6ne gidiyorsun demektir!"
     successMessage: "\u0130\xE7 ve d\u0131\u015F bas\u0131n\xE7 tam olarak e\u015Fitlendi!
       Kap\u0131daki a\u011F\u0131r metal kilitler b\xFCy\xFCk bir t\u0131slama sesiyle
       a\xE7\u0131l\u0131yor. Denizalt\u0131na g\xFCvenle s\u0131zd\u0131n, operasyon
@@ -49,6 +52,10 @@ MonoBehaviour:
       s\u0131zd\u0131ran pillerin t\xFCketti\u011Fi enerjiyi \xE7\u0131kararak sistemin
       ne kadar daha dayanabilece\u011Fini bulmak zorundayd\u0131. Her saniye, enerji
       havuzundan eksilen bir say\u0131yd\u0131."
+    robotHint: "Voltaj d\xFC\u015F\xFC\u015F\xFCn\xFC hesaplarken dikkatli ol. E\u011Fer
+      pozitiften negatife d\xFC\u015Ft\xFCysen, aradaki fark \xE7ok daha b\xFCy\xFCkt\xFCr.
+      Say\u0131 do\u011Frusunda s\u0131f\u0131r\u0131n \xFCzerinden ge\xE7ti\u011Fini
+      hayal et!"
     successMessage: "Enerji ka\xE7a\u011F\u0131n\u0131 tespit ettin ve jenerat\xF6r\xFC
       stabilize ettin! I\u015F\u0131klar tekrar maviye d\xF6nd\xFC. Sistemin ne kadar
       dayanaca\u011F\u0131n\u0131 art\u0131k biliyoruz, AIDA rotay\u0131 g\xFCncelliyor."
@@ -64,6 +71,9 @@ MonoBehaviour:
       Neon, iki denizalt\u0131n\u0131n deniz seviyesine olan uzakl\u0131klar\u0131n\u0131
       kar\u015F\u0131la\u015Ft\u0131rarak aralar\u0131ndaki derinlik fark\u0131n\u0131
       bulmal\u0131yd\u0131. D\xFC\u015Fman ka\xE7 metre daha derindeydi?"
+    robotHint: "Sonar ekran\u0131ndaki derinlik farklar\u0131n\u0131 hesaplarken,
+      (-450) - (-300) i\u015Fleminin (-450) + 300 oldu\u011Funu hat\u0131rla. Derindeysen
+      negatif say\u0131larla oynamay\u0131 \xF6\u011Frenmelisin."
     successMessage: "Sinyaller netle\u015Fti! D\xFC\u015Fman denizalt\u0131s\u0131
       ile arandaki derinlik fark\u0131n\u0131 tam olarak saptad\u0131n. Hedef radar\u0131nda,
       art\u0131k ka\xE7acak yerleri yok."
@@ -79,6 +89,10 @@ MonoBehaviour:
       di\u011Fer ucu ise bir su alt\u0131 kanyonunun dibindeydi. \u0130ki u\xE7 aras\u0131ndaki
       devasa mesafe fark\u0131n\u0131 hesaplamak, kabloyu onaracak yamay\u0131 haz\u0131rlamak
       i\xE7in kritikti."
+    robotHint: "Kablo hatt\u0131 \xE7ok uzun! B\xFCy\xFCk say\u0131larda \xE7\u0131karma
+      yaparken \xF6nce birler basama\u011F\u0131ndan ba\u015Fla. E\u011Fer negatiften
+      daha b\xFCy\xFCk bir negatif \xE7\u0131kar\u0131yorsan, sonucun pozitif olaca\u011F\u0131n\u0131
+      unutma."
     successMessage: "Yama tam \xF6l\xE7\xFCs\xFCnde haz\u0131rland\u0131! Okyanus
       taban\u0131ndaki veri hatt\u0131n\u0131 onard\u0131n. 'S\u0131f\u0131r Noktas\u0131'n\u0131n
       d\xFCnyaya yayd\u0131\u011F\u0131 vir\xFCs\xFCn ilk b\xFCy\xFCk par\xE7as\u0131
@@ -94,6 +108,8 @@ MonoBehaviour:
       ge\xE7en her dakikadaki kayb\u0131 \xE7\u0131karmas\u0131 gerekiyordu. AIDA
       (Yapay Zeka), Neon'a s\xFCrekli negatif de\u011Ferler f\u0131s\u0131ld\u0131yordu.
       \"Kalan\" oksijeni bulmak, hayatta kalman\u0131n tek yoluydu."
+    robotHint: "Kalan havay\u0131 hesaplamak hayati \xF6nem ta\u015F\u0131r. \xDCretimden
+      t\xFCketimi \xE7\u0131kar!"
     successMessage: "Kalan oksijen miktar\u0131 do\u011Fruland\u0131. AIDA tasarruf
       moduna ge\xE7ti ve nefes alabilece\u011Fin s\xFCreyi uzatt\u0131. Bu s\xFCre
       operasyonu tamamlaman i\xE7in yeterli!"
@@ -109,6 +125,9 @@ MonoBehaviour:
       Neon, kendi derinli\u011Fi ile \xE7ukurun en dip noktas\u0131 aras\u0131ndaki
       o devasa 6 basamakl\u0131 fark\u0131 hesaplayarak torpidolar\u0131 ate\u015Flemeli
       ve vir\xFCs\xFCn ana merkezini yok etmeliydi."
+    robotHint: "Son kod \xE7ok yak\u0131n! Devasa bir negatif say\u0131dan daha k\xFC\xE7\xFCk
+      bir negatif say\u0131y\u0131 \xE7\u0131kard\u0131\u011F\u0131nda, aradaki o
+      b\xFCy\xFCk fark pozitif bir enerjiye d\xF6n\xFC\u015Febilir."
     successMessage: "Hesaplama kusursuz! Torpidolar tam hedefi vurdu. 'G\xF6lge Kaptan'\u0131n
       ka\xE7\u0131\u015F mod\xFCl\xFC etkisiz hale getirildi ve vir\xFCs merkezi
       yok edildi. Derinliklerin kahraman\u0131 sensin, Ajan Neon!"

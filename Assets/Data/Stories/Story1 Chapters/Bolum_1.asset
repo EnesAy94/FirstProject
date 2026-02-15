@@ -29,6 +29,10 @@ MonoBehaviour:
     locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
     introDescription: "Ajan Neon, kap\u0131n\u0131n dijital kilidini a\u015Fmak i\xE7in
       sens\xF6rlerden gelen k\xFC\xE7\xFCk verileri birle\u015Ftirmelidir"
+    robotHint: "Kap\u0131 paneli z\u0131t kuvvetlerle \xE7al\u0131\u015F\u0131r.
+      E\u011Fer say\u0131lar z\u0131t i\u015Faretliyse, b\xFCy\xFCkten k\xFC\xE7\xFC\u011F\xFC
+      \xE7\u0131kar ve b\xFCy\xFC\u011F\xFCn i\u015Faretini sonuca yaz. E\u011Fer
+      ikisi de ayn\u0131 y\xF6ndeyse (negatif+negatif), sadece g\xFC\xE7lerini birle\u015Ftir!"
     successMessage: "Buzlanma \xE7\xF6z\xFCl\xFCyor! Sens\xF6rler ye\u015File d\xF6nd\xFC
       ve kap\u0131 mekanizmas\u0131 a\u011F\u0131r bir g\xFCr\xFClt\xFCyle a\xE7\u0131l\u0131yor.
       Ajan Neon, i\xE7eri s\u0131zd\u0131n!"
@@ -41,6 +45,9 @@ MonoBehaviour:
     introDescription: "Sunucular a\u015F\u0131r\u0131 y\xFCklenmi\u015F durumda.
       Veri ak\u0131\u015F\u0131n\u0131 dengelemek i\xE7in devasa say\u0131larla i\u015Flem
       yapmal\u0131s\u0131n."
+    robotHint: "Negatif paketler sistemdeki 'a\xE7\u0131\u011F\u0131', pozitif paketler
+      'kapasiteyi' temsil eder. \u0130ki negatif veri topland\u0131\u011F\u0131nda
+      a\xE7\u0131k daha da b\xFCy\xFCr. Basamak kayd\u0131rmamaya odaklan!\r\n"
     successMessage: "Veri kalkan\u0131 stabilize edildi! Anti-vir\xFCs yaz\u0131l\u0131m\u0131
       'S\u0131f\u0131r Noktas\u0131'n\u0131n kodlar\u0131n\u0131 temizliyor. Dev
       sunucular\u0131n u\u011Fultusu normale d\xF6n\xFCyor."
@@ -52,6 +59,9 @@ MonoBehaviour:
     locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
     introDescription: " Karanl\u0131k koridorlarda, eksik ekipmanlar\u0131 ve derinli\u011Fi
       hesaplama zaman\u0131."
+    robotHint: "Bor\xE7 ve alacak gibi d\xFC\u015F\xFCn Neon. Eksik olan malzeme
+      negatifse ve \xFCzerine yeni malzeme gelirse, \xF6nce eksi\u011Fi kapat\u0131rs\u0131n,
+      sonra elinde ne kadar kald\u0131\u011F\u0131na bakars\u0131n.\r\n"
     successMessage: "Asans\xF6r do\u011Fru katta durdu ve m\xFChimmat sand\u0131klar\u0131
       senkronize edildi. Deponun karanl\u0131k koridorlar\u0131nda ilerlemek i\xE7in
       gereken yolu a\xE7t\u0131n."
@@ -63,6 +73,9 @@ MonoBehaviour:
     locationIcon: {fileID: 21300000, guid: c582b76debe6eea469ea7bdbd2388101, type: 3}
     introDescription: " R\xFCzgarl\u0131 zirvede, antenleri hizalamak i\xE7in y\xF6n
       ve y\xFCkseklik toplamal\u0131s\u0131n."
+    robotHint: "E\u011Fer s\u0131cakl\u0131k -18 ise ve +18 artarsa, termometre tam
+      denge noktas\u0131na yani s\u0131f\u0131ra ula\u015F\u0131r. Buna 's\u0131f\u0131rlama'
+      protokol\xFC diyoruz."
     successMessage: "Antenler tam hizas\u0131na geldi! Sinyal g\xFCc\xFC %100'e ula\u015Ft\u0131
       ve harita netle\u015Fti. Art\u0131k t\xFCm b\xF6lgeyi yukar\u0131dan kontrol
       edebiliyorsun."
@@ -74,6 +87,9 @@ MonoBehaviour:
     locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
     introDescription: "Ajanlar\u0131n b\u0131rakt\u0131\u011F\u0131 izleri takip
       etmek i\xE7in termal ve a\u011F\u0131rl\u0131k verilerini topla."
+    robotHint: "Mutfaktaki eksikleri (negatif) tamamlad\u0131\u011F\u0131nda kalan
+      say\u0131 pozitifse, art\u0131k stokta \xFCr\xFCn var demektir. Sonu\xE7 negatifse
+      hala eksi\u011Fin var demektir.\r\n"
     successMessage: "Termal denge sa\u011Fland\u0131! Buzdolab\u0131 alarm\u0131
       sustu ve stok kay\u0131tlar\u0131ndaki a\xE7\u0131k kapand\u0131. Gizli dosyaya
       giden yol mutfak robotunun i\xE7inden ge\xE7iyor."
@@ -85,6 +101,10 @@ MonoBehaviour:
     locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
     introDescription: "Final hesapla\u015Fmas\u0131! Helikopter kalkmadan \xF6nce
       devasa verileri birle\u015Ftirerek sistemi kilitle."
+    robotHint: "Final \u015Fifresini bulurken sakin ol. Pozitif koordinat ile negatif
+      anahtar\u0131 toplarken asl\u0131nda b\xFCy\xFCk bir \xE7\u0131karma i\u015Flemi
+      yap\u0131yorsun. \u0130\u015Fareti en sona, b\xFCy\xFCk olan\u0131nkinden alarak
+      ekle."
     successMessage: "Paller d\xF6nmeye ba\u015Flad\u0131! Navigasyon verileri do\u011Fruland\u0131
       ve yak\u0131t tank\u0131 tam dolulukta. Ajan Neon, 'S\u0131f\u0131r Noktas\u0131'n\u0131n
       elindeki anahtar\u0131 ele ge\xE7irdin ve b\xF6lgeden ayr\u0131l\u0131yorsun!"

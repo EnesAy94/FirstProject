@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager instance;
-    public List<AchievementData> allAchievements; 
+    public List<AchievementData> allAchievements;
 
     void Awake()
     {
@@ -18,80 +18,86 @@ public class AchievementManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // --- İLERLEME KAYDETME (GÜNCELLENDİ) ---
+    // --- İLERLEME KAYDETME (ROBOT ENTEGRASYONLU) ---
     public void AddProgress(string achievementID, int amount)
     {
         AchievementData data = allAchievements.Find(x => x.id == achievementID);
         if (data == null) return;
 
-        // 1. KONTROL: Görev yapıldı mı? (SaveManager'a soruyoruz)
+        // 1. KONTROL: Görev yapıldı mı?
         if (data.requiresMission)
         {
             if (!SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
             {
-                Debug.Log($"[Achievement] {data.title} için önce ilgili görev yapılmalı!");
+                // Görev yapılmadıysa ilerleme ekleme
                 return;
             }
         }
 
-        // 2. MEVCUT İLERLEMEYİ AL (SaveManager'dan)
-        int currentCount = SaveManager.instance.GetAchievementProgress(achievementID);
+        // 2. MEVCUT (ESKİ) DURUMU AL
+        int oldCount = SaveManager.instance.GetAchievementProgress(achievementID);
 
-        // 3. ARTIR VE KAYDET (SaveManager'a)
-        currentCount += amount;
-    
-        SaveManager.instance.SetAchievementProgress(achievementID, currentCount);
+        // Eski seviyeyi hesapla
+        int oldTierIndex = GetTierIndex(data, oldCount);
 
-        // 4. SEVİYE KONTROLÜ
-        CheckUnlockStatus(data, currentCount);
+        // 3. YENİ DURUMU HESAPLA VE KAYDET
+        int newCount = oldCount + amount;
+        SaveManager.instance.SetAchievementProgress(achievementID, newCount);
+
+        // Yeni seviyeyi hesapla
+        int newTierIndex = GetTierIndex(data, newCount);
+
+        // 4. KUTLAMA KONTROLÜ (Level Atladı mı?)
+        // Eğer yeni seviye, eskisinden büyükse tebrik et
+        if (newTierIndex > oldTierIndex)
+        {
+            UnlockAchievement(data, newTierIndex);
+        }
     }
 
-    public void CheckUnlockStatus(AchievementData data, int currentCount)
+    // Yardımcı Fonksiyon: Verilen puana göre kaçıncı seviyede olduğunu bulur
+    int GetTierIndex(AchievementData data, int count)
     {
-        int currentTierIndex = -1;
+        int tierIndex = -1;
         for (int i = 0; i < data.tiers.Count; i++)
         {
-            if (currentCount >= data.tiers[i].targetCount)
+            if (count >= data.tiers[i].targetCount)
             {
-                currentTierIndex = i;
+                tierIndex = i;
             }
         }
+        return tierIndex;
+    }
 
-        if (currentTierIndex >= 0)
+    void UnlockAchievement(AchievementData data, int tierIndex)
+    {
+        string tierName = data.tiers[tierIndex].tierName;
+
+        // --- ESKİSİ: RobotAssistant.instance.Celebrate... (SİLDİK) ---
+
+        // --- YENİSİ: Üst Panelden Bildirim ---
+        if (NotificationManager.instance != null)
         {
-            // İstersen burada UI bildirimi yapabilirsin
-            // Debug.Log($"[Achievement] {data.title} seviye atladı!");
+            // Örn: "BAŞARIM KAZANILDI! Zor Soruların Efendisi (Altın)"
+            NotificationManager.instance.ShowNotification($"BAŞARIM KAZANILDI!\n{data.title} ({tierName})");
         }
     }
 
-    // --- DURUM SORGULAMA (GÜNCELLENDİ) ---
+    // --- DURUM SORGULAMA ---
     public (int currentCount, int currentTierIndex) GetAchievementStatus(string id)
     {
         AchievementData data = allAchievements.Find(x => x.id == id);
         if (data == null) return (0, -1);
 
-        // 1. İLERLEMEYİ ÇEK (SaveManager'dan)
-        // YENİSİ:
         int count = SaveManager.instance.GetAchievementProgress(data.id);
 
-        int tierIndex = -1;
-        for (int i = 0; i < data.tiers.Count; i++)
-        {
-            if (count >= data.tiers[i].targetCount) tierIndex = i;
-        }
-
-        // 2. GÖREV KİLİDİ KONTROLÜ (SaveManager'dan)
-        // YENİSİ:
+        // Görev kilidi kontrolü
         if (data.requiresMission && !SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
         {
-            return (0, -1); 
+            return (0, -1);
         }
 
-        if (!data.requiresMission && tierIndex == -1)
-        {
-            return (count, -1);
-        }
-
+        int tierIndex = GetTierIndex(data, count);
         return (count, tierIndex);
     }
 }

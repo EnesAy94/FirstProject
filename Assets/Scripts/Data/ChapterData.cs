@@ -6,19 +6,22 @@ using System.Collections.Generic;
 [System.Serializable]
 public struct LocationStoryInfo
 {
-    public TileType tileType;       // Hangi renk? (Örn: Green)
-    public string locationName;     // Örn: "Antik Kütüphane"
-    public Sprite locationIcon;     // Mekanın ikonu (Kartta görünecek resim)
+    public TileType tileType;       // Hangi renk?
+    public string locationName;     // Mekan İsmi
+    public Sprite locationIcon;     // İkon
 
     [TextArea(3, 5)]
-    public string introDescription; // Karta gelince çıkacak yazı (Örn: "Tozlu raflar arasında...")
+    public string introDescription; // Karta gelince çıkan yazı (Robot BURADA SUSACAK)
+
+    [Header("Robot İpucu")]
+    [TextArea(2, 4)]
+    public string robotHint;        // YENİ: Soru Paneli açılınca Robotun söyleyeceği söz
 
     [Header("Sonuç Mesajları")]
     [TextArea(2, 4)]
-    public string successMessage;   // Doğru bilince (Örn: "Şifreyi çözdün!")
-
+    public string successMessage;
     [TextArea(2, 4)]
-    public string failMessage;      // Yanlış bilince (Örn: "Alarm çaldı!")
+    public string failMessage;
 }
 
 // --- SENİN MEVCUT CHAPTER DATA CLASS'IN (GÜNCELLENMİŞ HALİ) ---

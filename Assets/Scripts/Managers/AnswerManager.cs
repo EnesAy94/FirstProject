@@ -42,6 +42,7 @@ public class AnswerManager : MonoBehaviour
     // ŞU ANKİ DOĞRU CEVAP (QuestionManager burayı güncelleyecek)
     public string currentCorrectAnswer;
     private TileType currentQuestionType;
+    public string currentRobotHint = "";
 
     void Awake()
     {
@@ -62,6 +63,7 @@ public class AnswerManager : MonoBehaviour
         if (answerPanel != null) answerPanel.SetActive(true);
         if (infoText != null) infoText.text = questionText;
 
+        // Input alanını temizle ve odaklan
         if (answerInput != null)
         {
             answerInput.text = "";
@@ -69,7 +71,42 @@ public class AnswerManager : MonoBehaviour
         }
 
         if (whiteboard != null) whiteboard.ClearBoard();
+
+        // Zarı kilitle (LevelManager üzerinden)
         if (LevelManager.instance != null) LevelManager.instance.SetDiceInteractable(false);
+
+        // Robot Butonunu Pasif Yap (Answer Panel açıkken menü açılmasın)
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.SetRobotInteractable(false);
+        }
+
+        // --- ROBOT İPUCU MANTIĞI (GÜNCELLENDİ) ---
+        string finalHint = "";
+
+        // 1. DURUM: Hapishane (Ceza) Modu -> İpucu YOK
+        if (LevelManager.instance != null && LevelManager.instance.isPenaltyActive)
+        {
+            finalHint = ""; // Robot sussun
+        }
+        // 2. DURUM: Zor Soru (Hard) -> Sabit Uyarı Mesajı
+        else if (type == TileType.Hard)
+        {
+            finalHint = "⚠️ DİKKAT: Bu bir ZOR SORU!\nYanlış yaparsan yüksek puan kaybedersin. İyice düşün!";
+        }
+        // 3. DURUM: Normal Hikaye Sorusu -> Mekana Özel İpucu
+        else
+        {
+            // PlayerMovement'tan gelen, o mekana özel ipucunu kullan
+            finalHint = currentRobotHint;
+        }
+
+        // Karar verilen ipucunu Robota söylet
+        if (RobotAssistant.instance != null && !string.IsNullOrEmpty(finalHint))
+        {
+            RobotAssistant.instance.ShowLocationHint(finalHint);
+        }
+        // ------------------------------------------
     }
 
     // --- CEVAP KONTROLÜ ---
@@ -119,38 +156,74 @@ public class AnswerManager : MonoBehaviour
     }
 
     // --- NORMAL GERİ BİLDİRİM (DÜZELTİLDİ) ---
+    // --- NORMAL GERİ BİLDİRİM (DÜZELTİLMİŞ) ---
     void HandleNormalFeedback(bool isCorrect)
     {
-        // 1. Önce Joker Butonunu HER İHTİMALE KARŞI gizle.
+        // 1. Joker Butonunu Gizle
         if (retryButton != null) retryButton.SetActive(false);
+
+        if (RobotAssistant.instance != null)
+        {
+            RobotAssistant.instance.ClearHintMemory();
+        }
+
+        // Zorluk ve Ceza Durumunu Belirle
+        bool isHard = (currentQuestionType == TileType.Hard);
+        bool isPenalty = (LevelManager.instance != null && LevelManager.instance.isPenaltyActive);
 
         if (isCorrect)
         {
             // --- DOĞRU CEVAP ---
             if (LevelManager.instance != null) LevelManager.instance.CheckMissionProgress(currentQuestionType);
 
-            bool isHard = (currentQuestionType == TileType.Hard);
-            bool isPenalty = (LevelManager.instance != null && LevelManager.instance.isPenaltyActive);
+            // 1. Veritabanına "DOĞRU" olarak kaydet
             SaveManager.instance.RegisterAnswer(true, isHard, isPenalty);
+
+            // 2. UI'ı Güncelle (Streak)
+            if (UIManager.instance != null && SaveManager.instance != null)
+            {
+                UIManager.instance.UpdateStreak(SaveManager.instance.activeSave.currentStreak);
+            }
 
             if (GameManager.instance != null && GameManager.instance.player != null)
                 GameManager.instance.player.BonusMove(0);
+
+            // İpucu hafızasını temizle (Doğru bildi, artık ipucuya gerek yok)
+            if (RobotAssistant.instance != null)
+            {
+                RobotAssistant.instance.ClearHintMemory();
+            }
 
             ShowFeedbackPanel(true, false);
         }
         else
         {
             // --- YANLIŞ CEVAP ---
+
+            // 1. Önce eski seriyi hafızaya al
             SaveManager.instance.SaveLastStreakBeforeReset();
 
-            // 2. Joker Kontrolü: Oyuncunun "İkinci Şans" jokeri var mı?
+            // 2. Veritabanına "YANLIŞ" olarak kaydet (Seri SIFIRLANIR)
+            SaveManager.instance.RegisterAnswer(false, isHard, isPenalty);
+
+            // 3. UI'ı Güncelle (Sıfırla)
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.UpdateStreak(0);
+            }
+
             bool hasJoker = false;
             if (JokerManager.instance != null)
                 hasJoker = JokerManager.instance.HasSecondChance();
 
+            // Yanlış cevapta da ipucu temizlenmeli (Yeni soru gelecek)
+            if (RobotAssistant.instance != null)
+            {
+                RobotAssistant.instance.ClearHintMemory();
+            }
+
             ShowFeedbackPanel(false, false);
 
-            // 3. Butonu SADECE joker varsa ve cevap yanlışsa göster
             if (retryButton != null) retryButton.SetActive(hasJoker);
         }
     }
@@ -170,16 +243,15 @@ public class AnswerManager : MonoBehaviour
         if (feedbackPanel == null) return;
         feedbackPanel.SetActive(true);
 
-        // --- 1. DOĞRU CEVAP MANTIĞI ---
+        // --- 1. METİN VE RENK AYARLARI ---
         if (isCorrect)
         {
             feedbackTitleText.text = "DOĞRU!";
             feedbackTitleText.color = Color.green;
 
-            // KURAL: Özel Başarı Mesajı SADECE 5. (Son) Hikaye Sorusunda Çıkar!
             if (isFinalStoryQuestion && !string.IsNullOrEmpty(currentSuccessMsg))
             {
-                feedbackDescText.text = currentSuccessMsg; // Örn: "Gizli geçidi buldun!"
+                feedbackDescText.text = currentSuccessMsg;
             }
             else if (isPenaltyMode)
             {
@@ -190,21 +262,17 @@ public class AnswerManager : MonoBehaviour
             }
             else
             {
-                // İlk 4 hikaye sorusu veya Zor sorular için standart mesaj
                 feedbackDescText.text = "Tebrikler, harika gidiyorsun!";
             }
         }
-        // --- 2. YANLIŞ CEVAP MANTIĞI ---
         else
         {
             feedbackTitleText.text = "YANLIŞ!";
             feedbackTitleText.color = Color.red;
 
-            // KURAL: Özel Yanlış Mesajı, TÜM Hikaye Sorularında (1-5) Çıkar.
-            // Ama Zor (Hard) sorulara geçince artık standart mesaj çıkar.
             if (isStoryPhase && !string.IsNullOrEmpty(currentFailMsg))
             {
-                feedbackDescText.text = currentFailMsg; // Örn: "Tüpler patladı!"
+                feedbackDescText.text = currentFailMsg;
             }
             else if (isPenaltyMode)
             {
@@ -214,43 +282,63 @@ public class AnswerManager : MonoBehaviour
             }
             else
             {
-                // Zor sorularda veya özel mesaj yoksa standart uyarı
                 if (LevelManager.instance != null && LevelManager.instance.currentScore <= 0)
                     feedbackDescText.text = "Eyvah! Puanın tükendi...";
                 else
-                    feedbackDescText.text = "Dikkatli ol, yanlış cevap.\nPuanın düştü.";
+                    feedbackDescText.text = "Dikkatli ol, yanlış cevap.\nPuanın düşecek.";
             }
         }
 
-        // --- BUTON VE KAPANIŞ İŞLEMLERİ (Aynen Kalıyor) ---
+        // --- 2. BUTON MANTIĞI (PUAN DÜŞME BURADA) ---
         feedbackContinueButton.onClick.RemoveAllListeners();
         feedbackContinueButton.onClick.AddListener(() =>
         {
-            if (feedbackTitleText.text.Contains("YANLIŞ"))
+            // KRİTİK DÜZELTME: Yazıya değil, gelen 'isCorrect' verisine bakıyoruz.
+            // Eğer cevap YANLIŞSA ve Ceza Modunda DEĞİLSE -> Puan Düşür.
+            if (!isCorrect && !isPenaltyMode)
             {
-                if (!isPenaltyMode && LevelManager.instance != null) LevelManager.instance.DecreaseScore();
+                if (LevelManager.instance != null)
+                {
+                    LevelManager.instance.DecreaseScore();
+                }
             }
 
+            // Paneli Kapat
             feedbackPanel.SetActive(false);
 
-            // Mesajları temizle
+            // Değişkenleri Sıfırla
             currentSuccessMsg = "";
             currentFailMsg = "";
-
-            // Durumları sıfırla (Güvenlik için)
             isStoryPhase = false;
             isFinalStoryQuestion = false;
 
+            // Robot ve UI İşlemleri
+            if (UIManager.instance != null) UIManager.instance.SetRobotInteractable(true);
+            if (RobotAssistant.instance != null) RobotAssistant.instance.ClearHintMemory();
+
+            // LevelManager Kontrolleri (Bölüm Sonu / Failure / Ceza)
             if (LevelManager.instance != null)
             {
-                if (LevelManager.instance.isFailurePending) { LevelManager.instance.OpenPendingLevelFailedPanel(); return; }
-                if (LevelManager.instance.isCompletionPending) { LevelManager.instance.OpenPendingLevelCompletePanel(); return; }
+                // Puan bittiyse -> Failed Paneli
+                if (LevelManager.instance.isFailurePending)
+                {
+                    LevelManager.instance.OpenPendingLevelFailedPanel();
+                    return;
+                }
 
+                // Bölüm veya Ana Görev bittiyse -> Level Complete Paneli
+                if (LevelManager.instance.isCompletionPending)
+                {
+                    LevelManager.instance.OpenLevelCompletePanelNow();
+                    return;
+                }
+
+                // Oyun Devam Ediyorsa
                 if (isPenaltyMode)
                 {
                     int current = LevelManager.instance.penaltyCorrectCount;
-                    if (isCorrect && current >= 3) { LevelManager.instance.ExitPenaltyZone(); if (LevelManager.instance.isCompletionPending) LevelManager.instance.OpenPendingLevelCompletePanel(); }
-                    else { QuestionManager.instance.AskRandomNormalQuestion(); }
+                    if (isCorrect && current >= 3) LevelManager.instance.ExitPenaltyZone();
+                    else QuestionManager.instance.AskRandomNormalQuestion();
                 }
                 else
                 {
@@ -283,5 +371,10 @@ public class AnswerManager : MonoBehaviour
         currentSuccessMsg = success;
         currentFailMsg = fail;
         Debug.Log($"Özel Mesajlar Alındı: D-{success} / Y-{fail}");
+    }
+
+    public void SetRobotHint(string hint)
+    {
+        currentRobotHint = hint;
     }
 }

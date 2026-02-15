@@ -23,13 +23,15 @@ MonoBehaviour:
   penaltyPerWrongAnswer: 10
   locationStories:
   - tileType: 1
-    locationName: "Giri\u015F: Dekontaminasyon Odas\u0131"
+    locationName: "Dekontaminasyon Odas\u0131"
     locationIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
     introDescription: "Laboratuvar\u0131n temiz kalmas\u0131 i\xE7in bas\u0131n\xE7l\u0131
       hava p\xFCsk\xFCrt\xFCl\xFCyor. Sens\xF6rler, i\xE7erideki zararl\u0131 partik\xFClleri
       tespit ediyor. Her bir partik\xFCl grubu $(-5)$ birim tehlike sa\xE7\u0131yor.
       E\u011Fer bu gruplardan 8 tane varsa, toplam tehlikeyi \xE7arparak hesaplamal\u0131
       ve o kadar dozda panzehir p\xFCsk\xFCrtmelisin."
+    robotHint: "Z\u0131t i\u015Faretlerin \xE7arp\u0131m\u0131 her zaman negatiftir.
+      Kirlilik ve kay\u0131p verileri eksiyi temsil eder!"
     successMessage: "Panzehir tam dozunda p\xFCsk\xFCrt\xFCld\xFC! Zararl\u0131 partik\xFCllerin
       tamam\u0131 etkisiz hale getirildi. Ar\u0131nma odas\u0131n\u0131n kap\u0131lar\u0131
       a\xE7\u0131l\u0131yor, laboratuvar\u0131n derinliklerine ilerleyebilirsin."
@@ -37,12 +39,14 @@ MonoBehaviour:
       Sens\xF6rler k\u0131rm\u0131z\u0131 yan\u0131yor ve i\xE7erideki hava hala
       zehirli. Gruplar\u0131 ve tehlike birimini tekrar \xE7arp!"
   - tileType: 2
-    locationName: " Embriyo Odas\u0131: Klon \xDCretimi"
+    locationName: " Embriyo Odas\u0131"
     locationIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
     introDescription: "Kuv\xF6zlerde klonlar geli\u015Fiyor. Bir ana h\xFCcre her
       saniye $(-3)$ birim enerji t\xFCketiyor. E\u011Fer yan yana 12 kuv\xF6z varsa,
       saniyedeki toplam enerji a\xE7\u0131\u011F\u0131n\u0131 (negatif sonucu) bulup
       jenerat\xF6r\xFC ona g\xF6re ayarlamal\u0131s\u0131n."
+    robotHint: "\u0130\u015Fte o me\u015Fhur 'D\xFC\u015Fman\u0131m\u0131n d\xFC\u015Fman\u0131
+      dostumdur' kural\u0131! \u0130ki negatif \xE7arpan, sistemi pozitife \xE7evirir."
     successMessage: "Jenerat\xF6r kusursuz bir \u015Fekilde ayarland\u0131! Enerji
       a\xE7\u0131\u011F\u0131 tam olarak kar\u015F\u0131lan\u0131yor ve klonlar\u0131n
       geli\u015Fimi kontrol alt\u0131na al\u0131nd\u0131. 'S\u0131f\u0131r Noktas\u0131'n\u0131n
@@ -51,13 +55,15 @@ MonoBehaviour:
       Toplam enerji a\xE7\u0131\u011F\u0131n\u0131 (negatif sonucu) yanl\u0131\u015F
       hesaplad\u0131\u011F\u0131n i\xE7in sistem her an patlayabilir!"
   - tileType: 3
-    locationName: " Ana Bilgisayar: Vir\xFCs Yay\u0131l\u0131m\u0131"
+    locationName: ' Ana Bilgisayar'
     locationIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
     introDescription: "Hackerlar sisteme \"\xC7o\u011Falan Vir\xFCs\" y\xFCkledi.
       Vir\xFCs her 10 saniyede bir mevcut g\xFCc\xFCn\xFC $(-4)$ ile \xE7arp\u0131yor.
       E\u011Fer ba\u015Flang\u0131\xE7 g\xFCc\xFC $(-1.500)$ ise, bir sonraki a\u015Famada
       g\xFCc\xFCn pozitife d\xF6n\xFCp d\xF6nmeyece\u011Fini ve miktar\u0131n\u0131
       hesaplamal\u0131s\u0131n."
+    robotHint: "Vir\xFCs katlanarak b\xFCy\xFCyor. S\u0131f\u0131rlar\u0131 sona
+      sakla, say\u0131lar\u0131 \xE7arp, sonra s\u0131f\u0131rlar\u0131 ekle!"
     successMessage: "Vir\xFCs\xFCn bir sonraki ad\u0131m\u0131n\u0131 \xF6ng\xF6rd\xFCn!
       G\xFCc\xFCn pozitife/negatife d\xF6n\xFC\u015F\xFCn\xFC ve miktar\u0131n\u0131
       do\u011Fru hesaplayarak anti-vir\xFCs\xFC tam zaman\u0131nda sisteme y\xFCkledin.
@@ -72,6 +78,7 @@ MonoBehaviour:
     introDescription: "Panzehir haz\u0131rlama vakti! Tanklardaki kimyasal dengesi
       i\xE7in 20 birimlik $(-250)$ ml t\xFCplerden 15 tane kullanman gerekiyor. Toplam
       hacmi bulup kar\u0131\u015F\u0131m\u0131 stabilize etmelisin."
+    robotHint: "Hacim hesaplarken i\u015Faretlerin g\xFCc\xFCne odaklan"
     successMessage: "Kar\u0131\u015F\u0131m stabilize edildi! Tanklardaki kimyasal
       denge tam istedi\u011Fin seviyeye ula\u015Ft\u0131. Panzehir t\xFCpleri haz\u0131r,
       'S\u0131f\u0131r Noktas\u0131'n\u0131n zehirli plan\u0131 suya d\xFC\u015Ft\xFC."
@@ -79,11 +86,13 @@ MonoBehaviour:
       y\xFCz\xFCnden kimyasal tepkime bozuldu. Kar\u0131\u015F\u0131m\u0131 sabitlemek
       i\xE7in toplam hacmi hemen yeniden hesapla!"
   - tileType: 5
-    locationName: "Radyasyon Kalkan\u0131: G\xFC\xE7 Kayb\u0131"
+    locationName: "Radyasyon Kalkan\u0131"
     locationIcon: {fileID: 21300000, guid: cfdfd41bd0510b94c96069907ed937b9, type: 3}
     introDescription: "Laboratuvar\u0131n kalkan\u0131 saniyede -120 birim s\u0131zd\u0131r\u0131yor.
       E\u011Fer s\u0131z\u0131nt\u0131 300 saniye boyunca s\xFCrerse, toplam kalkan
       kayb\u0131n\u0131 hesaplay\u0131p s\u0131z\u0131nt\u0131y\u0131 m\xFCh\xFCrlemelisin."
+    robotHint: "S\u0131z\u0131nt\u0131y\u0131 durdurmak i\xE7in toplam kayb\u0131
+      net belirle."
     successMessage: "S\u0131z\u0131nt\u0131 m\xFCh\xFCrlendi! Toplam kayb\u0131 tam
       saptad\u0131n ve yedek kalkanlar\u0131 devreye sokarak radyasyonun yay\u0131lmas\u0131n\u0131
       durdurdun. Ajan Neon, g\xFCvenli b\xF6lgedesin."
@@ -91,13 +100,14 @@ MonoBehaviour:
       ile kay\u0131p birimini yanl\u0131\u015F \xE7arpt\u0131n. Kalkan tamamen \xE7\xF6kmeden
       \xF6nce toplam kayb\u0131 do\u011Fru bulup s\u0131z\u0131nt\u0131y\u0131 kapatmal\u0131s\u0131n!"
   - tileType: 6
-    locationName: "Final: Klon Lideri'nin Odas\u0131"
+    locationName: "Klon Lideri'nin Odas\u0131"
     locationIcon: {fileID: 21300000, guid: a73bcd672c365654eb19e00170c7e82c, type: 3}
     introDescription: "Tesisin kalbindesin. Klon lideri kendini korumak i\xE7in 6
       basamakl\u0131 karma\u015F\u0131k bir frekans kalkan\u0131 olu\u015Fturmu\u015F.
       \u015Eifre, iki b\xFCy\xFCk tam say\u0131n\u0131n \xE7arp\u0131m\u0131d\u0131r.
       Yanl\u0131\u015F bir i\u015Faret se\xE7imi, t\xFCm laboratuvar\u0131 havaya
       u\xE7uracak bir patlamaya neden olabilir!"
+    robotHint: "Final kilidi! Devasa say\u0131lar, devasa sorumluluklar..."
     successMessage: "\u015Eifre kabul edildi! Klon Lideri'nin frekans kalkan\u0131
       parampar\xE7a oldu. Do\u011Fru i\u015Faret ve \xE7arpanla biyolojik k\u0131yameti
       durdurdun. Laboratuvar art\u0131k g\xFCvenli, d\xFCnya sana minnettar Ajan

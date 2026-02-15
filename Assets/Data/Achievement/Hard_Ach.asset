@@ -16,7 +16,7 @@ MonoBehaviour:
   title: Hard Master
   description: Solved hard question
   requiresMission: 1
-  requiredMissionKey: Mission_Hard_Done
+  requiredMissionKey: hard_master
   tiers:
   - tierName: 1
     targetCount: 1

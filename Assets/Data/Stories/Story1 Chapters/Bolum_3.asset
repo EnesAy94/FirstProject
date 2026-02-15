@@ -31,6 +31,8 @@ MonoBehaviour:
       ge\xE7en insan say\u0131s\u0131n\u0131 (toplama) ve g\xFCvenlik kart\u0131n\u0131
       okutup \xE7\u0131kanlar\u0131 (\xE7\u0131karma) ayn\u0131 anda hesaplaman\u0131
       istiyor. E\u011Fer dengeyi bulamazsan alarm \xE7alacak."
+    robotHint: "Ayn\u0131 i\u015Faretli olanlar\u0131 kendi aralar\u0131nda grupla,
+      sonra son hesapla\u015Fmay\u0131 yap!"
     successMessage: "Turnikeler ye\u015Fil yand\u0131! Giri\u015F ve \xE7\u0131k\u0131\u015F
       yapanlar\u0131n dengesini kusursuz hesaplad\u0131n. G\xFCvenlik g\xF6revlileri
       senin s\u0131radan bir ziyaret\xE7i oldu\u011Funu san\u0131yor. \u0130\xE7eridesin
@@ -46,6 +48,8 @@ MonoBehaviour:
       -2. kattas\u0131n ve 15 kat yukar\u0131 \xE7\u0131k\u0131p sonra 4 kat a\u015Fa\u011F\u0131
       inmen gerekiyor. Bu kar\u0131\u015F\u0131k komutlar\u0131 tek bir i\u015Flemle
       \xE7\xF6z\xFCp do\u011Fru kata ula\u015Fmal\u0131s\u0131n."
+    robotHint: "Parantezlerin \xF6n\xFCndeki eksi i\u015Faretlerine dikkat! Onlar
+      i\xE7eri s\u0131zan d\xFC\u015Fmanlard\u0131r, i\u015Faretleri tersine \xE7evirirler."
     successMessage: "Ding! Asans\xF6r tam olarak hedefledi\u011Fin katta durdu. Algoritmay\u0131
       \xE7\xF6zd\xFCn ve g\xFCvenlik katlar\u0131n\u0131 tek bir hamleyle atlatarak
       do\u011Fru kata ula\u015Ft\u0131n."
@@ -59,6 +63,8 @@ MonoBehaviour:
       Bir hisse \xF6nce +1500 puan art\u0131yor, sonra -2400 puan d\xFC\u015F\xFCyor
       ve ard\u0131ndan +800 puan daha ekleniyor. Neon, bu dalgalanmalar\u0131n sonundaki
       net de\u011Fi\u015Fim de\u011Ferini bulup sisteme girmeli."
+    robotHint: "B\xFCy\xFCk say\u0131larla u\u011Fra\u015F\u0131rken basamak de\u011Ferlerini
+      koru. Finansal veri hatas\u0131 binay\u0131 \xE7\xF6kertebilir!"
     successMessage: "Borsa verileri stabilize edildi! Net de\u011Fi\u015Fim de\u011Ferini
       sisteme girerek 'S\u0131f\u0131r Noktas\u0131'n\u0131n finansal sald\u0131r\u0131s\u0131n\u0131
       durdurdun. Ekranlar normale d\xF6n\xFCyor."
@@ -73,6 +79,8 @@ MonoBehaviour:
       giri\u015Fi yap\u0131l\u0131rken (toplama), ba\u015Fka bir hesaptan gizlice
       para \xE7ekiliyor (\xE7\u0131karma). Neon, bu iki i\u015Flem aras\u0131ndaki
       \"net bakiyeyi\" hesaplayarak h\u0131rs\u0131zl\u0131\u011F\u0131 durdurmal\u0131."
+    robotHint: "S\u0131\u011F\u0131naktaki dengeyi korumak i\xE7in net de\u011Fi\u015Fimi
+      odaklan."
     successMessage: "H\u0131rs\u0131zl\u0131k engellendi! Transferleri dondurdun
       ve net bakiyeyi sabitledin. Dijital paralar g\xFCvende, 'S\u0131f\u0131r Noktas\u0131'n\u0131n
       kasas\u0131 bo\u015F kald\u0131."
@@ -87,6 +95,8 @@ MonoBehaviour:
       ard\u0131ndan g\xFCne\u015F \u0131\u015F\u0131\u011F\u0131 +12 derece art\u0131r\u0131yor.
       Fanlar\u0131n \xE7al\u0131\u015Fmas\u0131 i\xE7in son s\u0131cakl\u0131k de\u011Ferini
       do\u011Fru hesaplamal\u0131s\u0131n."
+    robotHint: "Tesisat kat\u0131ndaki her de\u011Fi\u015Fim bir \xF6nceki sonucun
+      \xFCzerine eklenir."
     successMessage: "Fanlar d\xF6nmeye ba\u015Flad\u0131! S\u0131cakl\u0131k h\u0131zla
       normale d\xFC\u015F\xFCyor. Binadaki a\u015F\u0131r\u0131 \u0131s\u0131nma
       krizini \xE7\xF6zd\xFCn, art\u0131k sistemler daha rahat \xE7al\u0131\u015F\u0131yor."
@@ -102,6 +112,8 @@ MonoBehaviour:
       tepesinde r\xFCzgara kar\u015F\u0131 dururken, bu karma\u015F\u0131k \"D\xF6rt
       \u0130\u015Flem \xD6ncesi\" final s\u0131nav\u0131n\u0131 ge\xE7ip ana sinyali
       kesmeli."
+    robotHint: "Final hamlesi! Z\u0131t i\u015Faretlerin g\xFCc\xFCn\xFC kullan ve
+      kodlar\u0131 tersine \xE7evir."
     successMessage: "Sinyal kesildi! Anten kulesindeki karma\u015F\u0131k denklemi
       saniyeler i\xE7inde \xE7\xF6zd\xFCn. Ka\xE7\u0131\u015F helikopteri kalk\u0131\u015F
       yapam\u0131yor ve 'S\u0131f\u0131r Noktas\u0131'n\u0131n ana sinyali susturuldu.
