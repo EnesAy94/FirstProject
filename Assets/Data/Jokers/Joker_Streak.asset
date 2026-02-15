@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a78af3be5582554aa0aad6ec45bfc4b, type: 3}
-  m_Name: Data_SecondChance
+  m_Name: Joker_Streak
   m_EditorClassIdentifier: Assembly-CSharp::JokerData
-  type: 1
-  jokerName: "\u0130kinci \u015Eans"
-  icon: {fileID: 21300000, guid: e74a5d27012dc3447a87496eb5fe2f7b, type: 3}
-  description: 
-  isUsableFromInventory: 0
+  type: 2
+  jokerName: "Seri Kurtar\u0131c\u0131"
+  icon: {fileID: 21300000, guid: 2b6ae9c586fcc4a44a11b9d2d5bd6b5d, type: 3}
+  description: "En son kald\u0131\u011F\u0131n do\u011Fru cevap serisinden devam
+    edersin."
+  isUsableFromInventory: 1

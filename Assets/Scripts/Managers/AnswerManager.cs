@@ -43,6 +43,7 @@ public class AnswerManager : MonoBehaviour
     public string currentCorrectAnswer;
     private TileType currentQuestionType;
     public string currentRobotHint = "";
+    private string currentQuestionText;
 
     void Awake()
     {
@@ -59,6 +60,7 @@ public class AnswerManager : MonoBehaviour
     {
         currentCorrectAnswer = correctAnswer;
         currentQuestionType = type;
+        currentQuestionText = questionText;
 
         if (answerPanel != null) answerPanel.SetActive(true);
         if (infoText != null) infoText.text = questionText;
@@ -243,105 +245,171 @@ public class AnswerManager : MonoBehaviour
         if (feedbackPanel == null) return;
         feedbackPanel.SetActive(true);
 
-        // --- 1. METİN VE RENK AYARLARI ---
+        // --- 1. METİN AYARLARI ---
         if (isCorrect)
         {
             feedbackTitleText.text = "DOĞRU!";
             feedbackTitleText.color = Color.green;
 
-            if (isFinalStoryQuestion && !string.IsNullOrEmpty(currentSuccessMsg))
+            if (isPenaltyMode)
+            {
+                // Firar Tüneli ile bildiyse
+                if (LevelManager.instance != null && LevelManager.instance.isPrisonJokerActive)
+                {
+                    feedbackDescText.text = "MÜKEMMEL! Risk aldın ve kazandın.\nÖzgürsün!";
+                }
+                else
+                {
+                    int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
+                    int needed = 3 - current;
+                    if (current >= 3) feedbackDescText.text = "Özgürlüğüne kavuştun!";
+                    else feedbackDescText.text = $"Harika! {needed} tane kaldı.";
+                }
+            }
+            else if (isFinalStoryQuestion && !string.IsNullOrEmpty(currentSuccessMsg))
             {
                 feedbackDescText.text = currentSuccessMsg;
-            }
-            else if (isPenaltyMode)
-            {
-                int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
-                int needed = 3 - current;
-                if (current >= 3) feedbackDescText.text = "Özgürlüğüne kavuştun!";
-                else feedbackDescText.text = $"Harika! {needed} tane kaldı.";
             }
             else
             {
                 feedbackDescText.text = "Tebrikler, harika gidiyorsun!";
             }
         }
-        else
+        else // YANLIŞ CEVAP KISMI
         {
             feedbackTitleText.text = "YANLIŞ!";
             feedbackTitleText.color = Color.red;
 
-            if (isStoryPhase && !string.IsNullOrEmpty(currentFailMsg))
+            if (isPenaltyMode)
+            {
+                // Hapishanede standart uyarı
+                feedbackDescText.text = "Yanlış çözdün.\nGelecek soruyu daha dikkatli çöz.";
+            }
+            // --- DÜZELTME BURADA ---
+            // Hikaye metni varsa VE soru tipi 'Hard' DEĞİLSE göster.
+            else if (isStoryPhase && !string.IsNullOrEmpty(currentFailMsg) && currentQuestionType != TileType.Hard)
             {
                 feedbackDescText.text = currentFailMsg;
             }
-            else if (isPenaltyMode)
-            {
-                int current = (LevelManager.instance != null) ? LevelManager.instance.penaltyCorrectCount : 0;
-                int needed = 3 - current;
-                feedbackDescText.text = $"Bilemedin. Hala {needed} tane lazım.";
-            }
             else
             {
+                // Zor sorularda veya hikayesiz sorularda burası çalışır
                 if (LevelManager.instance != null && LevelManager.instance.currentScore <= 0)
                     feedbackDescText.text = "Eyvah! Puanın tükendi...";
                 else
                     feedbackDescText.text = "Dikkatli ol, yanlış cevap.\nPuanın düşecek.";
             }
         }
+        // --- 2. JOKER (RETRY) BUTONU KONTROLÜ ---
+        // 'retryButton' GameObject olduğu için SetActive ve GetComponent<Button> kullanıyoruz.
+        // --- 2. JOKER (RETRY) BUTONU KONTROLÜ (DÜZELTİLMİŞ) ---
+        if (!isCorrect && JokerManager.instance != null && JokerManager.instance.HasSecondChance())
+        {
+            if (retryButton != null)
+            {
+                retryButton.SetActive(true);
 
-        // --- 2. BUTON MANTIĞI (PUAN DÜŞME BURADA) ---
+                Button btn = retryButton.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.interactable = true;
+                    // Bu komut kodla eklenenleri siler ama editörden eklenenleri bazen silmez.
+                    // O yüzden 1. Adımdaki manuel kontrolü mutlaka yap.
+                    btn.onClick.RemoveAllListeners();
+
+                    btn.onClick.AddListener(() =>
+                    {
+                        // SADECE ONAY PANELİNİ AÇ (Soruyu tetikleme!)
+                        if (JokerConfirmationPanel.instance != null)
+                        {
+                            JokerConfirmationPanel.instance.ShowPanel(
+                                "İKİNCİ ŞANS",
+                                "Jokerini kullanıp soruyu tekrar denemek istiyor musun?",
+                        () =>
+                        {
+                            Debug.Log("2. Şans Jokeri Kullanıldı! Aynı soru tekrar soruluyor.");
+
+                            // 1. Jokeri Harca
+                            JokerManager.instance.ConsumeSecondChance();
+
+                            // 2. Paneli Kapat
+                            feedbackPanel.SetActive(false);
+
+                            // 3. AYNI SORUYU TEKRAR AÇ (DÜZELTME BURADA)
+                            // QuestionManager'dan yeni soru istemek yerine,
+                            // hafızadaki soruyu tekrar ekrana basıyoruz.
+                            SetQuestion(currentQuestionText, currentCorrectAnswer, currentQuestionType);
+                        },
+                                () => // --- HAYIR'A BASARSA BURASI ÇALIŞIR ---
+                                {
+                                    // Hiçbir şey yapma (Soru açma kodu burada YOK)
+                                    // Sadece Onay paneli kapanır, oyuncu geri döner.
+                                }
+                            );
+                        }
+                    });
+                }
+            }
+        }
+        else
+        {
+            // Joker yoksa veya Doğru bildiyse butonu gizle
+            if (retryButton != null) retryButton.SetActive(false);
+        }
+
+        // --- 3. DEVAM ET BUTONU ---
         feedbackContinueButton.onClick.RemoveAllListeners();
         feedbackContinueButton.onClick.AddListener(() =>
         {
-            // KRİTİK DÜZELTME: Yazıya değil, gelen 'isCorrect' verisine bakıyoruz.
-            // Eğer cevap YANLIŞSA ve Ceza Modunda DEĞİLSE -> Puan Düşür.
+            // Puan Düşme (Yanlışsa ve Ceza Modu değilse)
             if (!isCorrect && !isPenaltyMode)
             {
-                if (LevelManager.instance != null)
-                {
-                    LevelManager.instance.DecreaseScore();
-                }
+                if (LevelManager.instance != null) LevelManager.instance.DecreaseScore();
             }
 
-            // Paneli Kapat
             feedbackPanel.SetActive(false);
 
-            // Değişkenleri Sıfırla
-            currentSuccessMsg = "";
-            currentFailMsg = "";
-            isStoryPhase = false;
-            isFinalStoryQuestion = false;
-
-            // Robot ve UI İşlemleri
+            // Robot ve UI Temizliği
             if (UIManager.instance != null) UIManager.instance.SetRobotInteractable(true);
             if (RobotAssistant.instance != null) RobotAssistant.instance.ClearHintMemory();
 
-            // LevelManager Kontrolleri (Bölüm Sonu / Failure / Ceza)
             if (LevelManager.instance != null)
             {
-                // Puan bittiyse -> Failed Paneli
-                if (LevelManager.instance.isFailurePending)
-                {
-                    LevelManager.instance.OpenPendingLevelFailedPanel();
-                    return;
-                }
+                // Oyun Bitti mi?
+                if (LevelManager.instance.isFailurePending) { LevelManager.instance.OpenPendingLevelFailedPanel(); return; }
+                if (LevelManager.instance.isCompletionPending) { LevelManager.instance.OpenLevelCompletePanelNow(); return; }
 
-                // Bölüm veya Ana Görev bittiyse -> Level Complete Paneli
-                if (LevelManager.instance.isCompletionPending)
-                {
-                    LevelManager.instance.OpenLevelCompletePanelNow();
-                    return;
-                }
-
-                // Oyun Devam Ediyorsa
+                // Oyun Devam Ediyor
                 if (isPenaltyMode)
                 {
-                    int current = LevelManager.instance.penaltyCorrectCount;
-                    if (isCorrect && current >= 3) LevelManager.instance.ExitPenaltyZone();
-                    else QuestionManager.instance.AskRandomNormalQuestion();
+                    // A) Firar Tüneli Modu (Riskli)
+                    if (LevelManager.instance.isPrisonJokerActive)
+                    {
+                        if (isCorrect)
+                        {
+                            // KAZANDI -> ÇIK
+                            LevelManager.instance.isPrisonJokerActive = false;
+                            LevelManager.instance.ExitPenaltyZone();
+                        }
+                        else
+                        {
+                            // KAYBETTİ (Devam dedi) -> RİSK BİTTİ, NORMAL CEZA BAŞLAR
+                            LevelManager.instance.isPrisonJokerActive = false;
+                            // LevelManager.instance.penaltyCorrectCount = 0; // İstersen sıfırla, istersen kaldığı yerden devam ettir
+                            QuestionManager.instance.AskRandomNormalQuestion();
+                        }
+                    }
+                    // B) Normal Ceza Modu
+                    else
+                    {
+                        int current = LevelManager.instance.penaltyCorrectCount;
+                        if (isCorrect && current >= 3) LevelManager.instance.ExitPenaltyZone();
+                        else QuestionManager.instance.AskRandomNormalQuestion();
+                    }
                 }
                 else
                 {
+                    // Normal oyun
                     LevelManager.instance.SetDiceInteractable(true);
                 }
             }

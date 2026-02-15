@@ -6,9 +6,10 @@ using System.Linq; // Listeyi karıştırmak için lazım
 
 public enum JokerType
 {
-    ColorMove,     // 1. Renge Yürüme
-    SecondChance,  // 2. İkinci Şans
-    StreakRestore  // 3. Seri Kurtarma
+    ColorMove,
+    SecondChance,
+    StreakRestore,
+    PrisonBreak
 }
 
 public class JokerManager : MonoBehaviour
@@ -25,7 +26,7 @@ public class JokerManager : MonoBehaviour
     public GameObject inventoryPanel;
     public TextMeshProUGUI currentStreakHUDText;
     public Transform inventoryContainer;
-    public GameObject jokerCardPrefab;   // Envanterdeki kart prefabı
+    public GameObject jokerCardPrefab;   // Envanterdeki kart prefabı (PickCardPrefab ile aynı olabilir)
 
     [Header("UI: Joker Kazanma (Seçim) Ekranı")]
     public GameObject jokerSelectionPanel;    // Kartların çıktığı büyük panel
@@ -33,9 +34,6 @@ public class JokerManager : MonoBehaviour
     public GameObject pickCardPrefab;         // Masaya konacak kart prefabı (JokerCardPickUI olan)
     public Button takeButton;                 // "AL" butonu
     public GameObject takeButtonObj;          // Butonun objesi (Gizleyip açmak için)
-
-    [Header("UI: Renk Seçim Paneli")]
-    public GameObject colorSelectPanel;
 
     // O an masada seçilen kartın verisi
     private JokerData currentSelectedJoker;
@@ -69,41 +67,36 @@ public class JokerManager : MonoBehaviour
         takeButtonObj.SetActive(false);
         currentSelectedJoker = null;
 
+        // Masayı temizle
         foreach (Transform child in selectionContainer) Destroy(child.gameObject);
 
+        // Kartları karıştır
         List<JokerData> shuffledList = allJokerDefinitions.OrderBy(x => Random.value).ToList();
 
+        // Kartları diz
         foreach (JokerData data in shuffledList)
         {
-            GameObject cardObj = Instantiate(pickCardPrefab, selectionContainer); // Aynı prefabı kullanıyoruz
+            GameObject cardObj = Instantiate(pickCardPrefab, selectionContainer);
             JokerCardPickUI cardScript = cardObj.GetComponent<JokerCardPickUI>();
 
-            // BURASI DEĞİŞTİ: SetupForSelection kullanıyoruz
+            // Seçim modunda kur
             cardScript.SetupForSelection(data, OnCardRevealed);
         }
     }
 
-    // --- 2. KART SEÇİLİNCE (Kart Scripti Burayı Çağırır) ---
     // --- 2. KART SEÇİLİNCE ---
     void OnCardRevealed(JokerData revealedData)
     {
-        // Oyuncu bir karta tıkladı ve kart döndü.
         currentSelectedJoker = revealedData;
 
-        // --- YENİ KISIM: DİĞER KARTLARI KİLİTLE ---
-        // Selection Container içindeki tüm çocukları (kartları) gez
+        // Diğer kartları kilitle
         foreach (Transform child in selectionContainer)
         {
-            // Her kartın üzerindeki butonu bul ve kapat
             Button cardBtn = child.GetComponent<Button>();
-            if (cardBtn != null)
-            {
-                cardBtn.interactable = false;
-            }
+            if (cardBtn != null) cardBtn.interactable = false;
         }
-        // -----------------------------------------
 
-        // "AL" butonunu göster ve hazırla
+        // "AL" butonunu hazırla
         takeButtonObj.SetActive(true);
         takeButton.onClick.RemoveAllListeners();
         takeButton.onClick.AddListener(TakeSelectedJoker);
@@ -128,7 +121,7 @@ public class JokerManager : MonoBehaviour
         // C. Seçim Panelini Kapat
         jokerSelectionPanel.SetActive(false);
 
-        // D. ÖZEL DURUM: Eğer bu bir "Renk Jokeri" ise hemen kullanma panelini aç!
+        // D. Eğer Renk Jokeri ise hemen uygula
         if (currentSelectedJoker.type == JokerType.ColorMove)
         {
             UseColorJoker();
@@ -138,28 +131,36 @@ public class JokerManager : MonoBehaviour
     // --- RENK JOKERİ KULLANIMI ---
     public void UseColorJoker()
     {
-        // Envanterden düş
-        if (jokerInventory[JokerType.ColorMove] > 0)
-            jokerInventory[JokerType.ColorMove]--;
-
-        RefreshInventoryUI();
-
-        // Renk Panelini Aç
-        if (colorSelectPanel != null) colorSelectPanel.SetActive(true);
-    }
-
-    public void OnColorSelected(int colorIndex)
-    {
-        if (colorSelectPanel != null) colorSelectPanel.SetActive(false);
-        TileType target = (TileType)colorIndex;
-
-        if (GameManager.instance != null && GameManager.instance.player != null)
+        if (jokerInventory.ContainsKey(JokerType.ColorMove) && jokerInventory[JokerType.ColorMove] > 0)
         {
-            GameManager.instance.player.GoToNearestColor(target);
+            jokerInventory[JokerType.ColorMove]--;
+            RefreshInventoryUI();
+
+            // İŞLEMİ 'ACTIONS' SCRIPTİNE HAVALE ET
+            if (JokerActions.instance != null)
+            {
+                JokerActions.instance.ExecuteJokerEffect(JokerType.ColorMove);
+            }
         }
     }
 
-    // --- ENVANTER VE DİĞER FONKSİYONLAR (Aynen kaldı) ---
+    // --- ENVANTERDEN KULLANIM ---
+    public void UseJokerFromInventory(JokerType type)
+    {
+        if (jokerInventory.ContainsKey(type) && jokerInventory[type] > 0)
+        {
+            jokerInventory[type]--;
+            RefreshInventoryUI();
+
+            // İŞLEMİ 'ACTIONS' SCRIPTİNE HAVALE ET
+            if (JokerActions.instance != null)
+            {
+                JokerActions.instance.ExecuteJokerEffect(type);
+            }
+        }
+    }
+
+    // --- PASİF JOKERLER (Action gerekmez, sadece sayı düşer) ---
     public bool HasSecondChance()
     {
         return jokerInventory.ContainsKey(JokerType.SecondChance) && jokerInventory[JokerType.SecondChance] > 0;
@@ -171,25 +172,16 @@ public class JokerManager : MonoBehaviour
         {
             jokerInventory[JokerType.SecondChance]--;
             RefreshInventoryUI();
+
+            // Eğer ikinci şansın özel bir efekti varsa Actions'a ekleyip buradan çağırabilirsin.
+            // Şimdilik sadece sayı düşüyor.
         }
     }
 
-    public void UseJokerFromInventory(JokerType type)
-    {
-        if (type == JokerType.StreakRestore)
-        {
-            if (jokerInventory.ContainsKey(JokerType.StreakRestore) && jokerInventory[JokerType.StreakRestore] > 0)
-            {
-                jokerInventory[JokerType.StreakRestore]--;
-                SaveManager.instance.RestoreLostStreak();
-                RefreshInventoryUI();
-            }
-        }
-    }
-
+    // --- UI GÜNCELLEME ---
     public void RefreshInventoryUI()
     {
-        if (inventoryContainer == null || jokerCardPrefab == null) return; // Not: Artık jokerCardPrefab = pickCardPrefab olabilir
+        if (inventoryContainer == null || jokerCardPrefab == null) return;
 
         // Temizle
         foreach (Transform child in inventoryContainer) Destroy(child.gameObject);
@@ -204,19 +196,14 @@ public class JokerManager : MonoBehaviour
             {
                 JokerData data = allJokerDefinitions.Find(x => x.type == type);
 
-                // Renk jokerini envanterde göstermek istiyor musun? Genelde hemen kullanılır.
-                // Eğer istemiyorsan: && type != JokerType.ColorMove ekle
                 if (data != null)
                 {
-                    // BURASI DEĞİŞTİ: Artık PickCardPrefab'ı veya aynısını kullanıyoruz
                     GameObject newCard = Instantiate(jokerCardPrefab, inventoryContainer);
-
-                    // Yeni scripti alıyoruz
                     JokerCardPickUI cardScript = newCard.GetComponent<JokerCardPickUI>();
 
                     if (cardScript != null)
                     {
-                        // Envanter modunda kuruyoruz
+                        // Envanter modunda kur
                         cardScript.SetupForInventory(data, count);
                     }
                 }

@@ -41,11 +41,15 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI notificationTitle;
     public TextMeshProUGUI notificationDesc;
     public Button notificationButton;
+    public Button notificationJokerButton;
 
     [Header("Ceza Köşesi Durumu")]
     public bool isPenaltyActive = false;
     public int penaltyCorrectCount = 0;
     public Button diceButton;
+
+    [Header("Hapishane Joker Durumu")]
+    public bool isPrisonJokerActive = false;
 
     public string mainMenuSceneName = "MainMenu";
 
@@ -337,8 +341,59 @@ public class LevelManager : MonoBehaviour
     {
         isPenaltyActive = true;
         penaltyCorrectCount = 0;
+        isPrisonJokerActive = false;
         SetDiceInteractable(false);
-        ShowNotification("CEZA ALANI!", "3 doğru cevap lazım.", () => { QuestionManager.instance.AskRandomNormalQuestion(); });
+
+        // Joker var mı kontrol et
+        bool hasPrisonJoker = false;
+        if (JokerManager.instance != null &&
+            JokerManager.instance.jokerInventory.ContainsKey(JokerType.PrisonBreak) &&
+            JokerManager.instance.jokerInventory[JokerType.PrisonBreak] > 0)
+        {
+            hasPrisonJoker = true;
+        }
+
+        // INFO PANELİ AÇ
+        ShowNotification(
+            "CEZA ALANI!",
+            "Buradan çıkmak için 3 soruyu doğru bilmelisin.\n\nYa da tünel kazıp kaçabilirsin!",
+            // A) Normal Devam Butonu (Joker kullanmazsa)
+            () =>
+            {
+                QuestionManager.instance.AskRandomNormalQuestion();
+            },
+            // B) Joker Butonu (Varsa çalışır)
+            hasPrisonJoker ? () =>
+            {
+                // Joker butonuna basınca ONAY PANELI açılır
+                if (JokerConfirmationPanel.instance != null)
+                {
+                    JokerConfirmationPanel.instance.ShowPanel(
+                        "FİRAR TÜNELİ",
+                        "Riskli ama hızlı! Zor bir soru sorulacak.\nBilirsen ANINDA çıkarsın.\nDenemek istiyor musun?",
+                        () => // EVET dedi
+                        {
+                            // Info Paneli de kapat
+                            notificationPanel.SetActive(false);
+
+                            // Jokeri Harca
+                            JokerManager.instance.jokerInventory[JokerType.PrisonBreak]--;
+                            JokerManager.instance.RefreshInventoryUI();
+
+                            // Modu Aç ve Zor Soru Sor
+                            isPrisonJokerActive = true;
+                            QuestionManager.instance.SoruOlusturVeSor(TileType.Hard);
+                        },
+                        () => // HAYIR dedi
+                        {
+                            // Hiçbir şey yapma, sadece onay paneli kapanır.
+                            // Oyuncu Info Panel'e geri döner.
+                        }
+                    );
+                }
+            }
+        : null // Joker yoksa null gider
+        );
     }
 
     public void CheckPenaltyProgress(bool isCorrect)
@@ -360,14 +415,43 @@ public class LevelManager : MonoBehaviour
         ShowNotification("RİSKLİ BÖLGE!", "Zor soru geliyor!", () => { QuestionManager.instance.SoruOlusturVeSor(TileType.Hard); });
     }
 
-    public void ShowNotification(string title, string desc, System.Action onConfirm)
+    public void ShowNotification(string title, string desc, System.Action onConfirm, System.Action onJokerAction = null)
     {
         if (notificationPanel == null) return;
+
         notificationPanel.SetActive(true);
         notificationTitle.text = title;
         notificationDesc.text = desc;
+
+        // 1. Normal Buton (Devam)
         notificationButton.onClick.RemoveAllListeners();
-        notificationButton.onClick.AddListener(() => { notificationPanel.SetActive(false); onConfirm.Invoke(); });
+        notificationButton.onClick.AddListener(() =>
+        {
+            notificationPanel.SetActive(false);
+            onConfirm.Invoke();
+        });
+
+        // 2. Joker Butonu Ayarı
+        if (notificationJokerButton != null)
+        {
+            if (onJokerAction != null)
+            {
+                // Joker var, butonu göster ve işlev ata
+                notificationJokerButton.gameObject.SetActive(true);
+                notificationJokerButton.onClick.RemoveAllListeners();
+                notificationJokerButton.onClick.AddListener(() =>
+                {
+                    // Info paneli kapatmıyoruz! Onay paneli üstüne açılacak.
+                    // Eğer onay panelinden "Evet" gelirse o zaman kapatacağız (yukarıdaki kodda yazdık).
+                    onJokerAction.Invoke();
+                });
+            }
+            else
+            {
+                // Joker yok veya bu panel başka bir şey için açıldı -> Butonu gizle
+                notificationJokerButton.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void SetDiceInteractable(bool state)

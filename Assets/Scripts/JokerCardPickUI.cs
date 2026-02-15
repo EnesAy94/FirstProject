@@ -55,35 +55,32 @@ public class JokerCardPickUI : MonoBehaviour
     }
 
     // --- MOD 2: ENVANTER EKRANI İÇİN KURULUM ---
+    // --- MOD 2: ENVANTER EKRANI İÇİN KURULUM (GÜNCELLENDİ: Onay Paneli) ---
     public void SetupForInventory(JokerData data, int count)
     {
         myData = data;
         isInventoryMode = true;
-        isFlipped = true; // Zaten açık sayılır
+        isFlipped = true;
         cardButton.interactable = true;
 
         // Görünüm: Açık Başla
         cardBackObj.SetActive(false);
         cardFrontObj.SetActive(true);
 
-        // Adet Yazısını Göster
         if (countText)
         {
             countText.gameObject.SetActive(true);
             countText.text = "x" + count;
         }
 
-        // Düzgün rotasyon (Dönmüş kalmasın diye sıfırla)
         transform.localRotation = Quaternion.identity;
         transform.localScale = Vector3.one;
 
-        // Verileri doldur
         FillData(data);
 
-        // Tıklama: Kullanmaya Çalış
         cardButton.onClick.RemoveAllListeners();
 
-        // Eğer envanterden kullanılabilir bir jokersa (Streak gibi)
+        // Eğer envanterden kullanılabilir bir jokersa
         if (data.isUsableFromInventory)
         {
             cardButton.interactable = true;
@@ -91,12 +88,32 @@ public class JokerCardPickUI : MonoBehaviour
             {
                 // Hafif tıklama efekti
                 transform.DOPunchScale(new Vector3(-0.1f, -0.1f, 0), 0.1f);
-                JokerManager.instance.UseJokerFromInventory(myData.type);
+
+                // --- ONAY PANELİ AÇILIYOR ---
+                if (JokerConfirmationPanel.instance != null)
+                {
+                    JokerConfirmationPanel.instance.ShowPanel(
+                        myData.jokerName.ToUpper(), // Jokerin adını başlık yap
+                        "Bu jokeri şimdi kullanmak istiyor musun?", // Açıklama
+                        () => // EVET
+                        {
+                            // Envanter panelini kapatabiliriz (isteğe bağlı)
+                            // JokerManager.instance.ToggleInventoryPanel(); 
+
+                            // Jokeri Kullan
+                            JokerManager.instance.UseJokerFromInventory(myData.type);
+                        },
+                        () => // HAYIR
+                        {
+                            // Hiçbir şey yapma
+                        }
+                    );
+                }
             });
         }
         else
         {
-            // Pasif kart (Sadece bilgi verir)
+            // Pasif kart (Örn: İkinci şans envanterden tıklanmaz, sadece feedback panelde çıkar)
             cardButton.interactable = false;
         }
     }
