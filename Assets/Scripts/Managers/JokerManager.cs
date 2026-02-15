@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Linq; // Listeyi karıştırmak için lazım
 
 public enum JokerType
 {
@@ -17,19 +18,27 @@ public class JokerManager : MonoBehaviour
     [Header("Envanter Verisi")]
     public Dictionary<JokerType, int> jokerInventory = new Dictionary<JokerType, int>();
 
-    [Header("Joker Tanımları (Buraya ScriptableObjectleri at)")]
+    [Header("Joker Tanımları")]
     public List<JokerData> allJokerDefinitions;
 
-    [Header("UI: HUD & Paneller")]
-    public GameObject colorSelectPanel;
+    [Header("UI: HUD & Envanter")]
     public GameObject inventoryPanel;
+    public TextMeshProUGUI currentStreakHUDText;
+    public Transform inventoryContainer;
+    public GameObject jokerCardPrefab;   // Envanterdeki kart prefabı
 
-    // 🔥 EKSİK OLAN KISIM EKLENDİ 🔥
-    public TextMeshProUGUI currentStreakHUDText; // Ekrandaki "Seri: 5" yazısı
+    [Header("UI: Joker Kazanma (Seçim) Ekranı")]
+    public GameObject jokerSelectionPanel;    // Kartların çıktığı büyük panel
+    public Transform selectionContainer;      // Kartların dizileceği yer
+    public GameObject pickCardPrefab;         // Masaya konacak kart prefabı (JokerCardPickUI olan)
+    public Button takeButton;                 // "AL" butonu
+    public GameObject takeButtonObj;          // Butonun objesi (Gizleyip açmak için)
 
-    [Header("UI: Dinamik Envanter")]
-    public Transform inventoryContainer; // Kartların dizileceği kutu (Content)
-    public GameObject jokerCardPrefab;   // Kartın tasarımı (Prefab)
+    [Header("UI: Renk Seçim Paneli")]
+    public GameObject colorSelectPanel;
+
+    // O an masada seçilen kartın verisi
+    private JokerData currentSelectedJoker;
 
     void Awake()
     {
@@ -38,54 +47,104 @@ public class JokerManager : MonoBehaviour
         jokerInventory[JokerType.ColorMove] = 0;
         jokerInventory[JokerType.SecondChance] = 0;
         jokerInventory[JokerType.StreakRestore] = 0;
+
+        if (jokerSelectionPanel) jokerSelectionPanel.SetActive(false);
     }
 
     void Update()
     {
-        // HUD Güncellemesi (SaveManager varsa)
         if (currentStreakHUDText != null && SaveManager.instance != null)
         {
             currentStreakHUDText.text = "Seri: " + SaveManager.instance.activeSave.currentStreak;
         }
     }
 
-    // --- JOKER KAZANMA ---
-    public void EarnRandomJoker()
+    // --- 1. JOKER KAZANMA SÜRECİNİ BAŞLAT ---
+    // (Bunu Joker Kutusuna gelince LevelManager çağıracak)
+    public void StartJokerSelection()
     {
-        JokerType earned = (JokerType)Random.Range(0, 3);
+        if (jokerSelectionPanel == null) return;
 
-        // Envantere ekle
-        if (!jokerInventory.ContainsKey(earned)) jokerInventory[earned] = 0;
-        jokerInventory[earned]++;
+        jokerSelectionPanel.SetActive(true);
+        takeButtonObj.SetActive(false);
+        currentSelectedJoker = null;
 
-        Debug.Log("🃏 JOKER KAZANILDI: " + earned);
+        foreach (Transform child in selectionContainer) Destroy(child.gameObject);
 
-        // Renk jokeri hemen kullanılır
-        if (earned == JokerType.ColorMove)
+        List<JokerData> shuffledList = allJokerDefinitions.OrderBy(x => Random.value).ToList();
+
+        foreach (JokerData data in shuffledList)
         {
-            UseColorJoker();
-        }
-        else
-        {
-            // Diğerleri için bildirim göster ve envanteri yenile
-            RefreshInventoryUI(); // UI'ı güncelle
+            GameObject cardObj = Instantiate(pickCardPrefab, selectionContainer); // Aynı prefabı kullanıyoruz
+            JokerCardPickUI cardScript = cardObj.GetComponent<JokerCardPickUI>();
 
-            // İsmini bulmak için listeye bakıyoruz
-            string jName = "Joker";
-            JokerData data = allJokerDefinitions.Find(x => x.type == earned);
-            if (data != null) jName = data.jokerName;
-
-            if (LevelManager.instance != null)
-                LevelManager.instance.ShowNotification("TEBRİKLER!", jName + " kazandın!", () => { });
+            // BURASI DEĞİŞTİ: SetupForSelection kullanıyoruz
+            cardScript.SetupForSelection(data, OnCardRevealed);
         }
     }
 
-    // --- JOKER 1: RENK SEÇİMİ ---
+    // --- 2. KART SEÇİLİNCE (Kart Scripti Burayı Çağırır) ---
+    // --- 2. KART SEÇİLİNCE ---
+    void OnCardRevealed(JokerData revealedData)
+    {
+        // Oyuncu bir karta tıkladı ve kart döndü.
+        currentSelectedJoker = revealedData;
+
+        // --- YENİ KISIM: DİĞER KARTLARI KİLİTLE ---
+        // Selection Container içindeki tüm çocukları (kartları) gez
+        foreach (Transform child in selectionContainer)
+        {
+            // Her kartın üzerindeki butonu bul ve kapat
+            Button cardBtn = child.GetComponent<Button>();
+            if (cardBtn != null)
+            {
+                cardBtn.interactable = false;
+            }
+        }
+        // -----------------------------------------
+
+        // "AL" butonunu göster ve hazırla
+        takeButtonObj.SetActive(true);
+        takeButton.onClick.RemoveAllListeners();
+        takeButton.onClick.AddListener(TakeSelectedJoker);
+    }
+
+    // --- 3. "AL" BUTONUNA BASINCA ---
+    void TakeSelectedJoker()
+    {
+        if (currentSelectedJoker == null) return;
+
+        // A. Envantere Ekle
+        if (!jokerInventory.ContainsKey(currentSelectedJoker.type))
+            jokerInventory[currentSelectedJoker.type] = 0;
+
+        jokerInventory[currentSelectedJoker.type]++;
+
+        Debug.Log("🃏 JOKER ALINDI: " + currentSelectedJoker.jokerName);
+
+        // B. Envanter UI'ını güncelle
+        RefreshInventoryUI();
+
+        // C. Seçim Panelini Kapat
+        jokerSelectionPanel.SetActive(false);
+
+        // D. ÖZEL DURUM: Eğer bu bir "Renk Jokeri" ise hemen kullanma panelini aç!
+        if (currentSelectedJoker.type == JokerType.ColorMove)
+        {
+            UseColorJoker();
+        }
+    }
+
+    // --- RENK JOKERİ KULLANIMI ---
     public void UseColorJoker()
     {
-        if (jokerInventory[JokerType.ColorMove] > 0) jokerInventory[JokerType.ColorMove]--;
-        RefreshInventoryUI(); // Sayı düştü, güncelle
+        // Envanterden düş
+        if (jokerInventory[JokerType.ColorMove] > 0)
+            jokerInventory[JokerType.ColorMove]--;
 
+        RefreshInventoryUI();
+
+        // Renk Panelini Aç
         if (colorSelectPanel != null) colorSelectPanel.SetActive(true);
     }
 
@@ -100,7 +159,7 @@ public class JokerManager : MonoBehaviour
         }
     }
 
-    // --- JOKER 2: İKİNCİ ŞANS ---
+    // --- ENVANTER VE DİĞER FONKSİYONLAR (Aynen kaldı) ---
     public bool HasSecondChance()
     {
         return jokerInventory.ContainsKey(JokerType.SecondChance) && jokerInventory[JokerType.SecondChance] > 0;
@@ -111,11 +170,10 @@ public class JokerManager : MonoBehaviour
         if (HasSecondChance())
         {
             jokerInventory[JokerType.SecondChance]--;
-            RefreshInventoryUI(); // Ekranda da eksilsin
+            RefreshInventoryUI();
         }
     }
 
-    // --- JOKER 3: ENVANTERDEN KULLANMA ---
     public void UseJokerFromInventory(JokerType type)
     {
         if (type == JokerType.StreakRestore)
@@ -123,28 +181,20 @@ public class JokerManager : MonoBehaviour
             if (jokerInventory.ContainsKey(JokerType.StreakRestore) && jokerInventory[JokerType.StreakRestore] > 0)
             {
                 jokerInventory[JokerType.StreakRestore]--;
-
                 SaveManager.instance.RestoreLostStreak();
-
-                Debug.Log("🔥 Seri Kurtarıldı!");
-
-                RefreshInventoryUI(); // Sadece sayıyı güncelle
-
-                // inventoryPanel.SetActive(false); // <-- BU SATIRI SİL (veya yorum satırı yap)
-                // Artık panel kapanmayacak, oyuncu çarpıya basıp kendi kapatır.
+                RefreshInventoryUI();
             }
         }
     }
 
-    // --- DİNAMİK UI SİSTEMİ (PREFAB MANTIĞI) ---
     public void RefreshInventoryUI()
     {
-        if (inventoryContainer == null || jokerCardPrefab == null) return;
+        if (inventoryContainer == null || jokerCardPrefab == null) return; // Not: Artık jokerCardPrefab = pickCardPrefab olabilir
 
-        // 1. Önce eski kartları temizle
+        // Temizle
         foreach (Transform child in inventoryContainer) Destroy(child.gameObject);
 
-        // 2. Envanterdeki her joker türü için
+        // Diz
         foreach (var item in jokerInventory)
         {
             JokerType type = item.Key;
@@ -152,17 +202,22 @@ public class JokerManager : MonoBehaviour
 
             if (count > 0)
             {
-                // Bu jokerin datasını (resmini, ismini) bul
                 JokerData data = allJokerDefinitions.Find(x => x.type == type);
 
+                // Renk jokerini envanterde göstermek istiyor musun? Genelde hemen kullanılır.
+                // Eğer istemiyorsan: && type != JokerType.ColorMove ekle
                 if (data != null)
                 {
-                    // Eğer Renk jokeri değilse göster (Renk jokeri anında kullanılıyor demiştik)
-                    // Ama istersen onu da gösterebilirsin.
-                    if (type != JokerType.ColorMove)
+                    // BURASI DEĞİŞTİ: Artık PickCardPrefab'ı veya aynısını kullanıyoruz
+                    GameObject newCard = Instantiate(jokerCardPrefab, inventoryContainer);
+
+                    // Yeni scripti alıyoruz
+                    JokerCardPickUI cardScript = newCard.GetComponent<JokerCardPickUI>();
+
+                    if (cardScript != null)
                     {
-                        GameObject newCard = Instantiate(jokerCardPrefab, inventoryContainer);
-                        newCard.GetComponent<JokerItemUI>().Setup(data, count);
+                        // Envanter modunda kuruyoruz
+                        cardScript.SetupForInventory(data, count);
                     }
                 }
             }
@@ -175,8 +230,7 @@ public class JokerManager : MonoBehaviour
         {
             bool isOpen = !inventoryPanel.activeSelf;
             inventoryPanel.SetActive(isOpen);
-
-            if (isOpen) RefreshInventoryUI(); // Açılınca listeyi yenile
+            if (isOpen) RefreshInventoryUI();
         }
     }
 }

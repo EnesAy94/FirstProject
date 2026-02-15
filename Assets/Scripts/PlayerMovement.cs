@@ -97,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
             if (currentTile.type == TileType.Joker)
             {
                 Debug.Log("🎁 Joker Kutusuna Geldin!");
-                if (JokerManager.instance != null) JokerManager.instance.EarnRandomJoker();
+                if (JokerManager.instance != null) JokerManager.instance.StartJokerSelection();
                 if (LevelManager.instance != null) LevelManager.instance.SetDiceInteractable(true);
                 return;
             }
