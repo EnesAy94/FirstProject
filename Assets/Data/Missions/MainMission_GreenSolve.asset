@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04943bed99a63af4499141c75dec297a, type: 3}
-  m_Name: Gorev_Yan_Mavi
+  m_Name: MainMission_GreenSolve
   m_EditorClassIdentifier: Assembly-CSharp::MissionData
-  description: "Mavi Alandan 1 \xC7\xF6z"
-  isMainMission: 0
-  type: 1
-  targetAmount: 1
+  description: "Ye\u015Fil mekandan 5 do\u011Fru soru \xE7\xF6z."
+  isMainMission: 1
+  type: 4
+  targetAmount: 5
   icon: {fileID: 0}
-  unlockAchievementKey: blue_master
+  unlockAchievementKey: 
   currentProgress: 0

@@ -18,40 +18,50 @@ public class AchievementManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // --- İLERLEME KAYDETME (ROBOT ENTEGRASYONLU) ---
+    // --- İLERLEME KAYDETME (GÜNCELLENMİŞ VE DEBUG'LI) ---
     public void AddProgress(string achievementID, int amount)
     {
         AchievementData data = allAchievements.Find(x => x.id == achievementID);
-        if (data == null) return;
+        if (data == null)
+        {
+            Debug.LogWarning($"[Achievement] ID bulunamadı: {achievementID}");
+            return;
+        }
 
         // 1. KONTROL: Görev yapıldı mı?
         if (data.requiresMission)
         {
             if (!SaveManager.instance.IsMissionCompleted(data.requiredMissionKey))
             {
-                // Görev yapılmadıysa ilerleme ekleme
+                Debug.Log($"[Achievement] {achievementID} için görev henüz tamamlanmadı: {data.requiredMissionKey}");
                 return;
             }
         }
 
         // 2. MEVCUT (ESKİ) DURUMU AL
         int oldCount = SaveManager.instance.GetAchievementProgress(achievementID);
-
-        // Eski seviyeyi hesapla
         int oldTierIndex = GetTierIndex(data, oldCount);
 
         // 3. YENİ DURUMU HESAPLA VE KAYDET
         int newCount = oldCount + amount;
         SaveManager.instance.SetAchievementProgress(achievementID, newCount);
 
-        // Yeni seviyeyi hesapla
+        Debug.Log($"[Achievement] {achievementID} ilerleme güncellendi: {oldCount} → {newCount}");
+
+        // 4. YENİ SEVİYEYİ HESAPLA
         int newTierIndex = GetTierIndex(data, newCount);
 
-        // 4. KUTLAMA KONTROLÜ (Level Atladı mı?)
-        // Eğer yeni seviye, eskisinden büyükse tebrik et
+        // 5. KUTLAMA KONTROLÜ (Level Atladı mı?)
         if (newTierIndex > oldTierIndex)
         {
+            string oldTierName = oldTierIndex >= 0 ? data.tiers[oldTierIndex].tierName : "Kilitli";
+            string newTierName = data.tiers[newTierIndex].tierName;
+            Debug.Log($"[Achievement] ⭐ SEVİYE YÜKSELDİ! {achievementID}: {oldTierName} → {newTierName}");
             UnlockAchievement(data, newTierIndex);
+        }
+        else
+        {
+            Debug.Log($"[Achievement] Henüz seviye atlamadı. Mevcut tier: {(newTierIndex >= 0 ? data.tiers[newTierIndex].tierName : "Kilitli")} ({newCount}/{(newTierIndex < data.tiers.Count - 1 ? data.tiers[newTierIndex + 1].targetCount : "MAX")})");
         }
     }
 

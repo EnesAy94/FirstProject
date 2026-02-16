@@ -18,8 +18,12 @@ MonoBehaviour:
   introText: 
   questionSet: {fileID: 11400000, guid: 15dcef8cc2ad4c5428e7242cb9960983, type: 2}
   missions:
-  - {fileID: 11400000, guid: e2961114b0bc7f740b9372161a9f7473, type: 2}
-  - {fileID: 11400000, guid: 69c9f43319a21e44e911a054071917ff, type: 2}
+  - {fileID: 11400000, guid: ad7eb141c6f2feb4eba263a2c0c7f65a, type: 2}
+  - {fileID: 11400000, guid: 95e8a921ff3e07944b93736b0d9b8f64, type: 2}
+  - {fileID: 11400000, guid: 9e84d3339007b11459de33f2ec37490e, type: 2}
+  - {fileID: 11400000, guid: 6b6abb5d1ebf2ea42a00f8ceb2e17a8f, type: 2}
+  - {fileID: 11400000, guid: 2e501f10a4d1da1449f16aa851c01868, type: 2}
+  - {fileID: 11400000, guid: cb5712aa39669b745abeed0b97cab4d2, type: 2}
   startingScore: 100
   penaltyPerWrongAnswer: 20
   locationStories:

@@ -7,9 +7,11 @@ public enum MissionType
     SolveBlue,
     SolveYellow,
     SolvePurple,
+    SolveOrange,
     SolveGreen,
     SolveAny,
-    SolveHard
+    SolveHard,
+    CompleteLapNoError
 }
 
 [CreateAssetMenu(fileName = "NewMission", menuName = "StorySystem/Mission")]

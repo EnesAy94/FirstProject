@@ -20,6 +20,9 @@ public class LevelManager : MonoBehaviour
     public bool isCompletionPending = false;
     public bool isFailurePending = false;
 
+    [Header("Tur Takibi")]
+    public int wrongAnswersInCurrentLap = 0;
+
     private bool hasCelebratedMainMissions = false; // Ana görev kutlaması yapıldı mı?
 
     [Header("Harita ve UI")]
@@ -79,6 +82,7 @@ public class LevelManager : MonoBehaviour
         isLevelFinished = false;
         hasCelebratedMainMissions = false;
         isCompletionPending = false;
+        wrongAnswersInCurrentLap = 0;
 
         currentScore = currentChapter.startingScore;
 
@@ -169,6 +173,7 @@ public class LevelManager : MonoBehaviour
             case TileType.Purple: targetType = MissionType.SolvePurple; break;
             case TileType.Green: targetType = MissionType.SolveGreen; break;
             case TileType.Hard: targetType = MissionType.SolveHard; break;
+            case TileType.Orange: targetType = MissionType.SolveOrange; break;
         }
 
         bool gorevGuncellendi = false;
@@ -483,5 +488,73 @@ public class LevelManager : MonoBehaviour
             return currentChapter.penaltyPerWrongAnswer;
         }
         return 10;
+    }
+
+    public void RegisterWrongAnswer()
+    {
+        wrongAnswersInCurrentLap++;
+        Debug.Log($"Bu turdaki hata sayısı: {wrongAnswersInCurrentLap}");
+    }
+
+    public void OnLapCompleted()
+    {
+        Debug.Log("🏁 TUR TAMAMLANDI! Kontrol ediliyor...");
+
+        if (wrongAnswersInCurrentLap == 0)
+        {
+            Debug.Log("✨ KUSURSUZ TUR! Hiç yanlış yapılmadı.");
+
+            // A) BAŞARIM KAZANMA (Varsa)
+            // Eğer AchievementData'da "flawless_lap" diye bir ID açarsan burası çalışır
+            if (AchievementManager.instance != null)
+            {
+                AchievementManager.instance.AddProgress("flawless_lap", 1);
+            }
+
+            // B) GÖREV İLERLEMESİ
+            CheckLapMissionProgress();
+
+            // C) KÜÇÜK BİR ÖDÜL (Opsiyonel - Robot konuşur)
+            if (RobotAssistant.instance != null)
+                RobotAssistant.instance.Say("Harika! Bu turu hiç hata yapmadan bitirdin!", 3f);
+        }
+        else
+        {
+            Debug.Log($"Tur bitti ama {wrongAnswersInCurrentLap} hata yapıldı.");
+        }
+
+        // Bir sonraki tur için sayacı sıfırla
+        wrongAnswersInCurrentLap = 0;
+    }
+
+    void CheckLapMissionProgress()
+    {
+        bool gorevGuncellendi = false;
+
+        foreach (MissionData mission in activeMissions)
+        {
+            // Eğer görev "Kusursuz Tur" tipindeyse ve henüz bitmediyse
+            if (mission.type == MissionType.CompleteLapNoError && mission.currentProgress < mission.targetAmount)
+            {
+                mission.currentProgress++;
+                gorevGuncellendi = true;
+
+                // Görev Tamamlandı mı?
+                if (mission.currentProgress >= mission.targetAmount)
+                {
+                    if (RobotAssistant.instance != null)
+                        RobotAssistant.instance.Say($"GÖREV TAMAMLANDI:\n{mission.description}", 4f);
+
+                    // Ödül vs. kodları buraya (CheckMissionProgress'teki ile aynı mantık)
+                }
+            }
+        }
+
+        if (gorevGuncellendi)
+        {
+            if (OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
+            SaveAllProgress();
+            // Buraya CheckMissionProgress'teki "Tüm görevler bitti mi?" kontrollerini de ekleyebilirsin
+        }
     }
 }

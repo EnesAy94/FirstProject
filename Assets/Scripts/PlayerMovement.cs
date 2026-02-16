@@ -36,7 +36,16 @@ public class PlayerMovement : MonoBehaviour
             currentTileIndex++;
 
             // Harita sonuna gelince başa sar
-            currentTileIndex %= currentRoute.childNodes.Count;
+            if (currentTileIndex >= currentRoute.childNodes.Count)
+            {
+                currentTileIndex = 0; // Başa dön
+
+                // TUR BİTTİ SİNYALİ GÖNDER
+                if (LevelManager.instance != null)
+                {
+                    LevelManager.instance.OnLapCompleted();
+                }
+            }
 
             Vector3 nextPos = currentRoute.childNodes[currentTileIndex].position;
 

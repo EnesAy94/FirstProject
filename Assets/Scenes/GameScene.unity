@@ -10452,10 +10452,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnswerManager
   achievementLinks:
-  - type: 6
+  - type: 7
     achievementID: hard_master
   - type: 2
     achievementID: blue_master
+  - type: 1
+    achievementID: red_master
+  - type: 3
+    achievementID: yellow_master
+  - type: 4
+    achievementID: purple_master
+  - type: 5
+    achievementID: green_master
+  - type: 6
+    achievementID: orange_master
   answerPanel: {fileID: 463850257}
   infoText: {fileID: 1245274405}
   answerInput: {fileID: 1844875644}

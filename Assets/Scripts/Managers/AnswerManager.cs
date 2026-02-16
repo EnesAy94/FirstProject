@@ -157,8 +157,7 @@ public class AnswerManager : MonoBehaviour
         }
     }
 
-    // --- NORMAL GERİ BİLDİRİM (DÜZELTİLDİ) ---
-    // --- NORMAL GERİ BİLDİRİM (DÜZELTİLMİŞ) ---
+    // --- NORMAL GERİ BİLDİRİM (GÜNCELLENMİŞ - BAŞARIM SİSTEMİ EKLENDİ) ---
     void HandleNormalFeedback(bool isCorrect)
     {
         // 1. Joker Butonunu Gizle
@@ -176,12 +175,18 @@ public class AnswerManager : MonoBehaviour
         if (isCorrect)
         {
             // --- DOĞRU CEVAP ---
-            if (LevelManager.instance != null) LevelManager.instance.CheckMissionProgress(currentQuestionType);
 
-            // 1. Veritabanına "DOĞRU" olarak kaydet
+            // 1. Görev İlerlemesini Kontrol Et
+            if (LevelManager.instance != null)
+                LevelManager.instance.CheckMissionProgress(currentQuestionType);
+
+            // 2. Veritabanına "DOĞRU" olarak kaydet
             SaveManager.instance.RegisterAnswer(true, isHard, isPenalty);
 
-            // 2. UI'ı Güncelle (Streak)
+            // ✨ 3. BAŞARIM SİSTEMİNE BİLDİR (YENİ EKLENEN KISIM) ✨
+            CheckAndUpdateAchievement(currentQuestionType);
+
+            // 4. UI'ı Güncelle (Streak)
             if (UIManager.instance != null && SaveManager.instance != null)
             {
                 UIManager.instance.UpdateStreak(SaveManager.instance.activeSave.currentStreak);
@@ -214,6 +219,11 @@ public class AnswerManager : MonoBehaviour
                 UIManager.instance.UpdateStreak(0);
             }
 
+            if (LevelManager.instance != null)
+            {
+                LevelManager.instance.RegisterWrongAnswer();
+            }
+
             bool hasJoker = false;
             if (JokerManager.instance != null)
                 hasJoker = JokerManager.instance.HasSecondChance();
@@ -230,6 +240,39 @@ public class AnswerManager : MonoBehaviour
         }
     }
 
+    // ✨ YENİ FONKSİYON: BAŞARIM KONTROLÜ VE GÜNCELLEME ✨
+    void CheckAndUpdateAchievement(TileType solvedType)
+    {
+        // AchievementManager yoksa çık
+        if (AchievementManager.instance == null)
+        {
+            Debug.LogWarning("[AnswerManager] AchievementManager bulunamadı!");
+            return;
+        }
+
+        // achievementLinks listesi boşsa çık
+        if (achievementLinks == null || achievementLinks.Count == 0)
+        {
+            Debug.LogWarning("[AnswerManager] achievementLinks listesi boş! Inspector'da ayarlanmalı.");
+            return;
+        }
+
+        // Bu soru tipine bağlı bir başarım var mı?
+        foreach (AchievementLink link in achievementLinks)
+        {
+            if (link.type == solvedType)
+            {
+                // Başarımı bulduk! İlerlet
+                Debug.Log($"[AnswerManager] 🎯 {solvedType} sorusu çözüldü → {link.achievementID} başarımına +1 ekleniyor");
+                AchievementManager.instance.AddProgress(link.achievementID, 1);
+                return; // Bir tane bulduk, yeter
+            }
+        }
+
+        // Eğer hiç eşleşme yoksa (Opsiyonel log)
+        // Debug.Log($"[AnswerManager] {solvedType} için başarım tanımlanmamış.");
+    }
+
     // --- CEZA MODU GERİ BİLDİRİM ---
     void HandlePenaltyFeedback(bool isCorrect)
     {
@@ -239,7 +282,6 @@ public class AnswerManager : MonoBehaviour
     }
 
     // --- PANEL GÖSTERME ---
-    // ShowFeedbackPanel fonksiyonunu BU YENİ MANTIKLA değiştir:
     void ShowFeedbackPanel(bool isCorrect, bool isPenaltyMode)
     {
         if (feedbackPanel == null) return;
@@ -301,8 +343,6 @@ public class AnswerManager : MonoBehaviour
             }
         }
         // --- 2. JOKER (RETRY) BUTONU KONTROLÜ ---
-        // 'retryButton' GameObject olduğu için SetActive ve GetComponent<Button> kullanıyoruz.
-        // --- 2. JOKER (RETRY) BUTONU KONTROLÜ (DÜZELTİLMİŞ) ---
         if (!isCorrect && JokerManager.instance != null && JokerManager.instance.HasSecondChance())
         {
             if (retryButton != null)
@@ -313,13 +353,11 @@ public class AnswerManager : MonoBehaviour
                 if (btn != null)
                 {
                     btn.interactable = true;
-                    // Bu komut kodla eklenenleri siler ama editörden eklenenleri bazen silmez.
-                    // O yüzden 1. Adımdaki manuel kontrolü mutlaka yap.
                     btn.onClick.RemoveAllListeners();
 
                     btn.onClick.AddListener(() =>
                     {
-                        // SADECE ONAY PANELİNİ AÇ (Soruyu tetikleme!)
+                        // SADECE ONAY PANELİNİ AÇ
                         if (JokerConfirmationPanel.instance != null)
                         {
                             JokerConfirmationPanel.instance.ShowPanel(
@@ -335,15 +373,12 @@ public class AnswerManager : MonoBehaviour
                             // 2. Paneli Kapat
                             feedbackPanel.SetActive(false);
 
-                            // 3. AYNI SORUYU TEKRAR AÇ (DÜZELTME BURADA)
-                            // QuestionManager'dan yeni soru istemek yerine,
-                            // hafızadaki soruyu tekrar ekrana basıyoruz.
+                            // 3. AYNI SORUYU TEKRAR AÇ
                             SetQuestion(currentQuestionText, currentCorrectAnswer, currentQuestionType);
                         },
                                 () => // --- HAYIR'A BASARSA BURASI ÇALIŞIR ---
                                 {
                                     // Hiçbir şey yapma (Soru açma kodu burada YOK)
-                                    // Sadece Onay paneli kapanır, oyuncu geri döner.
                                 }
                             );
                         }
@@ -393,9 +428,8 @@ public class AnswerManager : MonoBehaviour
                         }
                         else
                         {
-                            // KAYBETTİ (Devam dedi) -> RİSK BİTTİ, NORMAL CEZA BAŞLAR
+                            // KAYBETTİ -> RİSK BİTTİ, NORMAL CEZA BAŞLAR
                             LevelManager.instance.isPrisonJokerActive = false;
-                            // LevelManager.instance.penaltyCorrectCount = 0; // İstersen sıfırla, istersen kaldığı yerden devam ettir
                             QuestionManager.instance.AskRandomNormalQuestion();
                         }
                     }
