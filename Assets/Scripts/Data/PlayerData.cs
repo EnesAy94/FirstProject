@@ -3,9 +3,14 @@ using System.Collections.Generic;
 [System.Serializable] // Bu satır çok önemli! Verinin kaydedilebilir olduğunu söyler.
 public class PlayerData
 {
-    // Temel Veriler
+    // --- TEMEL VERİLER ---
     public int totalScore;
     public int maxLevelReached;
+
+    // --- YENİ EKLENEN: CÜZDAN / EKONOMİ ---
+    // Şans Çarkı için kazanılan biletler burada tutulacak.
+    public int globalTicketCount = 0;
+    // --------------------------------------
 
     // 1. Genel Başarı (Zor olmayanlar)
     public int normalCorrectCount; // Doğru normal soru
@@ -22,35 +27,43 @@ public class PlayerData
     // 4. Streak (Seri) Bilgisi
     public int currentStreak; // Şu anki seri (Hata yapana kadar artar)
     public int maxStreak;     // En yüksek rekor seri
+    public int lastLostStreak = 0; // Jokerle kurtarılacak seri
 
-    // --- YENİ EKLENEN: PROFİL BİLGİLERİ ---
+    // --- PROFİL BİLGİLERİ ---
     public string playerName = "";
     public string playerSurname = "";
     public string playerNickname = "";
 
-    // Hangi bölümden kaç puan aldığını burada tutacağız ki toplamı hesaplayabilelim.
-    public List<LevelScoreData> levelBestScores = new List<LevelScoreData>();
-    public List<MissionProgressSave> missionProgresses = new List<MissionProgressSave>();
-    public List<UsedQuestionData> usedQuestions = new List<UsedQuestionData>();
-
-    // Oyun Ayarları (Ses vs.)
+    // --- OYUN AYARLARI ---
     public float musicVolume = 1f;
     public float sfxVolume = 1f;
 
-    // Listeler (Firebase bunları çok sever)
-    // Hangi başarımları kazandı? ID'leri tutuyoruz.
+    // --- İLERLEME LİSTELERİ ---
+    public int lastUnlockedLevel = 1; // Varsayılan 1. bölüm açık
+
+    // Hangi bölümden kaç puan aldı?
+    public List<LevelScoreData> levelBestScores = new List<LevelScoreData>();
+
+    // Görev ilerlemeleri
+    public List<MissionProgressSave> missionProgresses = new List<MissionProgressSave>();
+
+    // Çözülen soruların kaydı (Tekrar sormamak için)
+    public List<UsedQuestionData> usedQuestions = new List<UsedQuestionData>();
+
+    // Kazanılan başarımlar (Achievement ID'leri)
     public List<string> earnedAchievements = new List<string>();
 
-    // Hangi görevler bitti? ID'leri tutuyoruz.
-    public int lastUnlockedLevel = 1; // Varsayılan 1. bölüm açık
+    // Tamamlanan ana bölümler
     public List<int> completedMainChapters = new List<int>();
+
+    // Tamamlanan görevler
     public List<string> completedMissions = new List<string>();
-    public int lastLostStreak = 0;
 
     // Başarım ilerlemeleri (Örn: "hard_master" -> 5 tane çözdü)
-    // Dictionary Unity'de direkt serileşmez, basit bir struct listesi yapalım:
     public List<ProgressData> achievementProgress = new List<ProgressData>();
 }
+
+// --- YARDIMCI YAPILAR (STRUCTS) ---
 
 [System.Serializable]
 public struct ProgressData

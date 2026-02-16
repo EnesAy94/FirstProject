@@ -63,7 +63,6 @@ public class JokerCardPickUI : MonoBehaviour
         isFlipped = true;
         cardButton.interactable = true;
 
-        // Görünüm: Açık Başla
         cardBackObj.SetActive(false);
         cardFrontObj.SetActive(true);
 
@@ -80,7 +79,9 @@ public class JokerCardPickUI : MonoBehaviour
 
         cardButton.onClick.RemoveAllListeners();
 
-        // Eğer envanterden kullanılabilir bir jokersa
+        // --- BURASI DEĞİŞTİ ---
+
+        // DURUM A: Kullanılabilir Jokerler (Renge Git, Can Doldur vb.)
         if (data.isUsableFromInventory)
         {
             cardButton.interactable = true;
@@ -89,58 +90,51 @@ public class JokerCardPickUI : MonoBehaviour
                 // Tıklama efekti
                 transform.DOPunchScale(new Vector3(-0.1f, -0.1f, 0), 0.1f);
 
-                // --- 1. KONTROL: CAN ZATEN FULL MÜ? ---
+                // --- ÖZEL KONTROL: CAN DOLDURMA ---
                 if (myData.type == JokerType.ScoreBoost)
                 {
-                    // LevelManager'dan mevcut ve başlangıç puanlarını alıyoruz
                     if (LevelManager.instance != null &&
                         LevelManager.instance.currentScore >= LevelManager.instance.currentChapter.startingScore)
                     {
-                        // CAN ZATEN FULL! Uyarı ver ve çık.
-                        LevelManager.instance.ShowNotification(
-                            "CANIN DOLU!",
-                            "Şu an zaten turp gibisin.\nBu jokeri puanın düşünce kullanmalısın.",
-                            () => { } // Tamam deyince kapansın
-                        );
-                        return; // Buradan aşağı inme, joker harcanmasın.
+                        LevelManager.instance.ShowNotification("CANIN DOLU!", "Turp gibisin, harcama!", () => { });
+                        return;
                     }
                 }
 
-                // --- 2. KONTROL GEÇİLDİ, ONAY PANELİNİ AÇ ---
+                // ONAY PANELİ AÇ
                 if (JokerConfirmationPanel.instance != null)
                 {
                     string desc = "Bu jokeri şimdi kullanmak istiyor musun?";
-
-                    // Eğer Puan artırıcıysa, oyuncuya KAÇ PUAN artacağını hesaplayıp söyleyelim
                     if (myData.type == JokerType.ScoreBoost && LevelManager.instance != null)
                     {
                         int penalty = LevelManager.instance.GetCurrentPenalty();
                         int amount = penalty / 2;
                         if (amount < 1) amount = 1;
-
-                        desc = $"Bu jokeri kullanarak canını +{amount} puan (Cezanın Yarısı) artırmak istiyor musun?";
+                        desc = $"Canını +{amount} puan artırmak istiyor musun?";
                     }
 
-                    JokerConfirmationPanel.instance.ShowPanel(
-                        myData.jokerName.ToUpper(),
-                        desc,
-                        () => // EVET
-                        {
-                            // Onaylandı, Manager'a söyle kullansın
-                            JokerManager.instance.UseJokerFromInventory(myData.type);
-                        },
-                        () => // HAYIR
-                        {
-                            // Vazgeçti
-                        }
+                    JokerConfirmationPanel.instance.ShowPanel(myData.jokerName.ToUpper(), desc,
+                        () => { JokerManager.instance.UseJokerFromInventory(myData.type); }, // EVET
+                        () => { } // HAYIR
                     );
                 }
             });
         }
+        // DURUM B: Pasif Eşyalar (Bilet gibi)
         else
         {
-            // Pasif kart (Örn: İkinci şans envanterden tıklanmaz, sadece feedback panelde çıkar)
-            cardButton.interactable = false;
+            cardButton.interactable = true; // Tıklanabilsin ama işlem yapmasın
+            cardButton.onClick.AddListener(() =>
+            {
+                // Sadece bilgi ver
+                if (RobotAssistant.instance != null)
+                {
+                    if (myData.type == JokerType.WheelTicket)
+                        RobotAssistant.instance.Say("Bu bir Şans Bileti! Bölümü bitirince hesabına eklenecek.", 3f);
+                    else
+                        RobotAssistant.instance.Say("Bu eşya şu an kullanılamaz.", 2f);
+                }
+            });
         }
     }
 

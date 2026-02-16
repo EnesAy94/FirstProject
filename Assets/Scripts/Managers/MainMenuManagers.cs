@@ -21,6 +21,9 @@ public class MainMenuManager : MonoBehaviour
     public Transform chapterListContainer;
     public GameObject menuButtonPrefab;
 
+    [Header("Para Birimi UI")]
+    public TextMeshProUGUI ticketCountText;
+
     public GameObject replayConfirmPanel;
     private ChapterData selectedChapterToReplay;
 
@@ -28,6 +31,7 @@ public class MainMenuManager : MonoBehaviour
     {
         OpenPanel(rootPanel);
         if (replayConfirmPanel != null) replayConfirmPanel.SetActive(false);
+        UpdateTicketUI();
     }
 
     // --- PANEL YÖNETİMİ ---
@@ -49,6 +53,18 @@ public class MainMenuManager : MonoBehaviour
     public void OnClick_Multiplayer()
     {
         Debug.Log("Çok Oyunculu modu henüz yapım aşamasında...");
+    }
+
+    public void UpdateTicketUI()
+    {
+        if (ticketCountText != null && SaveManager.instance != null)
+        {
+            // SaveManager'dan sayıyı çek
+            int amount = SaveManager.instance.GetTicketCount();
+
+            // Ekrana yaz (Örn: "5" veya "x5" şeklinde)
+            ticketCountText.text = amount.ToString();
+        }
     }
 
     public void OnClick_Profile()

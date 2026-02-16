@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
     [Header("Mevcut Durum")]
     public ChapterData currentChapter;
     public List<MissionData> activeMissions;
-    public bool isLevelFinished = false; // Oyun tamamen bitti mi? (Puan 0 veya Tüm görevler bitti)
+    public bool isLevelFinished = false; // Oyun tamamen bitti mi?
 
     // Panel açılmayı bekliyor mu?
     public bool isCompletionPending = false;
@@ -116,10 +116,9 @@ public class LevelManager : MonoBehaviour
         if (OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
     }
 
-    // --- PUAN SİSTEMİ (DÜZELTİLDİ) ---
+    // --- PUAN SİSTEMİ ---
     public void DecreaseScore()
     {
-        // Eğer oyun zaten bitmişse (Kaybetme veya Kazanma), puan düşmesin.
         if (isLevelFinished) return;
 
         int penalty = currentChapter.penaltyPerWrongAnswer;
@@ -131,8 +130,8 @@ public class LevelManager : MonoBehaviour
 
         if (currentScore <= 0)
         {
-            isLevelFinished = true; // Oyun bitti (Kaybettin)
-            isFailurePending = true; // Panel açılmayı bekliyor
+            isLevelFinished = true;
+            isFailurePending = true;
             Debug.Log("Puan bitti! Başarısızlık paneli sıraya alındı.");
         }
     }
@@ -158,7 +157,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    // --- GÖREV KONTROL SİSTEMİ ---
+    // --- GÖREV KONTROL SİSTEMİ (GÜNCELLENDİ) ---
     public void CheckMissionProgress(TileType type)
     {
         MissionType targetType = MissionType.SolveAny;
@@ -186,14 +185,12 @@ public class LevelManager : MonoBehaviour
                 // Görev Tamamlandı
                 if (mission.currentProgress >= mission.targetAmount)
                 {
-                    // 1. Robot Konuşması
                     if (RobotAssistant.instance != null)
                     {
                         string baslik = mission.isMainMission ? "ANA GÖREV" : "EK GÖREV";
                         RobotAssistant.instance.Say($"{baslik} TAMAMLANDI:\n{mission.description}", 4f);
                     }
 
-                    // 2. Başarım (Notification)
                     if (!string.IsNullOrEmpty(mission.unlockAchievementKey))
                     {
                         SaveManager.instance.CompleteMission(mission.unlockAchievementKey);
@@ -211,34 +208,76 @@ public class LevelManager : MonoBehaviour
             if (OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
             SaveAllProgress();
 
-            // --- PANEL AÇMA MANTIĞI (GÜNCELLENDİ) ---
+            // --- PANEL AÇMA VE KAYIT MANTIĞI (KRİTİK GÜNCELLEME) ---
 
-            // 1. Durum: Tüm görevler (Ana + Yan) bitti mi?
-            if (AreAllMissionsCompleted())
+            // SENARYO 1: Ana Görevler İLK DEFA bitti mi?
+            if (AreMainMissionsCompleted() && !hasCelebratedMainMissions)
             {
-                Debug.Log("HER ŞEY BİTTİ -> Panel Bekliyor");
-                PrepareLevelCompletionData();
-                isCompletionPending = true; // AnswerManager panel kapatınca bunu görecek
+                Debug.Log("✅ ANA GÖREVLER TAMAMLANDI -> Puan Kaydediliyor...");
+                hasCelebratedMainMissions = true;
+
+                // Puanı Kaydet, Bileti Ver
+                PrepareMainMissionCompletion();
+
+                // Paneli açılmak üzere sıraya al
+                isCompletionPending = true;
             }
-            // 2. Durum: Sadece Ana Görevler yeni mi bitti? (Daha önce kutlanmadıysa)
-            else if (AreMainMissionsCompleted() && !hasCelebratedMainMissions)
+
+            // SENARYO 2: Her şey (Yan Görevler dahil) bitti mi?
+            else if (AreAllMissionsCompleted())
             {
-                Debug.Log("ANA GÖREVLER BİTTİ -> Panel Bekliyor");
-                hasCelebratedMainMissions = true; // Bir daha açılmasın
+                Debug.Log("✅ TÜM GÖREVLER (YAN DAHİL) BİTTİ -> Oyun Kilitleniyor...");
 
-                // Ana görev bitince de verileri kaydedelim ve kilidi açalım
-                SaveManager.instance.SetMainMissionDone(currentChapter.chapterID);
-                SaveManager.instance.UnlockNextLevel(currentChapter.chapterID);
-                SaveAllProgress();
+                if (!hasCelebratedMainMissions)
+                {
+                    hasCelebratedMainMissions = true;
+                    PrepareMainMissionCompletion();
+                }
 
-                isCompletionPending = true; // AnswerManager panel kapatınca bunu görecek
+                // Oyunu tamamen bitir (Zarları kilitle)
+                isLevelFinished = true;
+                SetDiceInteractable(false);
+                if (UIManager.instance != null) UIManager.instance.SetRobotInteractable(false);
+
+                // Paneli tekrar aç (Bu sefer "Devam Et" butonu çıkmayacak)
+                isCompletionPending = true;
             }
         }
     }
 
-    // --- YARDIMCI KONTROLLER ---
+    // --- ANA GÖREV BİTİNCE ÇALIŞACAK FONKSİYON (YENİ) ---
+    void PrepareMainMissionCompletion()
+    {
+        Debug.Log("📢 BÖLÜM KAZANILDI! Veriler Kaydediliyor...");
 
-    // Tüm görevler (Ana + Yan) bitti mi?
+        // 1. Temel İlerlemeler
+        SaveManager.instance.SetMainMissionDone(currentChapter.chapterID);
+        SaveManager.instance.UnlockNextLevel(currentChapter.chapterID);
+
+        // 2. SKORU KAYDET (En önemli kısım burası!)
+        SaveManager.instance.SubmitLevelScore(currentChapter.chapterID, currentScore);
+
+        // 3. BİLET TRANSFERİ (Joker -> Cüzdan)
+        if (JokerManager.instance != null &&
+            JokerManager.instance.jokerInventory.ContainsKey(JokerType.WheelTicket))
+        {
+            int ticketCount = JokerManager.instance.jokerInventory[JokerType.WheelTicket];
+
+            if (ticketCount > 0)
+            {
+                SaveManager.instance.AddTicketsToWallet(ticketCount);
+                if (RobotAssistant.instance != null)
+                    RobotAssistant.instance.Say($"Tebrikler! {ticketCount} adet Şans Bileti cüzdanına eklendi!", 4f);
+
+                // Envanterden sil
+                JokerManager.instance.jokerInventory[JokerType.WheelTicket] = 0;
+            }
+        }
+
+        SaveAllProgress();
+    }
+
+    // --- YARDIMCI KONTROLLER ---
     public bool AreAllMissionsCompleted()
     {
         foreach (MissionData mission in activeMissions)
@@ -246,7 +285,6 @@ public class LevelManager : MonoBehaviour
         return true;
     }
 
-    // Sadece Ana Görevler bitti mi?
     public bool AreMainMissionsCompleted()
     {
         foreach (MissionData mission in activeMissions)
@@ -257,34 +295,15 @@ public class LevelManager : MonoBehaviour
         return true;
     }
 
-    // --- BÖLÜM BİTİŞ VERİLERİNİ HAZIRLA ---
-    void PrepareLevelCompletionData()
-    {
-        SaveManager.instance.SetMainMissionDone(currentChapter.chapterID);
-        SaveManager.instance.UnlockNextLevel(currentChapter.chapterID);
-        SaveManager.instance.SubmitLevelScore(currentChapter.chapterID, currentScore);
-        SaveAllProgress();
-
-        // Eğer HER ŞEY bittiyse (Yan görev kalmadıysa) oyunu bitiriyoruz
-        if (AreAllMissionsCompleted())
-        {
-            isLevelFinished = true; // Artık puan düşmez, zar atılmaz
-            SetDiceInteractable(false);
-            if (UIManager.instance != null) UIManager.instance.SetRobotInteractable(false);
-        }
-    }
-
-    // --- BÖLÜM SONU PANELİNİ AÇ (AnswerManager Çağırır) ---
+    // --- BÖLÜM SONU PANELİNİ AÇ ---
     public void OpenLevelCompletePanelNow()
     {
-        // Eğer açılmayı bekleyen bir durum yoksa açma
         if (!isCompletionPending) return;
 
         if (levelCompletePanel != null)
         {
             levelCompletePanel.SetActive(true);
 
-            // Sonraki bölüm butonu her zaman görünür (Eğer varsa)
             if (nextLevelButton != null)
                 nextLevelButton.SetActive(currentChapter.nextChapter != null);
 
@@ -293,23 +312,18 @@ public class LevelManager : MonoBehaviour
 
             if (keepPlayingButton != null)
             {
-                // Eğer her şey bittiyse -> Devam butonu YOK
-                // Eğer yan görev kaldıysa -> Devam butonu VAR
                 keepPlayingButton.SetActive(!herSeyBittiMi);
             }
         }
 
-        isCompletionPending = false; // Bekleme bitti
+        isCompletionPending = false;
     }
 
     // --- BUTON FONKSİYONLARI ---
-
-    // "Devam Et" butonuna basınca çalışır
     public void OnClick_KeepPlaying()
     {
         levelCompletePanel.SetActive(false);
 
-        // Oyunu "bitmiş" modundan çıkar, devam etsin
         isLevelFinished = false;
         SetDiceInteractable(true);
         if (UIManager.instance != null) UIManager.instance.SetRobotInteractable(true);
@@ -330,7 +344,7 @@ public class LevelManager : MonoBehaviour
     public void ReturnToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneName); }
     public void RetryLevel() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
 
-    // --- CEZA & DİĞER FONKSİYONLAR ---
+    // --- CEZA & JOKER FONKSİYONLARI ---
     void LevelFailed()
     {
         isLevelFinished = true;
@@ -344,7 +358,6 @@ public class LevelManager : MonoBehaviour
         isPrisonJokerActive = false;
         SetDiceInteractable(false);
 
-        // Joker var mı kontrol et
         bool hasPrisonJoker = false;
         if (JokerManager.instance != null &&
             JokerManager.instance.jokerInventory.ContainsKey(JokerType.PrisonBreak) &&
@@ -353,47 +366,30 @@ public class LevelManager : MonoBehaviour
             hasPrisonJoker = true;
         }
 
-        // INFO PANELİ AÇ
         ShowNotification(
             "CEZA ALANI!",
             "Buradan çıkmak için 3 soruyu doğru bilmelisin.\n\nYa da tünel kazıp kaçabilirsin!",
-            // A) Normal Devam Butonu (Joker kullanmazsa)
-            () =>
-            {
-                QuestionManager.instance.AskRandomNormalQuestion();
-            },
-            // B) Joker Butonu (Varsa çalışır)
+            () => { QuestionManager.instance.AskRandomNormalQuestion(); },
             hasPrisonJoker ? () =>
             {
-                // Joker butonuna basınca ONAY PANELI açılır
                 if (JokerConfirmationPanel.instance != null)
                 {
                     JokerConfirmationPanel.instance.ShowPanel(
                         "FİRAR TÜNELİ",
                         "Riskli ama hızlı! Zor bir soru sorulacak.\nBilirsen ANINDA çıkarsın.\nDenemek istiyor musun?",
-                        () => // EVET dedi
+                        () => // EVET
                         {
-                            // Info Paneli de kapat
                             notificationPanel.SetActive(false);
-
-                            // Jokeri Harca
                             JokerManager.instance.jokerInventory[JokerType.PrisonBreak]--;
                             JokerManager.instance.RefreshInventoryUI();
-
-                            // Modu Aç ve Zor Soru Sor
                             isPrisonJokerActive = true;
                             QuestionManager.instance.SoruOlusturVeSor(TileType.Hard);
                         },
-                        () => // HAYIR dedi
-                        {
-                            // Hiçbir şey yapma, sadece onay paneli kapanır.
-                            // Oyuncu Info Panel'e geri döner.
-                        }
+                        () => { } // HAYIR
                     );
                 }
             }
-        : null // Joker yoksa null gider
-        );
+        : null);
     }
 
     public void CheckPenaltyProgress(bool isCorrect)
@@ -423,7 +419,6 @@ public class LevelManager : MonoBehaviour
         notificationTitle.text = title;
         notificationDesc.text = desc;
 
-        // 1. Normal Buton (Devam)
         notificationButton.onClick.RemoveAllListeners();
         notificationButton.onClick.AddListener(() =>
         {
@@ -431,24 +426,16 @@ public class LevelManager : MonoBehaviour
             onConfirm.Invoke();
         });
 
-        // 2. Joker Butonu Ayarı
         if (notificationJokerButton != null)
         {
             if (onJokerAction != null)
             {
-                // Joker var, butonu göster ve işlev ata
                 notificationJokerButton.gameObject.SetActive(true);
                 notificationJokerButton.onClick.RemoveAllListeners();
-                notificationJokerButton.onClick.AddListener(() =>
-                {
-                    // Info paneli kapatmıyoruz! Onay paneli üstüne açılacak.
-                    // Eğer onay panelinden "Evet" gelirse o zaman kapatacağız (yukarıdaki kodda yazdık).
-                    onJokerAction.Invoke();
-                });
+                notificationJokerButton.onClick.AddListener(() => { onJokerAction.Invoke(); });
             }
             else
             {
-                // Joker yok veya bu panel başka bir şey için açıldı -> Butonu gizle
                 notificationJokerButton.gameObject.SetActive(false);
             }
         }
@@ -482,13 +469,10 @@ public class LevelManager : MonoBehaviour
     public void IncreaseScore(int amount)
     {
         currentScore += amount;
-
-        // Asla başlangıç puanını (Genelde 100) geçmesin
         if (currentScore > currentChapter.startingScore)
             currentScore = currentChapter.startingScore;
 
         UpdateScoreUI();
-
         Debug.Log("Can Artırıldı! Yeni Can: " + currentScore);
     }
 
@@ -498,6 +482,6 @@ public class LevelManager : MonoBehaviour
         {
             return currentChapter.penaltyPerWrongAnswer;
         }
-        return 10; // Varsayılan güvenlik değeri
+        return 10;
     }
 }

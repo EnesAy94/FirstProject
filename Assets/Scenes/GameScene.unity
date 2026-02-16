@@ -10575,6 +10575,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb58244e622799b4bb254d24a3baf493, type: 2}
   - {fileID: 11400000, guid: 49ca4b054ba358747b5dc0d8c70ebedc, type: 2}
   - {fileID: 11400000, guid: d5a98af4d87fc964a8d2442b76350a39, type: 2}
+  - {fileID: 11400000, guid: 729f8104e39e98844a85394ea8105f0f, type: 2}
   inventoryPanel: {fileID: 1219034779}
   currentStreakHUDText: {fileID: 0}
   inventoryContainer: {fileID: 1858110664}
