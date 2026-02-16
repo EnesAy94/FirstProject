@@ -32,6 +32,10 @@ public class JokerActions : MonoBehaviour
                 Debug.Log("İkinci şans aktif edildi.");
                 break;
 
+            case JokerType.ScoreBoost:
+                BoostScoreAction();
+                break;
+
                 // YENİ JOKERLER BURAYA GELECEK:
                 // case JokerType.TimeFreeze:
                 //     FreezeTimeAction();
@@ -70,6 +74,31 @@ public class JokerActions : MonoBehaviour
         {
             // Güncel seri değerini UIManager'a gönder, o da barı açsın
             UIManager.instance.UpdateStreak(SaveManager.instance.activeSave.currentStreak);
+        }
+    }
+
+    // --- YENİ: PUAN ARTIRMA (YARIM CAN) ---
+    void BoostScoreAction()
+    {
+        if (LevelManager.instance != null)
+        {
+            // 1. O anki bölümün cezasını öğren (LevelManager'a yeni eklediğimiz fonksiyon)
+            int penalty = LevelManager.instance.GetCurrentPenalty();
+
+            // 2. Yarısını hesapla (Örn: 25 ise 12 olur)
+            int boostAmount = penalty / 2;
+
+            // 0 olmasın, en az 1 can verelim
+            if (boostAmount < 1) boostAmount = 1;
+
+            // 3. Puanı artır (LevelManager'a yeni eklediğimiz fonksiyon)
+            LevelManager.instance.IncreaseScore(boostAmount);
+
+            // 4. Robot Konuşsun
+            if (RobotAssistant.instance != null)
+            {
+                RobotAssistant.instance.Say("Canın tazelendi! (+" + boostAmount + ")", 3f);
+            }
         }
     }
 }

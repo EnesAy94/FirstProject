@@ -9,7 +9,8 @@ public enum JokerType
     ColorMove,
     SecondChance,
     StreakRestore,
-    PrisonBreak
+    PrisonBreak,
+    ScoreBoost
 }
 
 public class JokerManager : MonoBehaviour

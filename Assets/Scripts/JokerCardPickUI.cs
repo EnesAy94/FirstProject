@@ -86,26 +86,52 @@ public class JokerCardPickUI : MonoBehaviour
             cardButton.interactable = true;
             cardButton.onClick.AddListener(() =>
             {
-                // Hafif tıklama efekti
+                // Tıklama efekti
                 transform.DOPunchScale(new Vector3(-0.1f, -0.1f, 0), 0.1f);
 
-                // --- ONAY PANELİ AÇILIYOR ---
+                // --- 1. KONTROL: CAN ZATEN FULL MÜ? ---
+                if (myData.type == JokerType.ScoreBoost)
+                {
+                    // LevelManager'dan mevcut ve başlangıç puanlarını alıyoruz
+                    if (LevelManager.instance != null &&
+                        LevelManager.instance.currentScore >= LevelManager.instance.currentChapter.startingScore)
+                    {
+                        // CAN ZATEN FULL! Uyarı ver ve çık.
+                        LevelManager.instance.ShowNotification(
+                            "CANIN DOLU!",
+                            "Şu an zaten turp gibisin.\nBu jokeri puanın düşünce kullanmalısın.",
+                            () => { } // Tamam deyince kapansın
+                        );
+                        return; // Buradan aşağı inme, joker harcanmasın.
+                    }
+                }
+
+                // --- 2. KONTROL GEÇİLDİ, ONAY PANELİNİ AÇ ---
                 if (JokerConfirmationPanel.instance != null)
                 {
+                    string desc = "Bu jokeri şimdi kullanmak istiyor musun?";
+
+                    // Eğer Puan artırıcıysa, oyuncuya KAÇ PUAN artacağını hesaplayıp söyleyelim
+                    if (myData.type == JokerType.ScoreBoost && LevelManager.instance != null)
+                    {
+                        int penalty = LevelManager.instance.GetCurrentPenalty();
+                        int amount = penalty / 2;
+                        if (amount < 1) amount = 1;
+
+                        desc = $"Bu jokeri kullanarak canını +{amount} puan (Cezanın Yarısı) artırmak istiyor musun?";
+                    }
+
                     JokerConfirmationPanel.instance.ShowPanel(
-                        myData.jokerName.ToUpper(), // Jokerin adını başlık yap
-                        "Bu jokeri şimdi kullanmak istiyor musun?", // Açıklama
+                        myData.jokerName.ToUpper(),
+                        desc,
                         () => // EVET
                         {
-                            // Envanter panelini kapatabiliriz (isteğe bağlı)
-                            // JokerManager.instance.ToggleInventoryPanel(); 
-
-                            // Jokeri Kullan
+                            // Onaylandı, Manager'a söyle kullansın
                             JokerManager.instance.UseJokerFromInventory(myData.type);
                         },
                         () => // HAYIR
                         {
-                            // Hiçbir şey yapma
+                            // Vazgeçti
                         }
                     );
                 }

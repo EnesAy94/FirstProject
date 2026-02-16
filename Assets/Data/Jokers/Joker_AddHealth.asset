@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a78af3be5582554aa0aad6ec45bfc4b, type: 3}
+  m_Name: Joker_AddHealth
+  m_EditorClassIdentifier: Assembly-CSharp::JokerData
+  type: 4
+  jokerName: Can Ekleme
+  icon: {fileID: 21300000, guid: 8abf3fac088b169419121da3623d53dd, type: 3}
+  description: "Kullan\u0131ld\u0131\u011F\u0131nda bir yanl\u0131\u015F cevaptan
+    giden can miktar\u0131 kadar can yeniler."
+  isUsableFromInventory: 1

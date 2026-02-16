@@ -478,4 +478,26 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+
+    public void IncreaseScore(int amount)
+    {
+        currentScore += amount;
+
+        // Asla başlangıç puanını (Genelde 100) geçmesin
+        if (currentScore > currentChapter.startingScore)
+            currentScore = currentChapter.startingScore;
+
+        UpdateScoreUI();
+
+        Debug.Log("Can Artırıldı! Yeni Can: " + currentScore);
+    }
+
+    public int GetCurrentPenalty()
+    {
+        if (currentChapter != null)
+        {
+            return currentChapter.penaltyPerWrongAnswer;
+        }
+        return 10; // Varsayılan güvenlik değeri
+    }
 }
