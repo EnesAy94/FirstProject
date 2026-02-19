@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04943bed99a63af4499141c75dec297a, type: 3}
-  m_Name: SideMission_FlawlessLap
+  m_Name: SideMission_CompleteLevelNoJoker
   m_EditorClassIdentifier: Assembly-CSharp::MissionData
-  description: "1 turu hi\xE7 yanl\u0131\u015F yapmadan tamamla."
+  description: "Bir b\xF6l\xFCm\xFC hi\xE7 joker kullanmadan tamamla."
   isMainMission: 0
-  type: 8
+  type: 10
   targetAmount: 1
   icon: {fileID: 0}
   unlockAchievementKey: 

@@ -15,8 +15,8 @@ MonoBehaviour:
   id: flawless_lap
   title: "Kusursuz Ko\u015Fucu"
   description: "1 turu hi\xE7 yanl\u0131\u015F yapmadan tamamla."
-  requiresMission: 1
-  requiredMissionKey: flawless_lap
+  requiresMission: 0
+  requiredMissionKey: 
   tiers:
   - tierName: Bronze
     targetCount: 1

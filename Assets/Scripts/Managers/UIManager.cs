@@ -101,21 +101,27 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Menüyü tamamen kapatan ve ipucuna döndüren fonksiyon
+    // UIManager.cs içindeki CloseRobotMenuAndRestore fonksiyonunu BUL ve GÜNCELLE:
+
     public void CloseRobotMenuAndRestore()
     {
         isMenuOpen = false;
 
-        // Paneller açıksa onları da kapatmayı garantiye alalım
+        // Panelleri kapat
         if (inventoryPanel) inventoryPanel.SetActive(false);
         if (missionsPanel) missionsPanel.SetActive(false);
 
         UpdateMenuVisuals();
 
-        // Robot eski ipucuna dönsün
+        // --- KRİTİK DEĞİŞİKLİK BURADA ---
         if (RobotAssistant.instance != null)
         {
-            RobotAssistant.instance.RestoreLastHint();
+            // 1. Önce robotu tamamen sustur (Ekranda "Bu joker kullanılmaz" vs. kalmasın)
+            RobotAssistant.instance.ForceStopSpeaking();
+
+            // 2. (İsteğe Bağlı) Eğer eski ipucunun geri gelmesini istersen bunu açabilirsin.
+            // Ama "Yazı da kapansın" dediğin için şimdilik kapalı tutuyorum.
+            // RobotAssistant.instance.RestoreLastHint(); 
         }
     }
 
@@ -133,7 +139,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // --- 3. PANELLERİ AÇMA/KAPAMA ---
+    // UIManager.cs içindeki ToggleInventory fonksiyonu:
 
     public void ToggleInventory()
     {
@@ -141,19 +147,28 @@ public class UIManager : MonoBehaviour
 
         bool willBeActive = !inventoryPanel.activeSelf;
 
-        // Diğer paneli kapat
         if (missionsPanel) missionsPanel.SetActive(false);
         inventoryPanel.SetActive(willBeActive);
 
         if (willBeActive)
         {
-            // Panel açıldıysa Robot sussun
+            // Panel açıldı, Robot sussun
             if (RobotAssistant.instance != null) RobotAssistant.instance.CloseBubble();
         }
-        else if (isMenuOpen)
+        else
         {
-            // Panel kapandı ama menü hala arkada açıksa -> "Hangi panel?" diye tekrar sorsun
-            if (RobotAssistant.instance != null) RobotAssistant.instance.AskForMenu();
+            // --- DEĞİŞİKLİK ---
+            // Panel KAPANDI. Eğer menü de kapalıysa Robotu ANINDA sustur.
+            // (Eskiden burada soru sormaya çalışıyordu, o yüzden takılıyordu)
+            if (!isMenuOpen && RobotAssistant.instance != null)
+            {
+                RobotAssistant.instance.ForceStopSpeaking();
+            }
+            // Eğer menü arkada hala açıksa (ki overlay sistemiyle zor ama) menü sorusunu sorabilir.
+            else if (isMenuOpen && RobotAssistant.instance != null)
+            {
+                RobotAssistant.instance.AskForMenu();
+            }
         }
     }
 

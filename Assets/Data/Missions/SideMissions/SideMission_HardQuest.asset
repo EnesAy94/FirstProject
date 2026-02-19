@@ -17,5 +17,5 @@ MonoBehaviour:
   type: 7
   targetAmount: 1
   icon: {fileID: 0}
-  unlockAchievementKey: hard_master
+  unlockAchievementKey: 
   currentProgress: 0

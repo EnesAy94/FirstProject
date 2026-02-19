@@ -255,4 +255,24 @@ public class RobotAssistant : MonoBehaviour
     {
         Say($"<color=red>DİKKAT:</color>\n{message}", 3f, true, false);
     }
+
+    public void ForceStopSpeaking()
+    {
+        // 1. Gelecek mesajları çöpe at
+        messageQueue.Clear();
+
+        // 2. Şu an çalışan tüm animasyonları (yazı, bekleme, silinme) ÖLDÜR
+        if (currentTypewriter != null) currentTypewriter.Kill();
+        if (currentFade != null) currentFade.Kill();
+        if (currentDelayedCall != null) currentDelayedCall.Kill();
+
+        // 3. Durumları sıfırla
+        isSpeaking = false;
+        isTyping = false;
+        isTextCompleted = false;
+
+        // 4. Baloncuğu animasyonsuz, direkt yok et
+        if (bubbleCanvasGroup != null) bubbleCanvasGroup.alpha = 0;
+        if (speechBubbleObj != null) speechBubbleObj.SetActive(false);
+    }
 }

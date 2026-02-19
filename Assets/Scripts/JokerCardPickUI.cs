@@ -105,7 +105,11 @@ public class JokerCardPickUI : MonoBehaviour
                 if (JokerConfirmationPanel.instance != null)
                 {
                     string desc = "Bu jokeri şimdi kullanmak istiyor musun?";
-                    if (myData.type == JokerType.ScoreBoost && LevelManager.instance != null)
+                    if (myData.type == JokerType.ColorMove)
+                    {
+                        desc = "İstediğin renkteki en yakın kutuya ışınlanmak ister misin?";
+                    }
+                    else if (myData.type == JokerType.ScoreBoost && LevelManager.instance != null)
                     {
                         int penalty = LevelManager.instance.GetCurrentPenalty();
                         int amount = penalty / 2;

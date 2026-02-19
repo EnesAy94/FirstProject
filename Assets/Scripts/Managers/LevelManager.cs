@@ -23,6 +23,10 @@ public class LevelManager : MonoBehaviour
     [Header("Tur Takibi")]
     public int wrongAnswersInCurrentLap = 0;
 
+    [Header("Joker Takibi")]
+    public bool isJokerUsedInCurrentLap = false; // Bu turda kullanıldı mı?
+    public bool isJokerUsedInLevel = false;
+
     private bool hasCelebratedMainMissions = false; // Ana görev kutlaması yapıldı mı?
 
     [Header("Harita ve UI")]
@@ -83,6 +87,8 @@ public class LevelManager : MonoBehaviour
         hasCelebratedMainMissions = false;
         isCompletionPending = false;
         wrongAnswersInCurrentLap = 0;
+        isJokerUsedInCurrentLap = false;
+        isJokerUsedInLevel = false;
 
         currentScore = currentChapter.startingScore;
 
@@ -279,6 +285,21 @@ public class LevelManager : MonoBehaviour
             }
         }
 
+        if (!isJokerUsedInLevel)
+        {
+            Debug.Log("🏆 BÖLÜM JOKERSİZ BİTTİ!");
+
+            // a) Görevi İlerlet
+            CheckLevelEndMissionProgress(MissionType.CompleteLevelNoJoker);
+
+            // b) Başarımı Ver (Sadece bölüm bitince verilsin demiştin)
+            // AchievementData ID'si: "no_joker_master" olsun
+            if (AchievementManager.instance != null)
+            {
+                AchievementManager.instance.AddProgress("no_joker_master", 1);
+            }
+        }
+
         SaveAllProgress();
     }
 
@@ -387,6 +408,7 @@ public class LevelManager : MonoBehaviour
                             notificationPanel.SetActive(false);
                             JokerManager.instance.jokerInventory[JokerType.PrisonBreak]--;
                             JokerManager.instance.RefreshInventoryUI();
+                            LevelManager.instance.RegisterJokerUsage();
                             isPrisonJokerActive = true;
                             QuestionManager.instance.SoruOlusturVeSor(TileType.Hard);
                         },
@@ -498,33 +520,25 @@ public class LevelManager : MonoBehaviour
 
     public void OnLapCompleted()
     {
-        Debug.Log("🏁 TUR TAMAMLANDI! Kontrol ediliyor...");
+        Debug.Log("🏁 TUR TAMAMLANDI!");
 
+        // A) MEVCUT: Hatasız Tur Kontrolü
         if (wrongAnswersInCurrentLap == 0)
         {
-            Debug.Log("✨ KUSURSUZ TUR! Hiç yanlış yapılmadı.");
-
-            // A) BAŞARIM KAZANMA (Varsa)
-            // Eğer AchievementData'da "flawless_lap" diye bir ID açarsan burası çalışır
-            if (AchievementManager.instance != null)
-            {
-                AchievementManager.instance.AddProgress("flawless_lap", 1);
-            }
-
-            // B) GÖREV İLERLEMESİ
-            CheckLapMissionProgress();
-
-            // C) KÜÇÜK BİR ÖDÜL (Opsiyonel - Robot konuşur)
-            if (RobotAssistant.instance != null)
-                RobotAssistant.instance.Say("Harika! Bu turu hiç hata yapmadan bitirdin!", 3f);
+            CheckLapMissionProgress(MissionType.CompleteLapNoError);
+            if (AchievementManager.instance != null) AchievementManager.instance.AddProgress("flawless_lap", 1);
         }
-        else
+
+        // B) YENİ: Jokersiz Tur Kontrolü
+        if (!isJokerUsedInCurrentLap)
         {
-            Debug.Log($"Tur bitti ama {wrongAnswersInCurrentLap} hata yapıldı.");
+            Debug.Log("✨ JOKERSİZ TUR! Görev kontrol ediliyor...");
+            CheckLapMissionProgress(MissionType.CompleteLapNoJoker);
         }
 
-        // Bir sonraki tur için sayacı sıfırla
+        // Sıfırlamalar
         wrongAnswersInCurrentLap = 0;
+        isJokerUsedInCurrentLap = false; // Yeni tur için temizle (Bölüm değişkenine dokunma!)
     }
 
     void CheckLapMissionProgress()
@@ -556,5 +570,80 @@ public class LevelManager : MonoBehaviour
             SaveAllProgress();
             // Buraya CheckMissionProgress'teki "Tüm görevler bitti mi?" kontrollerini de ekleyebilirsin
         }
+    }
+
+    public void RegisterJokerUsage()
+    {
+        isJokerUsedInCurrentLap = true;
+        isJokerUsedInLevel = true;
+        Debug.Log("⚠️ Joker kullanıldı! 'Jokersiz' görevleri iptal.");
+    }
+
+    // LevelManager.cs içindeki bu fonksiyonu BUL ve DEĞİŞTİR:
+
+    void CheckLapMissionProgress(MissionType typeToCheck)
+    {
+        bool gorevGuncellendi = false;
+
+        foreach (MissionData mission in activeMissions)
+        {
+            // 1. Tip ve İlerleme Kontrolü
+            if (mission.type == typeToCheck && mission.currentProgress < mission.targetAmount)
+            {
+                mission.currentProgress++;
+                gorevGuncellendi = true;
+
+                // 2. TAMAMLANDI MI? (Robotun Konuşması Gereken Yer Burası!)
+                if (mission.currentProgress >= mission.targetAmount)
+                {
+                    Debug.Log("✅ Görev Bitti: " + mission.description);
+
+                    // --- ROBOT KONUŞMA KODU EKLENDİ ---
+                    if (RobotAssistant.instance != null)
+                    {
+                        string baslik = mission.isMainMission ? "ANA GÖREV" : "EK GÖREV";
+
+                        // Normal Say yerine 'Celebrate' kullanıyoruz ki tebrik etsin (yeşil yazı)
+                        RobotAssistant.instance.Celebrate($"{baslik} TAMAMLANDI:\n{mission.description}");
+                    }
+
+                    // --- BAŞARIM KİLİDİ VARSA AÇ ---
+                    if (!string.IsNullOrEmpty(mission.unlockAchievementKey))
+                    {
+                        SaveManager.instance.CompleteMission(mission.unlockAchievementKey);
+                        if (AchievementManager.instance != null)
+                        {
+                            AchievementManager.instance.AddProgress(mission.unlockAchievementKey, 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (gorevGuncellendi)
+        {
+            SaveAllProgress();
+            if (OnMissionsUpdated != null) OnMissionsUpdated.Invoke();
+
+            // 3. EĞER BU SON GÖREVSE OYUNU BİTİRME KONTROLÜ
+            // (Normal sorularda olan o "Bölüm Bitti" panelini açma kodu)
+            if (AreAllMissionsCompleted())
+            {
+                // Panel açılma işlemleri (CheckMissionProgress'teki mantıkla aynı)
+                if (!isCompletionPending)
+                {
+                    isLevelFinished = true;
+                    isCompletionPending = true;
+                    OpenLevelCompletePanelNow();
+                }
+            }
+        }
+    }
+
+    void CheckLevelEndMissionProgress(MissionType typeToCheck)
+    {
+        // CheckLapMissionProgress ile aynı mantık, sadece ismi farklı karışmasın diye ayırdım.
+        // İstersen tek fonksiyonda birleştirebilirsin.
+        CheckLapMissionProgress(typeToCheck);
     }
 }

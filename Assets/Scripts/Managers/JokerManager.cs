@@ -122,12 +122,6 @@ public class JokerManager : MonoBehaviour
 
         // C. Seçim Panelini Kapat
         jokerSelectionPanel.SetActive(false);
-
-        // D. Eğer Renk Jokeri ise hemen uygula
-        if (currentSelectedJoker.type == JokerType.ColorMove)
-        {
-            UseColorJoker();
-        }
     }
 
     // --- RENK JOKERİ KULLANIMI ---
@@ -137,6 +131,8 @@ public class JokerManager : MonoBehaviour
         {
             jokerInventory[JokerType.ColorMove]--;
             RefreshInventoryUI();
+
+            if (LevelManager.instance != null) LevelManager.instance.RegisterJokerUsage();
 
             // İŞLEMİ 'ACTIONS' SCRIPTİNE HAVALE ET
             if (JokerActions.instance != null)
@@ -153,6 +149,8 @@ public class JokerManager : MonoBehaviour
         {
             jokerInventory[type]--;
             RefreshInventoryUI();
+
+            if (LevelManager.instance != null) LevelManager.instance.RegisterJokerUsage();
 
             // İŞLEMİ 'ACTIONS' SCRIPTİNE HAVALE ET
             if (JokerActions.instance != null)
@@ -175,8 +173,7 @@ public class JokerManager : MonoBehaviour
             jokerInventory[JokerType.SecondChance]--;
             RefreshInventoryUI();
 
-            // Eğer ikinci şansın özel bir efekti varsa Actions'a ekleyip buradan çağırabilirsin.
-            // Şimdilik sadece sayı düşüyor.
+            if (LevelManager.instance != null) LevelManager.instance.RegisterJokerUsage();
         }
     }
 

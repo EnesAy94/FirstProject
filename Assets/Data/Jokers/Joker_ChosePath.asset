@@ -17,4 +17,4 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: "S\u0131radaki mekan\u0131n\u0131 se\xE7 ve oraya h\u0131zl\u0131ca
     git."
-  isUsableFromInventory: 0
+  isUsableFromInventory: 1
