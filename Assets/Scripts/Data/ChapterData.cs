@@ -31,6 +31,7 @@ public class ChapterData : ScriptableObject
     [Header("Bölüm Kimliği")]
     public int chapterID;       // 1, 2, 3...
     public string chapterName;  // Örn: "Bölüm 1: İlk İpucu"
+    public Sprite chapterImage; // YENİ: Bu bölüme özel resim
     public ChapterData nextChapter;
     [TextArea]
     public string introText;    // Bölüm başlarken çıkacak hikaye yazısı

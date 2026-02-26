@@ -20,6 +20,7 @@ public class MainMenuManager : MonoBehaviour
     public Transform storyListContainer;
     public Transform chapterListContainer;
     public GameObject menuButtonPrefab;
+    public Sprite lockedLevelSprite; // YENİ: Kilitli bölümlerin ikon resmi
 
     [Header("Para Birimi UI")]
     public TextMeshProUGUI ticketCountText;
@@ -124,9 +125,22 @@ public class MainMenuManager : MonoBehaviour
                 buttonScript.SetupStory(
                     story.storyTitle,
                     averageScore,
+                    story.storyImage, // Kapak Resmi
                     () => OpenChapterSelection(story)
                 );
+
+                if (story.isComingSoon)
+                {
+                    buttonScript.SetComingSoon();
+                }
             }
+        }
+
+        // HİKAYELER YÜKLENDİ - SWIPE AYARLARINI HESAPLA!
+        UI.StorySwipeController storySwipe = storySelectPanel.GetComponentInChildren<UI.StorySwipeController>(true);
+        if (storySwipe != null)
+        {
+            storySwipe.Initialize();
         }
     }
 
@@ -189,9 +203,16 @@ public class MainMenuManager : MonoBehaviour
                 {
                     // KİLİTLİ BÖLÜM
                     buttonScript.Setup(chapter, 0, null);
-                    buttonScript.LockButton();
+                    buttonScript.LockButton(lockedLevelSprite);
                 }
             }
+        }
+
+        // TIKLANABİLİR BÖLÜMLER YÜKLENDİ - SWIPE AYARLARINI HESAPLA!
+        UI.StorySwipeController chapterSwipe = chapterSelectPanel.GetComponentInChildren<UI.StorySwipeController>(true);
+        if (chapterSwipe != null)
+        {
+            chapterSwipe.Initialize();
         }
     }
 
@@ -240,7 +261,15 @@ public class MainMenuManager : MonoBehaviour
 
     void ClearContainer(Transform container)
     {
-        foreach (Transform child in container) Destroy(child.gameObject);
+        // Unity'de foreach içindeyken SetParent veya Destroy(Immediate) yaparsan
+        // liste o an çöker ve bazı elemanlar atlanır. 
+        // Kesin çözüm: Listeyi tersten dönüp temizlemektir.
+        for (int i = container.childCount - 1; i >= 0; i--)
+        {
+            Transform child = container.GetChild(i);
+            child.SetParent(null); 
+            Destroy(child.gameObject);
+        }
     }
     [ContextMenu("Tüm Kayıtları Sil")]
     public void DeleteAllSaveData()
