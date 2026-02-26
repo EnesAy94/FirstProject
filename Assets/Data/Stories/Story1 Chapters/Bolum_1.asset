@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterID: 1
   chapterName: Buzul Operasyonu
-  chapterImage: {fileID: 0}
+  chapterImage: {fileID: 21300000, guid: a7ba3e03ecdb35c4bbbe2c613669de4c, type: 3}
   nextChapter: {fileID: 11400000, guid: 4bea84389a324fc4d9ed059b8ba55af3, type: 2}
   introText: "H\u0131rs\u0131z\u0131 bul"
   questionSet: {fileID: 11400000, guid: 3c4ff23947de8c342b3268cfa175660d, type: 2}

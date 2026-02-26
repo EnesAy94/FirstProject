@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Bolum_5
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterID: 5
-  chapterName: "H\u0131rs\u0131z 5"
+  chapterName: "Antik Tap\u0131nak"
+  chapterImage: {fileID: 21300000, guid: ddf278473fdf6554c9c4edd641443bb6, type: 3}
   nextChapter: {fileID: 11400000, guid: 416006e8213368749b98ec9d07ddb5c9, type: 2}
   introText: 
   questionSet: {fileID: 11400000, guid: bafcfa8491a428a4d99d06db58f5ba8b, type: 2}

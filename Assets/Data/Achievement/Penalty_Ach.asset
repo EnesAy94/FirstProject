@@ -20,10 +20,10 @@ MonoBehaviour:
   tiers:
   - tierName: Bronze
     targetCount: 5
-    badgeIcon: {fileID: 21300000, guid: c04b12c3d0b61c743bebefa02b1fe089, type: 3}
+    badgeIcon: {fileID: 21300000, guid: 1c9a940677c2e1244860d17dde106f43, type: 3}
   - tierName: Silver
     targetCount: 50
-    badgeIcon: {fileID: 21300000, guid: 24074a6191055774d92ba26f895533ba, type: 3}
+    badgeIcon: {fileID: 21300000, guid: 8f9574f4c54ff6d469f7964938f57ccc, type: 3}
   - tierName: Gold
     targetCount: 100
-    badgeIcon: {fileID: 21300000, guid: e90211ab13325eb4b8a89d46ecaf4d7e, type: 3}
+    badgeIcon: {fileID: 21300000, guid: ff6fd139de9d0394bb0d84e952f1fb89, type: 3}

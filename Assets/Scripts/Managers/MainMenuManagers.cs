@@ -27,6 +27,7 @@ public class MainMenuManager : MonoBehaviour
 
     public GameObject replayConfirmPanel;
     private ChapterData selectedChapterToReplay;
+    private GameObject currentActivePanel;
 
     void Start()
     {
@@ -36,14 +37,69 @@ public class MainMenuManager : MonoBehaviour
     }
 
     // --- PANEL YÖNETİMİ ---
-    void OpenPanel(GameObject panelToOpen)
-    {
-        rootPanel.SetActive(false);
-        storySelectPanel.SetActive(false);
-        chapterSelectPanel.SetActive(false);
-        if (replayConfirmPanel != null) replayConfirmPanel.SetActive(false);
+    public enum TransitionType { Normal, Skip, Glitch }
 
-        panelToOpen.SetActive(true);
+    void OpenPanel(GameObject panelToOpen, TransitionType transition = TransitionType.Normal)
+    {
+        if (currentActivePanel == panelToOpen) return;
+
+        if (currentActivePanel != null)
+        {
+            var animator = currentActivePanel.GetComponent<PanelCRTAnimator>();
+            
+            if (transition == TransitionType.Glitch)
+            {
+                // Glitch efekti: Eski panel kapatılmaz, kapanış animasyonu da girmez. 
+                // Yeni panele "Glitch" efekti ile geçildiğini varsayıyoruz. 
+                // Aslında Story -> Chapter durumunda ikisi de aynı yerde durduğu için
+                // eskiyi anında kapatıp yeniyi Glitch ile açmak en iyisi.
+                if (animator != null) animator.KillTweens();
+                currentActivePanel.SetActive(false);
+            }
+            else if (animator != null && transition != TransitionType.Skip)
+            {
+                // Normal kapanış
+                animator.ClosePanel();
+            }
+            else
+            {
+                // Skip veya Animator yok
+                if (animator != null) animator.KillTweens(); 
+                currentActivePanel.SetActive(false);
+            }
+        }
+        else
+        {
+            // İlk açılış
+            if (rootPanel != null) rootPanel.SetActive(false);
+            if (storySelectPanel != null) storySelectPanel.SetActive(false);
+            if (chapterSelectPanel != null) chapterSelectPanel.SetActive(false);
+            if (profilePanel != null) profilePanel.SetActive(false);
+            if (replayConfirmPanel != null) replayConfirmPanel.SetActive(false);
+        }
+
+        currentActivePanel = panelToOpen;
+        if (panelToOpen != null)
+        {
+            panelToOpen.SetActive(true);
+            var newAnimator = panelToOpen.GetComponent<PanelCRTAnimator>();
+            
+            if (newAnimator != null)
+            {
+                if (transition == TransitionType.Skip)
+                {
+                    newAnimator.SetOpenedInstantly();
+                }
+                else if (transition == TransitionType.Glitch)
+                {
+                    newAnimator.PlayGlitchTransition();
+                }
+                else
+                {
+                    newAnimator.PlayOpenAnimation(); // Normal Açılış
+                }
+            }
+        }
     }
 
     public void OnClick_StoryMode()
@@ -70,19 +126,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_Profile()
     {
-        if (rootPanel != null) rootPanel.SetActive(false);
-
-        if (profilePanel != null)
-        {
-            profilePanel.SetActive(true);
-            // ProfileUI OnEnable ile verileri otomatik çekecek
-        }
+        if (profilePanel != null) OpenPanel(profilePanel);
     }
 
     public void OnClick_CloseProfile()
     {
-        if (profilePanel != null) profilePanel.SetActive(false);
-        if (rootPanel != null) rootPanel.SetActive(true);
+        if (rootPanel != null) OpenPanel(rootPanel);
     }
 
     public void OnClick_Settings()
@@ -148,7 +197,8 @@ public class MainMenuManager : MonoBehaviour
     // --- 3. ADIM: BÖLÜM SEÇİMİ (SaveManager ile Tam Uyumlu) ---
     void OpenChapterSelection(StoryData selectedStory)
     {
-        OpenPanel(chapterSelectPanel);
+        // Hikayeden bölüme geçerken Glitch animasyonu kullan
+        OpenPanel(chapterSelectPanel, TransitionType.Glitch);
         ClearContainer(chapterListContainer);
 
         // YENİ KOD: SaveManager'a soruyoruz "En son hangi seviye açık?"
@@ -256,7 +306,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_BackToStories()
     {
-        OpenStorySelection();
+        // Chapter'dan Story'e geri dönerken de Glitch efekti kullan
+        OpenPanel(storySelectPanel, TransitionType.Glitch);
     }
 
     void ClearContainer(Transform container)

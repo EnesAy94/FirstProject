@@ -6,9 +6,13 @@ public class AchievementItemUI : MonoBehaviour
 {
     public Image iconImage;
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI descText;
-    public GameObject lockOverlay; // Siyah perde (Varsa)
+    public TextMeshProUGUI statusText;  // YENİ: "DURUM: KİLİTLİ" yazacak alan
+    public TextMeshProUGUI progressText; // YENİ: "İLERLEME: 3/9" yazacak alan
     public Image backgroundImage;  // Arka plan rengi (Varsa)
+    public Slider progressSlider; // YENİ: Resimdeki gibi altta dolan yeşil bar için Slider bileşeni
+    
+    [Header("Görseller")]
+    public Sprite lockedBadgeIcon; // YENİ: Başarım kilitliyken görünecek kilit ikonu
 
     public void Setup(AchievementData data, int currentCount, int tierIndex)
     {
@@ -17,17 +21,32 @@ public class AchievementItemUI : MonoBehaviour
         // --- KİLİTLİ DURUM ---
         if (tierIndex == -1)
         {
-            // İkonu gri yap
-            iconImage.sprite = data.tiers[0].badgeIcon; // İlk seviye ikonunu göster ama gri olsun
-            iconImage.color = Color.gray;
+            // İkonu kilit ikonu yap
+            if (lockedBadgeIcon != null)
+            {
+                iconImage.sprite = lockedBadgeIcon;
+                iconImage.color = Color.gray; // Veya orijinal renginde kalması için Color.white yapabilirsiniz
+            }
 
-            // Yazılar
+            // Yazılar (Durum ve İlerleme)
             int nextTarget = data.tiers[0].targetCount;
-            descText.text = $"KİLİTLİ\nİlerleme: {currentCount}/{nextTarget}";
-            descText.color = Color.gray;
+            
+            if (statusText != null) 
+            {
+                statusText.text = "DURUM: <color=#FF5555>KİLİTLİ</color>"; // Kırmızımsı KİLİTLİ yazısı
+            }
 
-            // Kilit perdesi
-            if (lockOverlay != null) lockOverlay.SetActive(true);
+            if (progressText != null)
+            {
+                progressText.text = $"İLERLEME: {currentCount}/{nextTarget}";
+            }
+
+            // Eğer slider varsa oranını ayarla
+            if (progressSlider != null)
+            {
+                progressSlider.maxValue = 1f; // 0 ile 1 arasına sabitledik (Matematiksel oran yapıyoruz)
+                progressSlider.value = (float)currentCount / nextTarget;
+            }
 
             // Arka planı biraz karart (Opsiyonel)
             if (backgroundImage != null) backgroundImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
@@ -44,16 +63,29 @@ public class AchievementItemUI : MonoBehaviour
             // Yazılar
             if (tierIndex < data.tiers.Count - 1)
             {
+                // Bir sonraki aşama var, o yüzden "AÇIK" diyeceğiz ama bitmemiş.
                 int nextTarget = data.tiers[tierIndex + 1].targetCount;
-                descText.text = $"{currentTier.tierName}\nSonraki: {currentCount}/{nextTarget}";
+                if (statusText != null) statusText.text = "DURUM: <color=#55FF55>DEVAM EDİYOR</color>";
+                if (progressText != null) progressText.text = $"İLERLEME: {currentCount}/{nextTarget}";
+                
+                if (progressSlider != null)
+                {
+                    progressSlider.maxValue = 1f;
+                    progressSlider.value = (float)currentCount / nextTarget;
+                }
             }
             else
             {
-                descText.text = $"{currentTier.tierName} (TAMAMLANDI!)";
+                // Tamamen bitmiş
+                if (statusText != null) statusText.text = "DURUM: <color=#55FF55>TAMAMLANDI</color>";
+                if (progressText != null) progressText.text = $"İLERLEME: MAKSİMUM";
+                
+                if (progressSlider != null)
+                {
+                    progressSlider.maxValue = 1f;
+                    progressSlider.value = 1f;
+                }
             }
-            descText.color = Color.white; // Veya sarı/yeşil
-
-            if (lockOverlay != null) lockOverlay.SetActive(false);
 
             // Arka planı canlı yap (Opsiyonel)
             if (backgroundImage != null) backgroundImage.color = new Color(0.1f, 0.3f, 0.1f, 1f); // Hafif yeşilimsi

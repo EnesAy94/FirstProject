@@ -100,7 +100,6 @@ public class LevelButtonItem : MonoBehaviour
     {
         if (selectVisual != null) selectVisual.SetActive(false);
         myButton.interactable = false;
-        titleText.text += " 🔒";
         scoreText.gameObject.SetActive(false);
         GetComponent<Image>().color = Color.gray;
 
@@ -116,7 +115,6 @@ public class LevelButtonItem : MonoBehaviour
         if (selectVisual != null) selectVisual.SetActive(false);
         myButton.interactable = false;
         scoreText.gameObject.SetActive(false);
-        titleText.text += "\n(YAKINDA)";
         GetComponent<Image>().color = Color.gray;
     }
 }

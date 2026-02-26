@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Bolum_2
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterID: 2
-  chapterName: "H\u0131rs\u0131z 2"
+  chapterName: "Derine Dal\u0131\u015F"
+  chapterImage: {fileID: 21300000, guid: 84ee65857eeab504f9b7dc0823021b6a, type: 3}
   nextChapter: {fileID: 11400000, guid: 230fe49fadb2171449f7456949be32c1, type: 2}
   introText: 
   questionSet: {fileID: 11400000, guid: 15dcef8cc2ad4c5428e7242cb9960983, type: 2}

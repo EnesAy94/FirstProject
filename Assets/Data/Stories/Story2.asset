@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoryData
   storyTitle: Coming Soon..
   storyDescription: 
+  storyImage: {fileID: 0}
+  isComingSoon: 1
   chapters: []
