@@ -9,11 +9,22 @@ public class LevelButtonItem : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public Image iconImage; // YENİ: Butonun üzerindeki resim (Story veya Chapter görseli)
     public GameObject selectVisual; // YENİ: "SELECT" yazısı/resmi (kilitliyken veya yakında açılacakken gizlenecek)
+    public TextMeshProUGUI btnSelectText; // YENİ: Select yazısı objesi ("PLAY" vs "SELECT" değiştirmek için)
+    public TextMeshProUGUI scoreLabelText; // YENİ: "BÖLÜM PUANI" vs "DOSYA PUANI" yazacak statik metin
 
     // --- BÖLÜMLER İÇİN ---
     public void Setup(ChapterData chapter, int highScore, System.Action onClickAction)
     {
-        titleText.text = chapter.chapterName;
+        string currentLang = LocalizationManager.instance != null ? LocalizationManager.instance.currentLanguage : "tr";
+        
+        if (currentLang.ToLower() == "en" && !string.IsNullOrEmpty(chapter.chapterNameEN))
+        {
+            titleText.text = chapter.chapterNameEN;
+        }
+        else
+        {
+            titleText.text = chapter.chapterName;
+        }
 
         // Görsel Atama (Eğer ChapterData içine resim koyulmuşsa)
         if (iconImage != null)
@@ -46,13 +57,13 @@ public class LevelButtonItem : MonoBehaviour
         // GÖRSEL AYARLAMA
         if (realScore > 0)
         {
-            scoreText.text = $"Puan: {realScore}";
             scoreText.gameObject.SetActive(true); // Görünür yap
             scoreText.color = Color.yellow;
+            scoreText.text = realScore.ToString(); // Yalnızca sayıyı yazdırıyoruz! ("Puan:" yazısı ayrı Text olacak).
         }
         else
         {
-            scoreText.text = "Puan: -";
+            scoreText.text = "-";
             scoreText.color = Color.gray;
         }
 
@@ -62,21 +73,48 @@ public class LevelButtonItem : MonoBehaviour
 
         if (selectVisual != null) selectVisual.SetActive(true);
         myButton.interactable = true;
+        
+        // Bölümlerde Text "OYNA / PLAY" yazmalı
+        if (btnSelectText != null) 
+        {
+            string locPlay = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("chapter_card_play") : "OYNA";
+            btnSelectText.text = locPlay;
+        }
+
+        // Puan etiketi "BÖLÜM PUANI / CHAPTER SCORE"
+        if (scoreLabelText != null)
+        {
+            scoreLabelText.gameObject.SetActive(true);
+            string locLabel = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("chapter_card_score") : "BÖLÜM PUANI";
+            scoreLabelText.text = locLabel;
+        }
+        
         GetComponent<Image>().color = Color.white;
     }
 
     // --- HİKAYELER İÇİN ---
-    public void SetupStory(string storyTitle, int totalStoryScore, Sprite storySprite, System.Action onClickAction)
+    public void SetupStory(StoryData story, int totalStoryScore, System.Action onClickAction)
     {
-        titleText.text = storyTitle;
+        string currentLang = LocalizationManager.instance != null ? LocalizationManager.instance.currentLanguage : "tr";
+        
+        if (currentLang.ToLower() == "en" && !string.IsNullOrEmpty(story.storyTitleEN))
+        {
+            titleText.text = story.storyTitleEN;
+        }
+        else
+        {
+            titleText.text = story.storyTitle;
+        }
         scoreText.gameObject.SetActive(true);
-        scoreText.text = $"Toplam Puan: {totalStoryScore}";
+        
+        // Puanı çıplak sayı olarak yazdırıyoruz.
+        scoreText.text = totalStoryScore.ToString();
 
         if (iconImage != null)
         {
-            if (storySprite != null)
+            if (story.storyImage != null)
             {
-                iconImage.sprite = storySprite;
+                iconImage.sprite = story.storyImage;
                 iconImage.gameObject.SetActive(true);
             }
             else
@@ -93,6 +131,22 @@ public class LevelButtonItem : MonoBehaviour
 
         if (selectVisual != null) selectVisual.SetActive(true);
         myButton.interactable = true;
+
+        // Hikayelerde Text "SEÇ / SELECT" yazmalı
+        if (btnSelectText != null) 
+        {
+            string locSelect = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("chapter_card_select") : "SEÇ";
+            btnSelectText.text = locSelect;
+        }
+
+        // Puan etiketi "DOSYA PUANI / FILE SCORE"
+        if (scoreLabelText != null)
+        {
+            scoreLabelText.gameObject.SetActive(true);
+            string locLabel = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("story_card_score") : "DOSYA PUANI";
+            scoreLabelText.text = locLabel;
+        }
+
         GetComponent<Image>().color = Color.white;
     }
 
@@ -101,6 +155,7 @@ public class LevelButtonItem : MonoBehaviour
         if (selectVisual != null) selectVisual.SetActive(false);
         myButton.interactable = false;
         scoreText.gameObject.SetActive(false);
+        if (scoreLabelText != null) scoreLabelText.gameObject.SetActive(false);
         GetComponent<Image>().color = Color.gray;
 
         if (iconImage != null && lockSprite != null)
@@ -115,6 +170,7 @@ public class LevelButtonItem : MonoBehaviour
         if (selectVisual != null) selectVisual.SetActive(false);
         myButton.interactable = false;
         scoreText.gameObject.SetActive(false);
+        if (scoreLabelText != null) scoreLabelText.gameObject.SetActive(false);
         GetComponent<Image>().color = Color.gray;
     }
 }

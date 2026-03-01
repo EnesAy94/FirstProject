@@ -30,11 +30,19 @@ public class ChapterData : ScriptableObject
 {
     [Header("Bölüm Kimliği")]
     public int chapterID;       // 1, 2, 3...
+    [Header("Türkçe Metinler")]
     public string chapterName;  // Örn: "Bölüm 1: İlk İpucu"
-    public Sprite chapterImage; // YENİ: Bu bölüme özel resim
-    public ChapterData nextChapter;
     [TextArea]
     public string introText;    // Bölüm başlarken çıkacak hikaye yazısı
+
+    [Header("İngilizce Metinler")]
+    public string chapterNameEN;  // Örn: "Chapter 1: First Clue"
+    [TextArea]
+    public string introTextEN;
+
+    [Header("Görseller")]
+    public Sprite chapterImage; // YENİ: Bu bölüme özel resim
+    public ChapterData nextChapter;
 
     [Header("Soru Bankası")]
     public ChapterQuestionSet questionSet;

@@ -15,6 +15,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject storySelectPanel;
     public GameObject chapterSelectPanel;
     public GameObject profilePanel;
+    public GameObject settingsPanel;
 
     [Header("Container & Prefabs")]
     public Transform storyListContainer;
@@ -75,6 +76,7 @@ public class MainMenuManager : MonoBehaviour
             if (storySelectPanel != null) storySelectPanel.SetActive(false);
             if (chapterSelectPanel != null) chapterSelectPanel.SetActive(false);
             if (profilePanel != null) profilePanel.SetActive(false);
+            if (settingsPanel != null) settingsPanel.SetActive(false);
             if (replayConfirmPanel != null) replayConfirmPanel.SetActive(false);
         }
 
@@ -109,7 +111,10 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_Multiplayer()
     {
-        Debug.Log("Çok Oyunculu modu henüz yapım aşamasında...");
+        if (PopupManager.instance != null)
+        {
+            PopupManager.instance.ShowPopup("popup_coming_soon");
+        }
     }
 
     public void UpdateTicketUI()
@@ -136,7 +141,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClick_Settings()
     {
-        Debug.Log("Ayarlar sayfası henüz yapım aşamasında...");
+        if (settingsPanel != null) OpenPanel(settingsPanel);
+    }
+
+    public void OnClick_CloseSettings()
+    {
+        if (rootPanel != null) OpenPanel(rootPanel);
     }
 
     public void OnClick_Quit()
@@ -172,9 +182,8 @@ public class MainMenuManager : MonoBehaviour
 
                 // Butonu Kur
                 buttonScript.SetupStory(
-                    story.storyTitle,
+                    story,
                     averageScore,
-                    story.storyImage, // Kapak Resmi
                     () => OpenChapterSelection(story)
                 );
 

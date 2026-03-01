@@ -53,6 +53,12 @@ public class PanelCRTAnimator : MonoBehaviour
             rectTransform.localScale = new Vector3(0.05f, 0.05f, 1f);
             rectTransform.anchoredPosition = Vector2.zero; // Ortala
             canvasGroup.alpha = 1f;
+
+            // Eğer hedef panel varsa, ana panelin scale'ini bozmamak için 1 yap (arkaplan kararması için)
+            if (targetInnerPanel != null)
+            {
+                transform.localScale = Vector3.one;
+            }
             
             // İlk hareket: Yatay ince bir lazer çizgisine dönüş
             seq.Append(rectTransform.DOScaleX(1f, lineDuration).SetEase(Ease.OutExpo));

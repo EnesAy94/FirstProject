@@ -5,8 +5,13 @@ using System.Collections.Generic;
 public class AchievementData : ScriptableObject
 {
     public string id; // Örn: "hard_master" (Kodda bunu kullanacağız)
+    [Header("Türkçe Metinler")]
     public string title; // Örn: "Zor Soruların Efendisi"
     public string description; // Örn: "Zor soruları çözerek ustalığını kanıtla."
+
+    [Header("İngilizce Metinler")]
+    public string titleEN; // Örn: "Master of Hard Questions"
+    public string descriptionEN;
     
     [Header("Gereksinimler")]
     public bool requiresMission; // Bu başarım bir yan göreve bağlı mı?

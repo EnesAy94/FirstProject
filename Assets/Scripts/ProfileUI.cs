@@ -50,6 +50,8 @@ public class ProfileUI : MonoBehaviour
     // --- PROFİL VERİLERİNİ YÜKLE VE DİNLE ---
     void LoadProfileData()
     {
+        if (SaveManager.instance == null || SaveManager.instance.activeSave == null) return;
+
         PlayerData data = SaveManager.instance.activeSave;
 
         // Kayıtlı isimleri kutulara yaz
@@ -92,6 +94,8 @@ public class ProfileUI : MonoBehaviour
     // --- İSTATİSTİK YAZILARI (Aynı) ---
     void UpdateStatTexts()
     {
+        if (SaveManager.instance == null || SaveManager.instance.activeSave == null) return;
+
         PlayerData data = SaveManager.instance.activeSave;
 
         // İstatistik hesaplamaları (Aynı kalıyor...)
@@ -117,6 +121,8 @@ public class ProfileUI : MonoBehaviour
     // --- BAŞARIM LİSTESİ (Aynı) ---
     public void RefreshAchievements()
     {
+        if (AchievementManager.instance == null) return;
+
         foreach (Transform child in allContent) Destroy(child.gameObject);
         List<AchievementSortData> sortList = new List<AchievementSortData>();
 

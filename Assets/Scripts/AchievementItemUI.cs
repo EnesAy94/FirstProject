@@ -16,7 +16,16 @@ public class AchievementItemUI : MonoBehaviour
 
     public void Setup(AchievementData data, int currentCount, int tierIndex)
     {
-        titleText.text = data.title;
+        string currentLang = LocalizationManager.instance != null ? LocalizationManager.instance.currentLanguage : "TR";
+
+        if (currentLang.ToLower() == "en" && !string.IsNullOrEmpty(data.titleEN))
+        {
+            titleText.text = data.titleEN;
+        }
+        else
+        {
+            titleText.text = data.title;
+        }
 
         // --- KİLİTLİ DURUM ---
         if (tierIndex == -1)
@@ -33,12 +42,14 @@ public class AchievementItemUI : MonoBehaviour
             
             if (statusText != null) 
             {
-                statusText.text = "DURUM: <color=#FF5555>KİLİTLİ</color>"; // Kırmızımsı KİLİTLİ yazısı
+                string locStatus = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_locked_status") : "DURUM: KİLİTLİ";
+                statusText.text = $"<color=#FF5555>{locStatus}</color>"; 
             }
 
             if (progressText != null)
             {
-                progressText.text = $"İLERLEME: {currentCount}/{nextTarget}";
+                string locProg = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_progress") : "İLERLEME:";
+                progressText.text = $"{locProg} {currentCount}/{nextTarget}";
             }
 
             // Eğer slider varsa oranını ayarla
@@ -65,8 +76,16 @@ public class AchievementItemUI : MonoBehaviour
             {
                 // Bir sonraki aşama var, o yüzden "AÇIK" diyeceğiz ama bitmemiş.
                 int nextTarget = data.tiers[tierIndex + 1].targetCount;
-                if (statusText != null) statusText.text = "DURUM: <color=#55FF55>DEVAM EDİYOR</color>";
-                if (progressText != null) progressText.text = $"İLERLEME: {currentCount}/{nextTarget}";
+                if (statusText != null) 
+                {
+                    string locStatus = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_ongoing") : "DURUM: DEVAM EDİYOR";
+                    statusText.text = $"<color=#55FF55>{locStatus}</color>";
+                }
+                if (progressText != null) 
+                {
+                    string locProg = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_progress") : "İLERLEME:";
+                    progressText.text = $"{locProg} {currentCount}/{nextTarget}";
+                }
                 
                 if (progressSlider != null)
                 {
@@ -77,8 +96,16 @@ public class AchievementItemUI : MonoBehaviour
             else
             {
                 // Tamamen bitmiş
-                if (statusText != null) statusText.text = "DURUM: <color=#55FF55>TAMAMLANDI</color>";
-                if (progressText != null) progressText.text = $"İLERLEME: MAKSİMUM";
+                if (statusText != null) 
+                {
+                    string locStatus = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_completed") : "DURUM: TAMAMLANDI";
+                    statusText.text = $"<color=#55FF55>{locStatus}</color>";
+                }
+                if (progressText != null) 
+                {
+                    string locProg = LocalizationManager.instance != null ? LocalizationManager.instance.GetText("achievement_max") : "İLERLEME: MAKSİMUM";
+                    progressText.text = locProg;
+                }
                 
                 if (progressSlider != null)
                 {
